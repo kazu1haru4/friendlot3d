@@ -1,8 +1,34 @@
 <!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="theme-color" content="#10152b"><title>フレンドロット3D</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#9ddcff;color:#fff;font-family:system-ui,-apple-system,sans-serif;touch-action:none}#game{position:fixed;inset:0}canvas{display:block}#hud{position:fixed;inset:0;pointer-events:none}.panel{background:#11182be8;border:1px solid #ffffff3d;border-radius:14px;padding:9px 12px;box-shadow:0 5px 18px #0003;backdrop-filter:blur(7px)}#brand{position:absolute;left:10px;top:10px;font-weight:1000;font-size:14px}#stats{position:absolute;left:10px;top:53px;font-size:12px;line-height:1.55}#help{position:absolute;right:10px;top:10px;max-width:46vw;text-align:right;font-size:11px}#actions{position:absolute;right:10px;top:94px;display:flex;flex-direction:column;gap:7px;pointer-events:auto}button{border:1px solid #ffffff70;border-radius:12px;background:#635bdb;color:white;font-weight:900;padding:10px 12px;font:inherit;box-shadow:0 3px 0 #27225e}button:active{transform:translateY(2px);box-shadow:none}#buy{position:absolute;right:20px;bottom:25px;width:82px;height:82px;border-radius:50%;background:#ffb82e;color:#36220a;border:3px solid #fff;pointer-events:auto;font-weight:1000}#stickpad{position:absolute;left:18px;bottom:20px;width:116px;height:116px;border-radius:50%;background:#ffffff28;border:2px solid #ffffff80;pointer-events:auto}#stick{position:absolute;left:33px;top:33px;width:46px;height:46px;border-radius:50%;background:#e8f1ffdd;border:2px solid white}#notice{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);opacity:0;transition:opacity .18s;max-width:85vw;text-align:center;font-weight:900}#notice.show{opacity:1}#loading{position:absolute;inset:0;display:grid;place-items:center;background:#9ddcff;color:#172445;font-weight:1000;font-size:22px;text-align:center}#catalog{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);font-size:11px;white-space:nowrap}@media(min-width:850px){#stickpad{display:none}#help{font-size:13px}#brand{font-size:17px}}
-</style></head><body><div id="game"></div><div id="hud"><div id="brand" class="panel">🌀 FRIENDLOT 3D <span style="color:#ffe37b">REBORN</span></div><div id="stats" class="panel">Cash: $500<br>収益: $0/s<br>ベース: 1F</div><div id="help" class="panel">WASD / 矢印キーで移動<br>中央レーンのキャラに近づいて購入<br>自分のベースで収益を回収！</div><div id="actions"><button id="collect">💵 収益回収</button><button id="rebirth">🔁 リバース</button><button id="catalogBtn">📚 キャラ図鑑</button></div><div id="stickpad"><div id="stick"></div></div><button id="buy">購入</button><div id="catalog" class="panel">キャラを購入してベースに運ぼう！</div><div id="notice" class="panel"></div><div id="loading">FRIENDLOT 3D<br>ワールド生成中…</div></div>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#9ddcff;color:#fff;font-family:system-ui,-apple-system,sans-serif;touch-action:none}#game{position:fixed;inset:0}canvas{display:block}#hud{position:fixed;inset:0;pointer-events:none}.panel{background:#11182be8;border:1px solid #ffffff3d;border-radius:14px;padding:9px 12px;box-shadow:0 5px 18px #0003;backdrop-filter:blur(7px)}#brand{position:absolute;left:10px;top:10px;font-weight:1000;font-size:14px}#stats{position:absolute;left:10px;top:53px;font-size:12px;line-height:1.55}#help{position:absolute;right:10px;top:10px;max-width:46vw;text-align:right;font-size:11px}#actions{position:absolute;right:10px;top:94px;display:flex;flex-direction:column;gap:7px;pointer-events:auto}button{border:1px solid #ffffff70;border-radius:12px;background:#635bdb;color:white;font-weight:900;padding:10px 12px;font:inherit;box-shadow:0 3px 0 #27225e}button:active{transform:translateY(2px);box-shadow:none}input,select{background:#10182b;color:#fff;border:1px solid #ffffff60;font:inherit}#buy{position:absolute;right:20px;bottom:25px;width:82px;height:82px;border-radius:50%;background:#ffb82e;color:#36220a;border:3px solid #fff;pointer-events:auto;font-weight:1000}#stickpad{position:absolute;left:18px;bottom:20px;width:116px;height:116px;border-radius:50%;background:#ffffff28;border:2px solid #ffffff80;pointer-events:auto}#stick{position:absolute;left:33px;top:33px;width:46px;height:46px;border-radius:50%;background:#e8f1ffdd;border:2px solid white}#notice{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);opacity:0;transition:opacity .18s;max-width:85vw;text-align:center;font-weight:900}#notice.show{opacity:1}#loading{position:absolute;inset:0;display:grid;place-items:center;background:#9ddcff;color:#172445;font-weight:1000;font-size:22px;text-align:center}#catalog{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);font-size:11px;white-space:nowrap}@media(min-width:850px){#stickpad{display:none}#help{font-size:13px}#brand{font-size:17px}}
+</style></head><body><div id="game"></div><div id="hud"><div id="brand" class="panel">🌀 FRIENDLOT 3D <span style="color:#ffe37b">REBORN</span></div><div id="stats" class="panel">Cash: $500<br>収益: $0/s<br>ベース: 1F</div><div id="help" class="panel">WASD / 矢印キーで移動<br>中央レーンのキャラに近づいて購入<br>自分のベースで収益を回収！</div><div id="actions"><button id="collect">💵 収益回収</button><button id="rebirth">🔁 リバース</button><button id="catalogBtn">📚 キャラ図鑑</button><button id="adminBtn" style="background:#a33c56">🛡️ 管理者</button></div><div id="stickpad"><div id="stick"></div></div><button id="buy">購入</button><div id="catalog" class="panel">キャラを購入してベースに運ぼう！</div><div id="eventBanner" class="panel" style="position:absolute;left:50%;top:10px;transform:translateX(-50%);display:none;color:#fff36b;font-weight:1000;text-align:center"></div><div id="notice" class="panel"></div>
+<div id="adminPanel" style="display:none;position:fixed;inset:0;background:#080d1bd9;z-index:20;place-items:center;padding:16px;pointer-events:auto">
+ <div class="panel" style="width:min(440px,94vw);max-height:88vh;overflow:auto">
+  <div style="display:flex;justify-content:space-between;align-items:center"><b>🛡️ フレンドロット 管理者パネル</b><button id="adminClose">閉じる</button></div>
+  <p style="font-size:12px;color:#dce5ff">許可された管理者IDだけ利用できます。イベント操作はサーバー側でも認証されます。</p>
+  <div id="adminLogin">
+   <label style="display:block;margin:8px 0 4px">管理者ID</label>
+   <select id="adminId" style="width:100%;padding:10px;border-radius:8px"><option value="kazu1haru100">kazu1haru100</option><option value="kazu1haru4sub">kazu1haru4sub</option></select>
+   <label style="display:block;margin:8px 0 4px">管理者パスワード</label><input id="adminPassword" type="password" autocomplete="current-password" style="width:100%;padding:10px;border-radius:8px">
+   <label style="display:block;margin:8px 0 4px">API URL（WorkerのURL）</label><input id="apiUrl" placeholder="https://your-worker.workers.dev" style="width:100%;padding:10px;border-radius:8px">
+   <button id="adminLoginBtn" style="width:100%;margin-top:10px">ログイン</button>
+  </div>
+  <div id="adminControls" style="display:none">
+   <p id="adminWho"></p>
+   <label style="display:block;margin:8px 0 4px">イベント</label>
+   <select id="eventType" style="width:100%;padding:10px;border-radius:8px">
+    <option value="cat">🐱 猫属性イベント</option><option value="strawberry">🍓 ストロベリー属性イベント</option><option value="emerald">💚 エメラルド属性イベント</option><option value="tawashi">🧽 たわし属性イベント</option><option value="golden">🌟 ゴールデンイベント</option><option value="rainbow">🌈 レインボーイベント</option><option value="lucky">🎁 ラッキーブロック祭り</option>
+   </select>
+   <label style="display:block;margin:8px 0 4px">開催時間</label><select id="eventDuration" style="width:100%;padding:10px;border-radius:8px"><option value="300">5分</option><option value="600">10分</option><option value="900">15分</option><option value="1800">30分</option></select>
+   <button id="eventStart" style="width:100%;margin-top:10px">イベント開始</button>
+   <button id="eventEnd" style="width:100%;margin-top:8px;background:#b53f4c">イベント終了</button>
+   <div id="eventStatus" style="margin-top:10px;font-size:13px;white-space:pre-wrap"></div>
+   <button id="adminLogout" style="width:100%;margin-top:10px;background:#49546b">ログアウト</button>
+  </div>
+ </div>
+</div>
+<div id="loading">FRIENDLOT 3D<br>ワールド生成中…</div></div>
 <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script>
 <script type="module">
 import * as THREE from 'three';
@@ -11,7 +37,7 @@ const camera=new THREE.PerspectiveCamera(58,innerWidth/innerHeight,.1,180);
 const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;$('#game').appendChild(renderer.domElement);
 scene.add(new THREE.HemisphereLight('#ffffff','#61718c',2.1));const sun=new THREE.DirectionalLight('#fff1d3',3);sun.position.set(-18,32,12);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);scene.add(sun);
 const mat=c=>new THREE.MeshStandardMaterial({color:c,roughness:.76});const box=(w,h,d,c,x,y,z,parent=scene)=>{let m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat(c));m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m};const ball=(r,c,x,y,z,parent=scene,scale=[1,1,1])=>{let m=new THREE.Mesh(new THREE.SphereGeometry(r,16,12),mat(c));m.position.set(x,y,z);m.scale.set(...scale);m.castShadow=true;parent.add(m);return m};
-let cash=500,bank=0,rebirths=0,floors=1,owned=[],near=null,toastTimer,selectedIndex=0;const bases=[],laneChars=[],keys=new Set(),joy={x:0,y:0};let player,playerBody;
+let cash=1500,bank=0,rebirths=0,floors=1,owned=[],near=null,toastTimer,selectedIndex=0;const bases=[],laneChars=[],keys=new Set(),joy={x:0,y:0};let player,playerBody;
 const fmt=n=>n>=1e12?(n/1e12).toFixed(2)+'T':n>=1e9?(n/1e9).toFixed(2)+'B':n>=1e6?(n/1e6).toFixed(2)+'M':n>=1e3?(n/1e3).toFixed(1)+'K':Math.floor(n).toLocaleString();
 const say=t=>{let e=$('#notice');e.textContent=t;e.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>e.classList.remove('show'),1900)};
 let catalog=[];const fallback=[{"id":"tawashi","name":"たわし","type":"brush","color":"#dcb36c","accent":"#fff0bf","rarity":"コモン","price":50,"income":2},{"id":"meowru","name":"ミャオル","type":"cat","color":"#ff91c8","accent":"#fff0d9","rarity":"レア","price":100,"income":5},{"id":"waffle","name":"わっふる","type":"waffle","color":"#e9ae65","accent":"#fff0c8","rarity":"レア","price":150,"income":8},{"id":"strawberry-elephant","name":"ストロベリーエレファント","type":"elephant","color":"#f15d83","accent":"#ffd8e4","rarity":"エピック","price":300,"income":18},{"id":"headless-knight","name":"首なし騎士","type":"knight","color":"#69758f","accent":"#d5d9e5","rarity":"レジェンド","price":900,"income":55},{"id":"emerald-meowru","name":"エメラルドミャオル","type":"cat","color":"#21d39a","accent":"#caffed","rarity":"シークレット","price":2000,"income":150}];
@@ -19,7 +45,33 @@ try{const r=await fetch('./character.json',{cache:'no-store'});if(!r.ok)throw 0;
 function label(text,color='#fff'){let c=document.createElement('canvas');c.width=512;c.height=112;let x=c.getContext('2d');x.fillStyle='#10182beF';x.beginPath();x.roundRect(8,8,496,96,22);x.fill();x.strokeStyle='#ffffff80';x.lineWidth=3;x.stroke();x.fillStyle=color;x.font='bold 32px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(String(text).slice(0,25),256,56);let s=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),depthTest:false}));s.scale.set(3.2,.7,1);return s}
 function makeChar(c){const g=new THREE.Group(),body=mat(c.color||'#aaaaff'),accent=mat(c.accent||'#fff0cf'),dark=mat('#1a1a2a'),white=mat('#ffffff');const sph=(r,x,y,z,sx=1,sy=1,sz=1,m=body)=>ball(r,'#ffffff',x,y,z,g,[sx,sy,sz]);const S=(r,x,y,z,sx=1,sy=1,sz=1,m=body)=>{let o=new THREE.Mesh(new THREE.SphereGeometry(r,16,12),m);o.position.set(x,y,z);o.scale.set(sx,sy,sz);o.castShadow=true;g.add(o);return o};const B=(w,h,d,x,y,z,m=body,rz=0)=>{let o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.rotation.z=rz;o.castShadow=true;g.add(o);return o};const C=(r,h,x,y,z,m=body,rz=0)=>{let o=new THREE.Mesh(new THREE.ConeGeometry(r,h,12),m);o.position.set(x,y,z);o.rotation.z=rz;o.castShadow=true;g.add(o);return o};
 const type=c.type||c.id;
-if(type==='brush'){B(.9,.34,.55,0,.52,0,body,.12);for(let i=0;i<9;i++){let a=i/9*Math.PI*2;S(.07,Math.cos(a)*.36,.52+Math.sin(a)*.17,Math.sin(a)*.24,1,1,1,accent)}B(.2,.08,.1,0,.7,.28,accent)}
+if(type==='pipikiwi'){
+// Pipi Kiwi: kiwi fruit torso, raccoon head/mask, ringed tail, human-like legs/feet.
+const kiwiSkin=mat('#79523b'), kiwiFuzz=mat('#9b6c48'), kiwiGreen=mat('#78c94e'), kiwiLight=mat('#c8ed8a'), seed=mat('#17291d'), mask=mat('#24252b'), raccoon=mat('#b8b4a8'), raccoonDark=mat('#514c49'), foot=mat('#d4aa8a');
+// Fuzzy kiwi torso: broad oval with a sliced green face toward the front (+Z)
+S(.52,.0,.62,0,1,.93,.76,kiwiSkin);
+S(.43,0,.64,.235,1,.88,.18,kiwiGreen);
+S(.35,0,.65,.355,1,.86,.07,kiwiLight);
+S(.29,0,.65,.405,1,.84,.025,kiwiGreen);
+// tiny kiwi seeds around the center of the cut surface
+for(let i=0;i<14;i++){let a=i/14*Math.PI*2;S(.018,Math.cos(a)*(.17+(i%2)*.045),.65+Math.sin(a)*(.16+(i%3)*.02),.438,1,1,1,seed)}
+// raccoon head rising from the kiwi, with round ears and eye mask
+S(.30,0,1.24,-.02,1.08,1,.9,raccoon);
+S(.12,-.22,1.47,-.03,1,1,1,raccoonDark);S(.12,.22,1.47,-.03,1,1,1,raccoonDark);
+S(.085,-.22,1.48,-.015,1,1,1,kiwiSkin);S(.085,.22,1.48,-.015,1,1,1,kiwiSkin);
+S(.19,0,1.23,.245,1.28,.55,.42,mask);
+S(.07,-.115,1.27,.34,1,1,1,mat('#f7f4df'));S(.07,.115,1.27,.34,1,1,1,mat('#f7f4df'));
+S(.035,-.115,1.27,.395,1,1,1,mat('#161820'));S(.035,.115,1.27,.395,1,1,1,mat('#161820'));
+S(.07,0,1.14,.365,1,.72,.8,raccoonDark);S(.045,0,1.16,.415,1,1,1,mask);
+// raccoon tail extending behind/right, with alternating dark/light rings
+let tail=new THREE.Group();tail.position.set(.34,.66,-.18);tail.rotation.z=-.55;g.add(tail);
+let tailBase=new THREE.Mesh(new THREE.CylinderGeometry(.095,.14,.72,12),raccoonDark);tailBase.rotation.z=Math.PI/2;tailBase.position.x=.28;tail.add(tailBase);
+for(let i=0;i<4;i++){let ring=new THREE.Mesh(new THREE.CylinderGeometry(.145-i*.012,.145-i*.012,.09,12),i%2===0?raccoon:mask);ring.rotation.z=Math.PI/2;ring.position.x=.02+i*.17;tail.add(ring)}
+S(.13,.92,.43,-.18,1,1,1,mask);
+// human-like legs and feet
+B(.13,.43,.15,-.2,.15,.02,foot,-.06);B(.13,.43,.15,.2,.15,.02,foot,.06);
+S(.14,-.22,.035,.12,1,.45,1.25,foot);S(.14,.22,.035,.12,1,.45,1.25,foot);
+} else if(type==='brush'){B(.9,.34,.55,0,.52,0,body,.12);for(let i=0;i<9;i++){let a=i/9*Math.PI*2;S(.07,Math.cos(a)*.36,.52+Math.sin(a)*.17,Math.sin(a)*.24,1,1,1,accent)}B(.2,.08,.1,0,.7,.28,accent)}
 else if(type==='cat'){S(.43,0,.58,0,1,1.05,.88,body);C(.2,.34,-.27,.98,0,body,-.25);C(.2,.34,.27,.98,0,body,.25);S(.055,-.15,.66,.37,1,1,1,dark);S(.055,.15,.66,.37,1,1,1,dark);S(.07,0,.53,.4,1,1,1,accent);S(.08,-.45,.57,0,1,1,1,accent);S(.08,.45,.57,0,1,1,1,accent)}
 else if(type==='waffle'){B(.82,.72,.7,0,.6,0,body);for(let x of [-.23,0,.23])for(let y of [.4,.6,.8])B(.1,.1,.025,x,y,.36,accent);S(.05,-.15,.72,.37,1,1,1,dark);S(.05,.15,.72,.37,1,1,1,dark)}
 else if(type==='elephant'){S(.44,0,.62,0,1.1,1,.95,body);S(.13,0,.35,.4,.8,1.6,1.2,accent);S(.12,0,.2,.52,.8,1.5,1,body);S(.2,-.46,.61,0,1,1,1,accent);S(.2,.46,.61,0,1,1,1,accent);S(.045,-.15,.72,.4,1,1,1,dark);S(.045,.15,.72,.4,1,1,1,dark);C(.08,.2,-.13,.91,.2,accent);C(.08,.2,.13,.91,.2,accent)}
@@ -49,8 +101,8 @@ for(let i=0;i<8;i++)buildBase(i);
 for(let i=0;i<18;i++){let a=i/18*Math.PI*2,x=Math.sin(a)*30,z=Math.cos(a)*30;let trunk=box(.45,1.4,.45,'#8a603f',x,.4,z);ball(.95,'#2eaa68',x,1.5,z,scene,[1,1.15,1])}
 function createPlayer(){player=new THREE.Group();player.position.set(0,0,11);playerBody=new THREE.Group();player.add(playerBody);let shirt=mat('#4268ff'),skin=mat('#f0c49a'),pants=mat('#29324b');box(.65,.75,.38,'#4268ff',0,1.0,0,playerBody);ball(.3,'#f0c49a',0,1.62,0,playerBody);box(.22,.55,.24,'#29324b',-.17,.38,0,playerBody);box(.22,.55,.24,'#29324b',.17,.38,0,playerBody);box(.17,.56,.2,'#f0c49a',-.43,1,0,playerBody);box(.17,.56,.2,'#f0c49a',.43,1,0,playerBody);scene.add(player)}
 createPlayer();
-function laneSpawn(){let c=catalog[Math.floor(Math.random()*catalog.length)];let g=makeChar(c);g.position.set(0,0,-15);scene.add(g);let p=label('$'+fmt(c.price)+' • '+c.rarity,c.rarity==='シークレット'?'#ff89ff':'#fff');p.position.set(0,2.05,0);g.add(p);laneChars.push({g,c,progress:0,dir:1});}
-for(let i=0;i<4;i++){laneSpawn();laneChars[i].progress=i*.23;laneChars[i].g.position.z=-15+i*7.5}
+function laneSpawn(){let c=(laneChars.length===0?catalog.find(v=>v.id==='pipi-kiwi'):null)||catalog[Math.floor(Math.random()*catalog.length)];let g=makeChar(c);g.position.set(0,0,-15);scene.add(g);let p=label('$'+fmt(c.price)+' • '+c.rarity,c.rarity==='シークレット'?'#ff89ff':'#fff');p.position.set(0,2.05,0);g.add(p);laneChars.push({g,c,progress:0,dir:1});}
+laneSpawn();laneChars[0].g.position.z=-5;for(let i=1;i<4;i++){laneSpawn();laneChars[i].progress=i*.23;laneChars[i].g.position.z=-15+i*7.5}
 function rebuildOwned(){for(let b of bases)for(let s of b.slots){if(s.world){scene.remove(s.world);s.world=null}}let my=bases[0];owned.forEach((o,i)=>{let s=my.slots.filter(q=>q.floor<floors)[i];if(!s)return;let g=makeChar(o);g.position.set(my.x+s.x,s.y||.75,my.z+s.z);g.rotation.y=Math.PI;scene.add(g);s.world=g})}
 function incomeRate(){return owned.reduce((n,c)=>n+(c.income||0),0)*(1+rebirths*.25)}
 function nearestLane(){let best=null,d=3.5;for(let o of laneChars){let dist=o.g.position.distanceTo(player.position);if(dist<d){best=o;d=dist}}return best}
@@ -68,6 +120,27 @@ spawnTimer+=dt;if(spawnTimer>5&&laneChars.length<5){spawnTimer=0;laneSpawn()}
 bank+=incomeRate()*dt;uiTimer+=dt;if(uiTimer>.2){uiTimer=0;updateUI()}
 camera.position.lerp(new THREE.Vector3(player.position.x,player.position.y+8,player.position.z+10),.09);camera.lookAt(player.position.x,player.position.y+1,player.position.z-1);
 renderer.render(scene,camera)}
+
+// 管理者機能：ログインとイベント操作はWorker側で認証する
+let adminToken=null, adminApi='';
+const adminPanel=$('#adminPanel');
+$('#adminBtn').onclick=()=>{adminPanel.style.display='grid'};
+$('#adminClose').onclick=()=>{adminPanel.style.display='none'};
+function apiRoot(){return ($('#apiUrl').value||adminApi).trim().replace(/\/+$/,'')}
+async function apiCall(path,body={},token=adminToken){
+ const root=apiRoot();if(!root)throw new Error('Cloudflare WorkerのAPI URLを入力してね');
+ const r=await fetch(root+path,{method:'POST',headers:{'Content-Type':'application/json',...(token?{'Authorization':'Bearer '+token}:{})},body:JSON.stringify(body)});
+ const data=await r.json().catch(()=>({error:'サーバー応答を読み取れません'}));if(!r.ok)throw new Error(data.error||'APIエラー');return data;
+}
+async function refreshEvent(){
+ try{const root=apiRoot();if(!root)return;const r=await fetch(root+'/api/event');if(!r.ok)return;const d=await r.json();if(d.active&&d.event){$('#eventBanner').style.display='block';$('#eventBanner').textContent='✨ '+d.event.label+' イベント中 • 残り '+Math.max(0,Math.ceil((d.event.endsAt-Date.now())/1000))+'秒'}else{$('#eventBanner').style.display='none'}}catch{}
+}
+$('#adminLoginBtn').onclick=async()=>{let b=$('#adminLoginBtn');b.disabled=true;try{adminApi=apiRoot();let d=await apiCall('/api/admin/login',{id:$('#adminId').value,password:$('#adminPassword').value},null);adminToken=d.token;$('#adminLogin').style.display='none';$('#adminControls').style.display='block';$('#adminWho').textContent='ログイン中: '+d.id;$('#eventStatus').textContent='ログイン成功。イベント操作ができます。';await refreshEvent();say('管理者ログイン成功')}catch(e){say('ログイン失敗: '+e.message)}finally{b.disabled=false}};
+$('#eventStart').onclick=async()=>{try{let d=await apiCall('/api/admin/event/start',{type:$('#eventType').value,durationSeconds:Number($('#eventDuration').value)});$('#eventStatus').textContent=d.message||'イベントを開始しました';await refreshEvent();say('イベント開始！')}catch(e){$('#eventStatus').textContent='失敗: '+e.message}};
+$('#eventEnd').onclick=async()=>{try{let d=await apiCall('/api/admin/event/end',{});$('#eventStatus').textContent=d.message||'イベントを終了しました';await refreshEvent();say('イベント終了')}catch(e){$('#eventStatus').textContent='失敗: '+e.message}};
+$('#adminLogout').onclick=()=>{adminToken=null;$('#adminPassword').value='';$('#adminLogin').style.display='block';$('#adminControls').style.display='none';say('ログアウトしました')};
+setInterval(refreshEvent,1000);
+
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 $('#loading').style.display='none';updateUI();requestAnimationFrame(loop);
 </script></body></html>
