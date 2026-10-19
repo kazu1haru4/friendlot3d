@@ -210,7 +210,7 @@ renderer.render(scene,camera)}
 
 // Login/register: auth API runs on the Friendlot 3D Worker. No secrets are stored in this HTML.
 let authMode='login', sessionToken=null, signedInId=null;
-const API_ROOT = 'PASTE_YOUR_CLOUDFLARE_WORKER_URL_HERE';
+const API_ROOT = 'https://riendlot3d-api.kazu31-t10.workers.dev';
 const authMsg=$('#authMessage');
 function authRoot(){return API_ROOT.trim().replace(/\/+$/,'')}
 function setAuthMode(mode){authMode=mode;$('#tabLogin').style.background=mode==='login'?'#4f8dff':'#46536c';$('#tabRegister').style.background=mode==='register'?'#4f8dff':'#46536c';$('#authSubmit').textContent=mode==='login'?'ログイン':'新規登録';$('#authPass').autocomplete=mode==='login'?'current-password':'new-password';authMsg.textContent=''}
