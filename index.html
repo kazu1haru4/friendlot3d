@@ -33,8 +33,8 @@
 <script type="module">
 import * as THREE from 'three';
 const $=s=>document.querySelector(s);const scene=new THREE.Scene();scene.background=new THREE.Color('#9ddcff');scene.fog=new THREE.Fog('#9ddcff',48,100);
-const camera=new THREE.PerspectiveCamera(58,innerWidth/innerHeight,.1,180);
-const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;$('#game').appendChild(renderer.domElement);
+const camera=new THREE.PerspectiveCamera(64,innerWidth/innerHeight,.1,180);
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.08;renderer.outputColorSpace=THREE.SRGBColorSpace;$('#game').appendChild(renderer.domElement);
 scene.add(new THREE.HemisphereLight('#ffffff','#61718c',2.1));const sun=new THREE.DirectionalLight('#fff1d3',3);sun.position.set(-18,32,12);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);scene.add(sun);
 const mat=c=>new THREE.MeshStandardMaterial({color:c,roughness:.76});const box=(w,h,d,c,x,y,z,parent=scene)=>{let m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat(c));m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m};const ball=(r,c,x,y,z,parent=scene,scale=[1,1,1])=>{let m=new THREE.Mesh(new THREE.SphereGeometry(r,16,12),mat(c));m.position.set(x,y,z);m.scale.set(...scale);m.castShadow=true;parent.add(m);return m};
 let cash=1500,bank=0,rebirths=0,floors=1,owned=[],near=null,toastTimer,selectedIndex=0;const bases=[],laneChars=[],keys=new Set(),joy={x:0,y:0};let player,playerBody;
@@ -87,23 +87,98 @@ else{S(.4,0,.6,0,1,1,.9,body);C(.2,.3,-.22,.96,0,accent);C(.2,.3,.22,.96,0,accen
 // Small legs + face-forward orientation
 for(let x of [-.22,.22])B(.14,.24,.16,x,.13,0,body);
 let tag=label(c.name,c.rarity==='シークレット'?'#ff8bff':c.rarity==='レジェンド'?'#ffd36a':'#fff');tag.position.y=1.55;g.add(tag);g.userData.charData=c;return g}
-function ground(){box(70,.6,70,'#56b85f',0,-.4,0);for(let i=-3;i<=3;i++){for(let j=-3;j<=3;j++){if((i+j)%2===0)box(9,.02,9,'#61c66a',i*9,-.08,j*9)}}}
-function buildBase(i){let a=i/8*Math.PI*2,x=Math.sin(a)*20,z=Math.cos(a)*20;let g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=-a;scene.add(g);let col=['#e65c66','#4d91e8','#a66be8','#f2b843','#36b98a','#e77ac5','#42b9cb','#df8652'][i];box(8,.35,8,'#cbd6e2',0,.05,0,g);box(8,.18,8,col,0,.3,0,g);box(8,2.8,.25,'#e7edf5',0,1.8,-4,g);box(.25,2.8,8,'#e7edf5',-4,1.8,0,g);box(.25,2.8,8,'#e7edf5',4,1.8,0,g);box(2.5,2.8,.25,'#e7edf5',-2.75,1.8,4,g);box(2.5,2.8,.25,'#e7edf5',2.75,1.8,4,g);box(3,.35,.28,col,0,3.15,-4,g);box(2.5,.65,.16,'#19233d',0,2.65,-3.82,g);let sign=label(i===0?'YOUR BASE':'BASE '+(i+1),'#ffffff');sign.position.set(0,2.65,-3.7);g.add(sign);
-let slots=[];for(let floor=0;floor<3;floor++){let fy=.3+floor*3.1;if(floor>0){box(8,.22,8,'#b9c7d7',0,fy,0,g);for(let xx of [-3.7,3.7])for(let zz of [-3.7,3.7])box(.22,3.0,.22,col,xx,fy-1.5,zz,g);box(8,.12,.25,col,0,fy+2.85,-4,g)}for(let row=0;row<2;row++)for(let coln=0;coln<3;coln++){let sx=-2.35+coln*2.35,sz=-1.6+row*2.4;box(1.7,.12,1.7,'#dce4ed',sx,fy+.25,sz,g);box(1.35,.08,1.35,'#9be6d6',sx,fy+.36,sz,g);slots.push({x:sx,y:fy+.42,z:sz,group:g,world:null,floor})}}
-let stair=box(1.5,.2,1.8,'#dce4ed',2.7,.5,2.6,g);box(1.5,.2,1.4,'#dce4ed',2.7,.7,3.1,g);
-bases.push({i,x,z,g,slots,color:col});}
+function ground(){
+ // broad floating island with layered earth edge
+ box(86,.8,86,'#4da85a',0,-.55,0);
+ box(83,.22,83,'#65c96d',0,-.03,0);
+ // subtle tiled grass patches
+ for(let i=-4;i<=4;i++)for(let j=-4;j<=4;j++){
+   if((i+j)%2===0)box(7.8,.025,7.8,'#70d475',i*8,-.015,j*8);
+ }
+ // outer stone border
+ for(let i=-8;i<=8;i++){
+   box(1.1,.28,.45,'#d4e0e7',i*4.5,-.12,-41.5);
+   box(1.1,.28,.45,'#d4e0e7',i*4.5,-.12,41.5);
+   box(.45,.28,1.1,'#d4e0e7',-41.5,-.12,i*4.5);
+   box(.45,.28,1.1,'#d4e0e7',41.5,-.12,i*4.5);
+ }
+ // roads from central conveyor to base ring
+ for(let i=0;i<8;i++){
+   const a=i/8*Math.PI*2, x=Math.sin(a)*11.5,z=Math.cos(a)*11.5;
+   const road=box(2.5,.06,13,'#cbd5df',x,.06,z);road.rotation.y=-a;
+   const stripe=box(.12,.025,12,'#f9fbff',x,.1,z);stripe.rotation.y=-a;
+ }
+}
+function buildBase(i){
+ const side=i<4?-1:1, row=i%4, x=side*13.2, z=-22+row*14.6;
+ const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=side<0?Math.PI/2:-Math.PI/2;scene.add(g);
+ const col=['#e65c66','#4d91e8','#a66be8','#f2b843','#36b98a','#e77ac5','#42b9cb','#df8652'][i];
+ box(8.6,.42,8.6,'#aeb9c8',0,.05,0,g);box(8.2,.16,8.2,'#4b5568',0,.32,0,g);box(8,.12,8,col,0,.43,0,g);
+ box(8.1,2.4,.3,'#515b6b',0,1.65,-4,g);box(7.8,.14,.22,col,0,2.9,-3.82,g);
+ for(const xx of [-3.85,3.85]){box(.34,2.8,.34,'#434d60',xx,1.75,-3.8,g);box(.44,.18,.44,col,xx,3.2,-3.8,g);}
+ box(.28,1.15,5.8,'#606b7c',-4,1.0,.8,g);box(.28,1.15,5.8,'#606b7c',4,1.0,.8,g);
+ box(2.3,1.0,.25,'#606b7c',-2.85,.9,3.85,g);box(2.3,1.0,.25,'#606b7c',2.85,.9,3.85,g);
+ box(9.2,.35,9.1,'#73717a',0,3.25,-.15,g);box(9.25,.17,.28,'#b76b43',0,3.04,4.25,g);box(9.25,.17,.28,'#b76b43',0,3.04,-4.5,g);
+ box(2.15,.06,2.5,'#dc3f4b',0,.53,4.8,g);
+ for(let j=0;j<5;j++){box(.18,.06,.45,'#5bf06c',-2.0,.54,1.2+j*.65,g);box(.18,.06,.45,'#5bf06c',2.0,.54,1.2+j*.65,g);}
+ box(3.4,.62,.18,'#263044',0,2.65,-3.55,g);
+ let sign=label(i===0?'YOUR BASE':'BASE '+(i+1),'#ffffff');sign.position.set(0,2.66,-3.68);sign.scale.set(2.8,.65,1);g.add(sign);
+ let slots=[];
+ for(let floor=0;floor<3;floor++){
+   const fy=.45+floor*3.15;
+   if(floor>0){box(8.1,.22,8.1,'#9da9b8',0,fy,0,g);for(let xx of [-3.75,3.75])for(let zz of [-3.75,3.75])box(.22,3.0,.22,col,xx,fy-1.5,zz,g);box(8.2,.12,.24,col,0,fy+2.85,-4.0,g);}
+   for(let rr=0;rr<2;rr++)for(let cc=0;cc<3;cc++){let sx=-2.35+cc*2.35,sz=-1.45+rr*2.45;box(1.7,.12,1.7,'#dce4ed',sx,fy+.18,sz,g);box(1.4,.08,1.4,'#6ce18e',sx,fy+.28,sz,g);slots.push({x:sx,y:fy+.35,z:sz,group:g,world:null,floor});}
+ }
+ for(let j=0;j<5;j++)box(1.4,.18,.55,'#cbd4df',2.65,.55+j*.22,2.5+j*.4,g);
+ bases.push({i,x,z,g,slots,color:col});
+}
 ground();
-// Central purchase conveyor and sidewalks
-box(6,.18,34,'#343b52',0,.02,0);box(4,.12,33,'#e44d5e',0,.14,0);for(let z=-15;z<=15;z+=2)box(3.5,.03,.08,'#ffb9a9',0,.22,z);
-for(let x of [-4.4,4.4])box(.5,.12,34,'#e8edf5',x,.02,0);
+// Central conveyor: dark steel bed, red moving belt, yellow safety rails and arrows
+box(7,.28,61,'#35435c',0,.03,0);
+box(5.1,.14,60,'#c53e50',0,.21,0);
+box(4.65,.08,59,'#ed5262',0,.31,0);
+for(let z=-28;z<=28;z+=1.8{
+  box(4.2,.025,.075,'#ffb7a9',0,.36,z);
+  const arrow= new THREE.Mesh(new THREE.ConeGeometry(.22,.5,3),mat('#ffe9c4'));
+  arrow.rotation.x=Math.PI/2;arrow.position.set(0,.4,z+.65);scene.add(arrow);
+}
+for(let x of [-3.1,3.1])box(.25,.35,61,'#f3bf54',x,.28,0);
+for(let x of [-4.4,4.4])box(.75,.16,62,'#e8edf5',x,.02,0);
+// entrance arch / spawn portal
+for(let x of [-3.4,3.4])box(.3,4,.35,'#27324a',x,2,-17.2);
+box(7,.35,.4,'#27324a',0,4,-17.2);
+box(6.3,.16,.16,'#7c7cff',0,4.22,-17.2);
+let portal=label('BRAINROT • CENTRAL SPAWN','#ffe57d');portal.position.set(0,3.35,-17.25);portal.scale.set(4.8,.85,1);scene.add(portal);
+// lamp posts with glowing bulbs
+for(let z=-25;z<=25;z+=8for(let x of [-5.5,5.5]){
+ box(.16,2.3,.16,'#4a536a',x,1.1,z);
+ box(.8,.16,.4,'#4a536a',x,2.25,z);
+ ball(.18,'#ffeaa1',x,2.2,z,scene,[1,1,1]);
+}
+// build the 8 colored player plots
 for(let i=0;i<8;i++)buildBase(i);
-// Decorative lights/trees around perimeter
-for(let i=0;i<18;i++){let a=i/18*Math.PI*2,x=Math.sin(a)*30,z=Math.cos(a)*30;let trunk=box(.45,1.4,.45,'#8a603f',x,.4,z);ball(.95,'#2eaa68',x,1.5,z,scene,[1,1.15,1])}
+// Low-poly decorative trees, rocks, shrubs and floating clouds around the island
+for(let i=0;i<20;i++){
+ const a=i/20*Math.PI*2,x=Math.sin(a)*39,z=Math.cos(a)*39;
+ box(.38,1.25,.38,'#8a603f',x,.45,z);
+ const crown=ball(.88,'#2eaa68',x,1.45,z,scene,[1,1.15,1]);
+ ball(.52,'#53c66b',x-.42,1.42,z+.12,scene,[1,1,1]);
+ ball(.48,'#237f57',x+.38,1.25,z-.08,scene,[1,1,1]);
+ if(i%2===0){ball(.42,'#8b9ba8',x+1.2,.1,z+.7,scene,[1,.7,1]);ball(.25,'#a6b6c2',x+1.5,.15,z+.5,scene,[1,.8,1]);}
+}
+// soft stylized clouds, visible in the sky around the play area
+for(let i=0;i<9;i++){
+ const x=(i%3-1)*22, y=10+(i%3)*2, z=-24+Math.floor(i/3)*23;
+ const cloud=new THREE.Group();cloud.position.set(x,y,z);scene.add(cloud);
+ ball(1.5,'#ffffff',0,0,0,cloud,[1.7,.65,1]);
+ ball(1.1,'#ffffff',-1.2,-.1,.1,cloud,[1.2,.7,1]);
+ ball(1.2,'#f5fbff',1.1,-.12,0,cloud,[1.2,.65,1]);
+}
 function createPlayer(){player=new THREE.Group();player.position.set(0,0,11);playerBody=new THREE.Group();player.add(playerBody);let shirt=mat('#4268ff'),skin=mat('#f0c49a'),pants=mat('#29324b');box(.65,.75,.38,'#4268ff',0,1.0,0,playerBody);ball(.3,'#f0c49a',0,1.62,0,playerBody);box(.22,.55,.24,'#29324b',-.17,.38,0,playerBody);box(.22,.55,.24,'#29324b',.17,.38,0,playerBody);box(.17,.56,.2,'#f0c49a',-.43,1,0,playerBody);box(.17,.56,.2,'#f0c49a',.43,1,0,playerBody);scene.add(player)}
 createPlayer();
 function laneSpawn(){let c=(laneChars.length===0?catalog.find(v=>v.id==='pipi-kiwi'):null)||catalog[Math.floor(Math.random()*catalog.length)];let g=makeChar(c);g.position.set(0,0,-15);scene.add(g);let p=label('$'+fmt(c.price)+' • '+c.rarity,c.rarity==='シークレット'?'#ff89ff':'#fff');p.position.set(0,2.05,0);g.add(p);laneChars.push({g,c,progress:0,dir:1});}
 laneSpawn();laneChars[0].g.position.z=-5;for(let i=1;i<4;i++){laneSpawn();laneChars[i].progress=i*.23;laneChars[i].g.position.z=-15+i*7.5}
-function rebuildOwned(){for(let b of bases)for(let s of b.slots){if(s.world){scene.remove(s.world);s.world=null}}let my=bases[0];owned.forEach((o,i)=>{let s=my.slots.filter(q=>q.floor<floors)[i];if(!s)return;let g=makeChar(o);g.position.set(my.x+s.x,s.y||.75,my.z+s.z);g.rotation.y=Math.PI;scene.add(g);s.world=g})}
+function rebuildOwned(){for(let b of bases)for(let s of b.slots){if(s.world){s.world.parent?.remove(s.world);s.world=null}}let my=bases[0];owned.forEach((o,i)=>{let s=my.slots.filter(q=>q.floor<floors)[i];if(!s)return;let g=makeChar(o);g.position.set(s.x,s.y,s.z);g.rotation.y=Math.PI;s.group.add(g);s.world=g})}
 function incomeRate(){return owned.reduce((n,c)=>n+(c.income||0),0)*(1+rebirths*.25)}
 function nearestLane(){let best=null,d=3.5;for(let o of laneChars){let dist=o.g.position.distanceTo(player.position);if(dist<d){best=o;d=dist}}return best}
 function updateUI(){let maxSlots=floors*6;$('#stats').innerHTML='Cash: $'+fmt(cash)+'<br>収益: $'+fmt(incomeRate())+'/s<br>ベース: '+floors+'F • リバース '+rebirths+'回<br>キャラ: '+owned.length+'/'+maxSlots;near=nearestLane();if(near){$('#buy').textContent='購入 $'+fmt(near.c.price);$('#catalog').textContent=near.c.name+' • '+near.c.rarity+' • +$'+fmt(near.c.income)+'/秒'}else{$('#buy').textContent='購入';$('#catalog').textContent='中央レーンのキャラに近づこう！'}}
