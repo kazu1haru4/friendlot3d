@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "characters": [
     {
       "id": "meowru",
@@ -7,7 +7,9 @@
       "emoji": "🐱",
       "color": "#ff91c8",
       "accent": "#fff0d9",
-      "rarity": "レア"
+      "rarity": "レア",
+      "price": 100,
+      "income": 5
     },
     {
       "id": "strawberry-elephant",
@@ -15,7 +17,9 @@
       "emoji": "🍓",
       "color": "#f15d83",
       "accent": "#ffd8e4",
-      "rarity": "エピック"
+      "rarity": "エピック",
+      "price": 300,
+      "income": 18
     },
     {
       "id": "tawashi",
@@ -23,7 +27,9 @@
       "emoji": "🧽",
       "color": "#e5b76a",
       "accent": "#fff0bf",
-      "rarity": "コモン"
+      "rarity": "コモン",
+      "price": 50,
+      "income": 2
     },
     {
       "id": "emerald-meowru",
@@ -31,7 +37,9 @@
       "emoji": "💚",
       "color": "#21d39a",
       "accent": "#caffed",
-      "rarity": "シークレット"
+      "rarity": "シークレット",
+      "price": 2000,
+      "income": 150
     },
     {
       "id": "headless-knight",
@@ -39,7 +47,9 @@
       "emoji": "🛡️",
       "color": "#69758f",
       "accent": "#d5d9e5",
-      "rarity": "レジェンド"
+      "rarity": "レジェンド",
+      "price": 900,
+      "income": 55
     },
     {
       "id": "waffle",
@@ -47,7 +57,9 @@
       "emoji": "🧇",
       "color": "#e9ae65",
       "accent": "#fff0c8",
-      "rarity": "スペシャル"
+      "rarity": "スペシャル",
+      "price": 150,
+      "income": 8
     }
   ]
 }
