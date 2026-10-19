@@ -1,195 +1,82 @@
 <!doctype html>
-<html lang="ja">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#11152b">
-<title>Friendlot 3D</title>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="theme-color" content="#10152b"><title>Friendlot 3D</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#10152b;color:white;font-family:system-ui,-apple-system,sans-serif;touch-action:none}
-#game{position:fixed;inset:0}canvas{display:block}
-#hud{position:fixed;inset:0;pointer-events:none}
-.panel{background:#10152be8;border:1px solid #ffffff2a;border-radius:13px;padding:9px 12px;box-shadow:0 7px 24px #0003;backdrop-filter:blur(8px)}
-#brand{position:absolute;top:10px;left:10px;font-size:15px;font-weight:900}
-#money{position:absolute;top:52px;left:10px;font-size:13px}
-#tip{position:absolute;top:10px;right:10px;max-width:49vw;text-align:right;font-size:11px}
-#actions{position:absolute;right:10px;top:86px;display:flex;flex-direction:column;gap:7px;pointer-events:auto}
-button{font:inherit;color:#fff;background:#665af0;border:1px solid #ffffff55;border-radius:10px;padding:9px 12px;font-weight:800;box-shadow:0 4px 14px #0003}
-button:disabled{opacity:.4}#actions button{font-size:12px}
-#notice{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);max-width:80vw;text-align:center;font-weight:800;font-size:15px;opacity:0;transition:opacity .2s}
-#notice.show{opacity:1}
-#joystick{position:absolute;left:18px;bottom:20px;width:116px;height:116px;border-radius:50%;background:#ffffff17;border:2px solid #ffffff45;pointer-events:auto}
-#stick{position:absolute;width:46px;height:46px;left:33px;top:33px;border-radius:50%;background:#dbe7ffcc;border:2px solid white}
-#buy{position:absolute;right:20px;bottom:30px;width:78px;height:78px;border-radius:50%;background:#f0a431;color:#20142a;pointer-events:auto}
-#loading{position:absolute;inset:0;display:grid;place-items:center;background:#10152b;font-weight:900}
-@media(min-width:850px){#joystick{display:none}#tip{font-size:13px}}
-</style>
-</head>
-<body>
-<div id="game"></div><div id="hud">
-<div id="brand" class="panel">🌀 FRIENDLOT 3D <span style="color:#a6aaff">V2</span></div>
-<div id="money" class="panel">Cash: $0<br>ベース: 1階 / リバース 0</div>
-<div id="tip" class="panel">左パッド/WASDで移動<br>レーンのキャラに近づいて購入<br>ベースの緑ゾーンで収益</div>
-<div id="actions"><button id="reverse">リバース</button><button id="collect">収益を回収</button></div>
-<div id="notice" class="panel"></div>
-<div id="joystick"><div id="stick"></div></div><button id="buy">購入</button>
-<div id="loading">FRIENDLOT 3D<br>ワールドを準備中…</div>
-</div>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#10152b;color:#fff;font-family:system-ui,sans-serif;touch-action:none}#game{position:fixed;inset:0}canvas{display:block}#hud{position:fixed;inset:0;pointer-events:none}.panel{background:#10152be8;border:1px solid #ffffff2c;border-radius:12px;padding:9px 12px;box-shadow:0 6px 22px #0004;backdrop-filter:blur(7px)}#brand{position:absolute;left:10px;top:10px;font-weight:900;font-size:15px}#stats{position:absolute;left:10px;top:51px;font-size:12px;line-height:1.5}#help{position:absolute;right:10px;top:10px;max-width:48vw;text-align:right;font-size:11px}#buttons{position:absolute;right:10px;top:88px;display:flex;flex-direction:column;gap:7px;pointer-events:auto}button{border:1px solid #ffffff55;border-radius:11px;background:#6559ed;color:#fff;font-weight:800;padding:10px;font:inherit}#buttons button{font-size:12px}#buy{position:absolute;right:20px;bottom:25px;width:82px;height:82px;border-radius:50%;background:#f4ad35;color:#251a22;pointer-events:auto;font-weight:900}#stickpad{position:absolute;left:18px;bottom:20px;width:116px;height:116px;border-radius:50%;background:#ffffff19;border:2px solid #ffffff50;pointer-events:auto}#stick{position:absolute;left:33px;top:33px;width:46px;height:46px;border-radius:50%;background:#dce7ffcc;border:2px solid white}#notice{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);opacity:0;transition:opacity .2s;max-width:80vw;text-align:center;font-weight:800}#notice.show{opacity:1}#loading{position:absolute;inset:0;display:grid;place-items:center;background:#10152b;font-weight:900}@media(min-width:850px){#stickpad{display:none}#help{font-size:13px}}
+</style></head><body><div id="game"></div><div id="hud"><div id="brand" class="panel">🌀 FRIENDLOT 3D <span style="color:#aab1ff">V3</span></div><div id="stats" class="panel">Cash: $500</div><div id="help" class="panel">WASD / 矢印キーで移動<br>キャラに近づいて購入<br>ベースに置くと収益発生</div><div id="buttons"><button id="collect">収益を回収</button><button id="reverse">リバース</button></div><div id="stickpad"><div id="stick"></div></div><button id="buy">購入</button><div id="notice" class="panel"></div><div id="loading">FRIENDLOT 3D<br>読み込み中…</div></div>
 <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script>
 <script type="module">
 import * as THREE from 'three';
-const $=s=>document.querySelector(s);
-let scene,camera,renderer,clock,player,playerBody,ground;
-const keys=new Set(),stick={x:0,y:0};let cash=500,bank=0,rebirth=0,floors=1,owned=[],laneChars=[],nearChar=null,toastTimer=0;
-const baseSpots=[];const laneZ=-2;
-const colors=['#ff719b','#65cfff','#ffd35b','#a58bff','#58dfaa','#ff985e','#ef6cff','#d8edff'];
+const $=s=>document.querySelector(s);let scene,camera,renderer,clock,player,playerModel;
+const keys=new Set(),joy={x:0,y:0};let cash=500,bank=0,rebirth=0,floors=1,owned=[],lane=[],near=null,toastId;
+const bases=[],baseRadius=17,slotLocal=[];
+const fallback=[
+{id:'tawashi',name:'たわし',emoji:'🧽',color:'#dcb36c',accent:'#fff0bf',rarity:'コモン',price:50,income:2},
+{id:'meowru',name:'ミャオル',emoji:'🐱',color:'#ff91c8',accent:'#fff0d9',rarity:'レア',price:100,income:5},
+{id:'waffle',name:'わっふる',emoji:'🧇',color:'#e9ae65',accent:'#fff0c8',rarity:'スペシャル',price:150,income:8},
+{id:'strawberry-elephant',name:'ストロベリーエレファント',emoji:'🍓',color:'#f15d83',accent:'#ffd8e4',rarity:'エピック',price:300,income:18},
+{id:'headless-knight',name:'首なし騎士',emoji:'🛡️',color:'#69758f',accent:'#d5d9e5',rarity:'レジェンド',price:900,income:55},
+{id:'emerald-meowru',name:'エメラルドミャオル',emoji:'💚',color:'#21d39a',accent:'#caffed',rarity:'シークレット',price:2000,income:150}];
 const fmt=n=>n>=1e12?(n/1e12).toFixed(1)+'T':n>=1e9?(n/1e9).toFixed(1)+'B':n>=1e6?(n/1e6).toFixed(1)+'M':Math.floor(n).toLocaleString();
-function mat(c,rough=.8){return new THREE.MeshStandardMaterial({color:c,roughness:rough});}
-function box(w,h,d,c,x,y,z,group=scene){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat(c));m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;group.add(m);return m;}
-function label(text,color='#ffffff'){
- const can=document.createElement('canvas');can.width=512;can.height=128;const ctx=can.getContext('2d');
- ctx.fillStyle='#11152be8';ctx.beginPath();ctx.roundRect(8,8,496,112,22);ctx.fill();ctx.strokeStyle='#ffffff70';ctx.lineWidth=3;ctx.stroke();
- ctx.fillStyle=color;ctx.font='bold 42px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(String(text).slice(0,22),256,64);
- const s=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(can),depthTest:false}));s.scale.set(3, .75, 1);return s;
+const material=c=>new THREE.MeshStandardMaterial({color:c,roughness:.8});
+function cube(w,h,d,c,x,y,z,g=scene){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material(c));m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;g.add(m);return m}
+function tag(text,color='#fff'){const cv=document.createElement('canvas');cv.width=512;cv.height=120;const x=cv.getContext('2d');x.fillStyle='#10152be8';x.beginPath();x.roundRect(8,8,496,104,22);x.fill();x.strokeStyle='#ffffff66';x.lineWidth=3;x.stroke();x.fillStyle=color;x.font='bold 38px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(String(text).slice(0,24),256,60);const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cv),depthTest:false}));sp.scale.set(3.3,.78,1);return sp}
+function character(c){const g=new THREE.Group();const b=new THREE.Mesh(new THREE.SphereGeometry(.48,20,16),material(c.color||'#a58bff'));b.position.y=.62;b.scale.set(1,1.05,.86);g.add(b);const belly=new THREE.Mesh(new THREE.SphereGeometry(.26,16,12),material(c.accent||'#fff0cf'));belly.position.set(0,.53,.35);belly.scale.set(1,.8,.4);g.add(belly);for(const x of [-.16,.16]){const e=new THREE.Mesh(new THREE.SphereGeometry(.055,10,8),material('#151526'));e.position.set(x,.84,.43);g.add(e)}for(const x of [-.2,.2]){const f=new THREE.Mesh(new THREE.SphereGeometry(.14,10,8),material(c.accent||'#fff0cf'));f.position.set(x,.13,.04);g.add(f)}const t=tag(c.name||'キャラ');t.position.y=1.55;g.add(t);g.userData.data=c;return g}
+function base(i){
+ const a=i*Math.PI/4,x=Math.sin(a)*baseRadius,z=Math.cos(a)*baseRadius;
+ const g=new THREE.Group();g.position.set(x,0,z);scene.add(g);
+ // A small enclosed base with an open front entrance and display pads.
+ cube(8,.32,8,i===0?'#3e8b61':'#596b83',0,.16,0,g);
+ cube(7.55,.12,7.55,'#a7e8ac',0,.38,0,g);
+ // back and side walls; front is split to leave a visible doorway
+ cube(7.5,2.8,.24,'#e7edf8',0,1.8,-3.75,g);
+ cube(.24,2.8,7.5,'#e7edf8',-3.75,1.8,0,g);
+ cube(.24,2.8,7.5,'#e7edf8',3.75,1.8,0,g);
+ cube(2.1,2.8,.24,'#e7edf8',-2.7,1.8,3.75,g);
+ cube(2.1,2.8,.24,'#e7edf8',2.7,1.8,3.75,g);
+ // colorful roof trim and front gate
+ cube(7.8,.18,.32,i===0?'#5fe68d':'#8eb6ff',0,3.25,-3.75,g);
+ cube(.3,2.9,.3,'#f2d77b',-1.65,1.8,3.72,g);
+ cube(.3,2.9,.3,'#f2d77b',1.65,1.8,3.72,g);
+ const sign=cube(3.2,.65,.18,i===0?'#2b7046':'#354766',0,3.75,-3.88,g);
+ const title=tag(i===0?'YOUR BASE':'BASE '+(i+1),i===0?'#9dffb6':'#fff');title.position.set(0,4.3,-3.9);g.add(title);
+ const floorsGroup=new THREE.Group();g.add(floorsGroup);
+ bases.push({g,x,z,floorsGroup,index:i});
 }
-function makeChar(c){
- const g=new THREE.Group(),color=c.color||'#a58bff',accent=c.accent||'#fff0cf';
- const body=new THREE.Mesh(new THREE.SphereGeometry(.48,20,16),mat(color));body.position.y=.62;body.scale.set(1,1.08,.85);g.add(body);
- const belly=new THREE.Mesh(new THREE.SphereGeometry(.26,16,12),mat(accent));belly.position.set(0,.52,.35);belly.scale.set(1,.8,.4);g.add(belly);
- for(const x of [-.16,.16]){const e=new THREE.Mesh(new THREE.SphereGeometry(.055,10,8),mat('#17172b'));e.position.set(x,.83,.43);g.add(e);}
- for(const x of [-.2,.2]){const f=new THREE.Mesh(new THREE.SphereGeometry(.15,10,8),mat(accent));f.position.set(x,.14,.05);g.add(f);}
- const l=label(c.name||'キャラ', '#ffffff');l.position.y=1.55;g.add(l);g.userData.charData=c;return g;
-}
-function makeBase(i){
- const a=i*Math.PI/4, r=14, x=Math.sin(a)*r,z=Math.cos(a)*r;
- const group=new THREE.Group();group.position.set(x,0,z);scene.add(group);
- box(7,.35,7,'#3c8057',0,.18,0,group);
- box(6.2,.16,6.2,'#9de7a4',0,.42,0,group);
- box(6.2,.18,.22,'#f3d77b',0,.55,3.1,group);box(6.2,.18,.22,'#f3d77b',0,.55,-3.1,group);
- box(.22,.18,6.2,'#f3d77b',3.1,.55,0,group);box(.22,.18,6.2,'#f3d77b',-3.1,.55,0,group);
- const l=label(i===0?'YOU':'BASE '+(i+1),i===0?'#9cffb0':'#ffffff');l.position.set(0,2.1,0);group.add(l);
- const floorsGroup=new THREE.Group();group.add(floorsGroup);
- baseSpots.push({group,floorsGroup,x,z,index:i,slots:[]});
- return baseSpots[i];
-}
-function buildFloors(){
- const b=baseSpots[0];while(b.floorsGroup.children.length)b.floorsGroup.remove(b.floorsGroup.children[0]);
- b.slots=[];
+function rebuildBase(){
+ const b=bases[0];while(b.floorsGroup.children.length)b.floorsGroup.remove(b.floorsGroup.children[0]);
+ slotLocal.length=0;
  for(let f=0;f<floors;f++){
-   const y=f*3.4;
+   const y=f*3.3;
    if(f>0){
-     box(6.2,.18,6.2,'#8ac5ff',0,y+.55,0,b.floorsGroup);
-     box(6.2,.18,.2,'#e5f1ff',0,y+.68,3.1,b.floorsGroup);
-     box(6.2,.18,.2,'#e5f1ff',0,y+.68,-3.1,b.floorsGroup);
-     box(.2,.18,6.2,'#e5f1ff',3.1,y+.68,0,b.floorsGroup);
-     box(.2,.18,6.2,'#e5f1ff',-3.1,y+.68,0,b.floorsGroup);
+     cube(7.5,.22,7.5,'#91bfff',0,y+.35,0,b.floorsGroup);
+     cube(7.5,.18,.25,'#edf5ff',0,y+.52,-3.7,b.floorsGroup);
+     cube(.25,.18,7.5,'#edf5ff',-3.7,y+.52,0,b.floorsGroup);
+     cube(.25,.18,7.5,'#edf5ff',3.7,y+.52,0,b.floorsGroup);
+     // compact staircase on the rear-right side
+     for(let k=0;k<6;k++)cube(1.25,.18,.48,'#d4e1f5',2.55,y+.55+k*.35,-2.8+k*.62,b.floorsGroup);
    }
-   for(let s=0;s<4;s++){
-     const x=(s%2===0?-1:1)*1.25,z=(s<2?-1:1)*1.25;
-     b.slots.push({x,z,y:y+.9,used:false});
+   for(let s=0;s<8;s++){
+     const x=(s%4)*1.65-2.48,z=s<4?-1.5:1.2;
+     // display pedestal, glowing rim, and a small marker
+     cube(1.18,.18,1.12,'#5b6d82',x,y+.55,z,b.floorsGroup);
+     cube(1.05,.07,.99,'#e9d27a',x,y+.68,z,b.floorsGroup);
+     slotLocal.push({x,z,y:y+.9});
    }
  }
- // redraw owned characters on valid slots
- owned.forEach((o,i)=>placeOwned(o,i));
+ owned.forEach((o,i)=>{const p=slotLocal[i];if(p)o.target.set(b.x+p.x,p.y,b.z+p.z)});
 }
-function placeOwned(o,i){
- const b=baseSpots[0];if(!b||!b.slots.length)return;
- const slot=b.slots[i%b.slots.length];o.model.position.set(slot.x,slot.y,slot.z);o.model.rotation.y=Math.PI;
-}
-async function loadCatalog(){
- try{const r=await fetch('./character.json',{cache:'no-store'});if(!r.ok)throw 0;const d=await r.json();if(Array.isArray(d.characters)&&d.characters.length)return d.characters;}catch{}
- return [
- {id:'meowru',name:'ミャオル',emoji:'🐱',color:'#ff91c8',accent:'#fff0d9',rarity:'レア',price:100,income:5},
- {id:'strawberry-elephant',name:'ストロベリーエレファント',emoji:'🍓',color:'#f15d83',accent:'#ffd8e4',rarity:'エピック',price:300,income:18},
- {id:'tawashi',name:'たわし',emoji:'🧽',color:'#e5b76a',accent:'#fff0bf',rarity:'コモン',price:50,income:2},
- {id:'emerald-meowru',name:'エメラルドミャオル',emoji:'💚',color:'#21d39a',accent:'#caffed',rarity:'シークレット',price:2000,income:150},
- {id:'headless-knight',name:'首なし騎士',emoji:'🛡️',color:'#69758f',accent:'#d5d9e5',rarity:'レジェンド',price:900,income:55},
- {id:'waffle',name:'わっふる',emoji:'🧇',color:'#e9ae65',accent:'#fff0c8',rarity:'スペシャル',price:150,income:8}
- ];
-}
-function createLane(catalog){
- // single central conveyor running north-south
- box(4,.18,42,'#34384e',0,.15,laneZ);
- for(let x of [-2.1,2.1])box(.12,.35,42,'#e8c45f',x,.3,laneZ);
- for(let z=-22;z<19;z+=2.5)box(3.7,.035,.09,'#777f9b',0,.27,z);
- for(let i=0;i<5;i++){
-   const c={...catalog[Math.floor(Math.random()*catalog.length)]};
-   c.price=Number(c.price)||Math.max(50,(i+1)*100);c.income=Number(c.income)||Math.max(2,(i+1)*5);
-   const model=makeChar(c);model.position.set(0,.35,-18-i*8);scene.add(model);
-   laneChars.push({model,data:c,speed:2.1+Math.random()*.65, bought:false});
- }
-}
-function init(){
- scene=new THREE.Scene();scene.background=new THREE.Color('#8bd8ff');scene.fog=new THREE.Fog('#8bd8ff',35,90);
- camera=new THREE.PerspectiveCamera(65,innerWidth/innerHeight,.1,160);
- renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;$('#game').appendChild(renderer.domElement);
- scene.add(new THREE.HemisphereLight('#f2f8ff','#53604c',2.2));const sun=new THREE.DirectionalLight('#fff2d2',2.4);sun.position.set(-10,20,8);sun.castShadow=true;scene.add(sun);
- const g=new THREE.Mesh(new THREE.PlaneGeometry(110,110),mat('#70c781'));g.rotation.x=-Math.PI/2;g.receiveShadow=true;scene.add(g);
- const grid=new THREE.GridHelper(100,50,'#ffffff40','#ffffff20');grid.position.y=.015;scene.add(grid);
- // bases around the center
- for(let i=0;i<8;i++)makeBase(i);
- // base walls/doors around each spot
- baseSpots.forEach((b,i)=>{box(6,.5,.18,'#d6e6ff',0,.7,-3.1,b.group);});
- player=new THREE.Group();playerBody=makeChar({name:'PLAYER',color:'#7167ff',accent:'#fff0c8'});player.add(playerBody);scene.add(player);player.position.set(0,0,6);
- clock=new THREE.Clock();
- loadCatalog().then(c=>{createLane(c);buildFloors();});
- window.addEventListener('resize',resize);
- window.addEventListener('keydown',e=>{keys.add(e.key.toLowerCase());if(e.key===' ')jump();});
- window.addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));
- setupStick();$('#buy').addEventListener('pointerdown',e=>{e.preventDefault();buyNearby();});
- $('#collect').addEventListener('click',()=>{cash+=bank;toast('回収！ +$'+fmt(bank));bank=0;updateHud();});
- $('#reverse').addEventListener('click',doReverse);
- $('#loading').style.display='none';updateHud();animate();
-}
-function setupStick(){
- const pad=$('#joystick'),ball=$('#stick');let active=false,id=null;
- function set(e){const r=pad.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;let dx=e.clientX-cx,dy=e.clientY-cy;const max=34,l=Math.hypot(dx,dy)||1;if(l>max){dx=dx/l*max;dy=dy/l*max;}stick.x=dx/max;stick.y=dy/max;ball.style.transform=`translate(${dx}px,${dy}px)`;}
- pad.addEventListener('pointerdown',e=>{active=true;id=e.pointerId;pad.setPointerCapture(id);set(e);});
- pad.addEventListener('pointermove',e=>{if(active&&id===e.pointerId)set(e);});
- function end(){active=false;id=null;stick.x=stick.y=0;ball.style.transform='translate(0,0)';}
- pad.addEventListener('pointerup',end);pad.addEventListener('pointercancel',end);
-}
-function jump(){}
-function buyNearby(){
- if(!nearChar){toast('レーンのキャラに近づいてね');return;}
- const c=nearChar.data;if(cash<c.price){toast('Cashが足りない！ $'+fmt(c.price)+'必要');return;}
- const slotCount=baseSpots[0].slots.length;
- if(owned.length>=slotCount){toast('ベースの空きがない！リバースで階を増やそう');return;}
- cash-=c.price;const model=nearChar.model;scene.remove(model);
- const copy=makeChar(c);scene.add(copy);owned.push({model:copy,data:c});placeOwned(owned[owned.length-1],owned.length-1);
- nearChar.bought=true;laneChars=laneChars.filter(x=>x!==nearChar);nearChar=null;updateHud();toast(c.name+' を購入！');
-}
-function doReverse(){
- const required=1500*(rebirth+1);
- if(rebirth>=2){toast('最大リバース到達！3階建てだよ');return;}
- if(cash<required){toast('リバースには $'+fmt(required)+' 必要');return;}
- cash=Math.floor(cash*.25);bank=Math.floor(bank*.5);rebirth++;floors=Math.min(3,rebirth+1);
- // keep a portion of collection (half rounded down)
- owned=owned.filter((o,i)=>i%2===0);
- buildFloors();updateHud();toast('リバース成功！ '+floors+'階建て / キャラ一部を保持');
-}
-function updateHud(){
- $('#money').innerHTML='Cash: $'+fmt(cash)+'<br>未回収: $'+fmt(bank)+'<br>ベース: '+floors+'階 / リバース '+rebirth+'<br>所持キャラ: '+owned.length;
- $('#reverse').textContent=rebirth>=2?'最大階数！':'リバース ($'+fmt(1500*(rebirth+1))+')';
-}
-function toast(s){const n=$('#notice');n.textContent=s;n.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>n.classList.remove('show'),2000);}
-function resize(){camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);}
-function animate(){
- requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.04);
- let x=stick.x,z=stick.y;if(keys.has('a')||keys.has('arrowleft'))x-=1;if(keys.has('d')||keys.has('arrowright'))x+=1;if(keys.has('w')||keys.has('arrowup'))z-=1;if(keys.has('s')||keys.has('arrowdown'))z+=1;
- const len=Math.hypot(x,z);if(len>1){x/=len;z/=len;}player.position.x=THREE.MathUtils.clamp(player.position.x+x*7*dt,-42,42);player.position.z=THREE.MathUtils.clamp(player.position.z+z*7*dt,-42,42);
- if(len>.05)player.rotation.y=Math.atan2(x,z);
- laneChars.forEach(o=>{o.model.position.z+=o.speed*dt;if(o.model.position.z>22)o.model.position.z=-22-Math.random()*10;o.model.rotation.y=Math.sin(performance.now()*.002)*.12;});
- nearChar=null;let best=3.5;for(const o of laneChars){const d=player.position.distanceTo(o.model.position);if(d<best){best=d;nearChar=o;}}
- $('#buy').textContent=nearChar?'$'+fmt(nearChar.data.price):'購入';
- // passive income for owned characters
- owned.forEach(o=>{bank+=(Number(o.data.income)||1)*dt;});
- // camera behind player looking forward-ish
- const target=new THREE.Vector3(player.position.x,player.position.y+1,player.position.z);
- const desired=new THREE.Vector3(player.position.x,6,player.position.z+10);
- camera.position.lerp(desired,1-Math.exp(-3*dt));camera.lookAt(target);
- renderer.render(scene,camera);
-}
-init();
-</script>
-</body></html>
+function setupLane(catalog){cube(4.3,.2,46,'#373c51',0,.13,0);cube(3.35,.045,45.5,'#c83e55',0,.255,0);for(const x of [-2.05,2.05])cube(.12,.34,46,'#f0c65e',x,.28,0);for(let z=-22;z<23;z+=2.4)cube(3.7,.035,.1,'#8189a2',0,.26,z);for(let i=0;i<6;i++)spawn(catalog)}
+function spawn(catalog){const c={...catalog[Math.floor(Math.random()*catalog.length)]};c.price=Number(c.price)||100;c.income=Number(c.income)||5;const m=character(c);m.position.set(0,.35,-23-Math.random()*12);scene.add(m);lane.push({model:m,data:c,speed:2.2+Math.random()*1.1,mode:'lane',target:null})}
+function toast(t){const e=$('#notice');e.textContent=t;e.classList.add('show');clearTimeout(toastId);toastId=setTimeout(()=>e.classList.remove('show'),2200)}
+function hud(){$('#stats').innerHTML='Cash: $'+fmt(cash)+'<br>未回収: $'+fmt(bank)+'<br>ベース: '+floors+'階 / リバース '+rebirth+'<br>所持キャラ: '+owned.length;$('#reverse').textContent=rebirth>=2?'最大階数':'リバース ($'+fmt(1500*(rebirth+1))+')'}
+function buy(){if(!near){toast('レーンのキャラに近づいてね！');return}if(cash<near.data.price){toast('Cashが足りない！');return}if(owned.length>=slotLocal.length){toast('空きスペースがない！リバースして階を増やそう');return}cash-=near.data.price;near.mode='home';near.target=new THREE.Vector3(bases[0].x+slotLocal[owned.length].x,slotLocal[owned.length].y,bases[0].z+slotLocal[owned.length].z);near.model.rotation.y=Math.PI;owned.push(near);lane=lane.filter(o=>o!==near);near=null;toast('購入！ キャラがベースへ移動中…');hud()}
+function reverse(){const cost=1500*(rebirth+1);if(rebirth>=2){toast('最大3階まで到達済み！');return}if(cash<cost){toast('リバースには $'+fmt(cost)+' 必要');return}cash=Math.floor(cash*.25);bank=Math.floor(bank*.5);rebirth++;floors=Math.min(3,rebirth+1);owned=owned.filter((o,i)=>i%2===0);rebuildBase();hud();toast('リバース成功！ '+floors+'階建て')}
+async function start(){scene=new THREE.Scene();scene.background=new THREE.Color('#8bd8ff');scene.fog=new THREE.Fog('#8bd8ff',38,100);camera=new THREE.PerspectiveCamera(65,innerWidth/innerHeight,.1,160);renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,1.6));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;$('#game').appendChild(renderer.domElement);scene.add(new THREE.HemisphereLight('#f2f8ff','#53604c',2.2));const sun=new THREE.DirectionalLight('#fff2d2',2.3);sun.position.set(-10,20,8);sun.castShadow=true;scene.add(sun);const gr=new THREE.Mesh(new THREE.PlaneGeometry(110,110),material('#72c981'));gr.rotation.x=-Math.PI/2;gr.receiveShadow=true;scene.add(gr);scene.add(new THREE.GridHelper(100,50,'#ffffff36','#ffffff18'));for(let i=0;i<8;i++)base(i);player=new THREE.Group();playerModel=character({name:'PLAYER',color:'#7167ff',accent:'#fff0c8'});player.add(playerModel);scene.add(player);player.position.set(0,0,5);clock=new THREE.Clock();let catalog=fallback;try{const r=await fetch('./character.json',{cache:'no-store'});if(r.ok){const d=await r.json();if(d.characters?.length)catalog=d.characters}}catch{}setupLane(catalog);rebuildBase();$('#loading').style.display='none';window.addEventListener('resize',resize);window.addEventListener('keydown',e=>{keys.add(e.key.toLowerCase())});window.addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));$('#buy').addEventListener('pointerdown',e=>{e.preventDefault();buy()});$('#collect').onclick=()=>{cash+=Math.floor(bank);bank=0;hud();toast('収益を回収したよ！')};$('#reverse').onclick=reverse;setupJoy();hud();animate()}
+function setupJoy(){const p=$('#stickpad'),b=$('#stick');let active=false,id;function move(e){const r=p.getBoundingClientRect();let dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),m=35,l=Math.hypot(dx,dy)||1;if(l>m){dx=dx/l*m;dy=dy/l*m}joy.x=dx/m;joy.y=dy/m;b.style.transform=`translate(${dx}px,${dy}px)`}p.onpointerdown=e=>{active=true;id=e.pointerId;p.setPointerCapture(id);move(e)};p.onpointermove=e=>{if(active&&e.pointerId===id)move(e)};function end(){active=false;joy.x=joy.y=0;b.style.transform='translate(0,0)'}p.onpointerup=end;p.onpointercancel=end}
+function resize(){camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)}
+function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.04);let x=joy.x,z=joy.y;if(keys.has('a')||keys.has('arrowleft'))x--;if(keys.has('d')||keys.has('arrowright'))x++;if(keys.has('w')||keys.has('arrowup'))z--;if(keys.has('s')||keys.has('arrowdown'))z++;let l=Math.hypot(x,z);if(l>1){x/=l;z/=l}player.position.x=THREE.MathUtils.clamp(player.position.x+x*7*dt,-42,42);player.position.z=THREE.MathUtils.clamp(player.position.z+z*7*dt,-42,42);if(l>.05)player.rotation.y=Math.atan2(x,z);
+for(const o of lane){o.model.position.z+=o.speed*dt;if(o.model.position.z>24)o.model.position.z=-26-Math.random()*10}
+for(const o of owned){if(o.mode==='home'&&o.target){const p=o.model.position,d=o.target.clone().sub(p),len=d.length();if(len>.15){d.normalize();p.addScaledVector(d,Math.min(len,3.6*dt))}else{o.model.position.copy(o.target);o.mode='placed';toast(o.data.name+' がベースに到着！')}}if(o.mode==='placed')bank+=(Number(o.data.income)||1)*dt}
+near=null;let best=3.1;for(const o of lane){const d=player.position.distanceTo(o.model.position);if(d<best){best=d;near=o}}$('#buy').textContent=near?'$'+fmt(near.data.price):'購入';const target=new THREE.Vector3(player.position.x,player.position.y+1,player.position.z);camera.position.lerp(new THREE.Vector3(player.position.x,6,player.position.z+10),1-Math.exp(-3*dt));camera.lookAt(target);renderer.render(scene,camera)}
+start();
+</script></body></html>
