@@ -28,7 +28,7 @@
  </div>
 </div>
 <div id="loading">FRIENDLOT 3D<br>ワールド生成中…</div></div>
-<script>if(!sessionStorage.getItem('friendlot3d_token')||!sessionStorage.getItem('friendlot3d_id'))location.replace('./login.html');</script>
+<script>if(!sessionStorage.getItem('friendlot3d_token')||!sessionStorage.getItem('friendlot3d_id'))location.replace('./auth.html');</script>
 <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script>
 <script type="module">
 import * as THREE from 'three';
@@ -197,10 +197,9 @@ camera.position.lerp(new THREE.Vector3(player.position.x,player.position.y+8,pla
 renderer.render(scene,camera)}
 
 
-// Session is created by login.html/register.html; password is never stored in the game page.
+// Session is created by auth.html; the game page restores the signed-in session.
 const API_ROOT = 'https://riendlot3d-api.kazu31-t10.workers.dev';
 let sessionToken=sessionStorage.getItem('friendlot3d_token'), signedInId=sessionStorage.getItem('friendlot3d_id');
-const authMsg={textContent:''};
 function authRoot(){return API_ROOT.trim().replace(/\/+$/,'')}
 $('#stats').innerHTML='プレイヤー: '+signedInId+'<br>Cash: $'+fmt(cash)+'<br>収益: $'+fmt(incomeRate())+'/s<br>ベース: '+floors+'F';
 try{const p=await fetch(authRoot()+'/api/game/save',{headers:{'Authorization':'Bearer '+sessionToken}});if(p.ok){const save=await p.json();if(save.profile){cash=Number(save.profile.cash)||cash;rebirths=Number(save.profile.rebirths)||0;floors=Math.max(1,Math.min(3,Number(save.profile.floors)||1));owned=Array.isArray(save.profile.owned)?save.profile.owned.filter(o=>catalog.some(c=>c.id===o.id)):[];rebuildOwned();updateUI()}}}catch{}
