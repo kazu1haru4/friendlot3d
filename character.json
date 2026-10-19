@@ -1,10 +1,11 @@
 {
-  "version": 3,
+  "version": 5,
   "characters": [
     {
       "id": "tawashi",
       "name": "たわし",
       "emoji": "🧽",
+      "type": "brush",
       "color": "#dcb36c",
       "accent": "#fff0bf",
       "rarity": "コモン",
@@ -15,6 +16,7 @@
       "id": "meowru",
       "name": "ミャオル",
       "emoji": "🐱",
+      "type": "cat",
       "color": "#ff91c8",
       "accent": "#fff0d9",
       "rarity": "レア",
@@ -25,16 +27,18 @@
       "id": "waffle",
       "name": "わっふる",
       "emoji": "🧇",
+      "type": "waffle",
       "color": "#e9ae65",
       "accent": "#fff0c8",
-      "rarity": "スペシャル",
+      "rarity": "レア",
       "price": 150,
       "income": 8
     },
     {
       "id": "strawberry-elephant",
       "name": "ストロベリーエレファント",
-      "emoji": "🍓",
+      "emoji": "🍓🐘",
+      "type": "elephant",
       "color": "#f15d83",
       "accent": "#ffd8e4",
       "rarity": "エピック",
@@ -45,6 +49,7 @@
       "id": "headless-knight",
       "name": "首なし騎士",
       "emoji": "🛡️",
+      "type": "knight",
       "color": "#69758f",
       "accent": "#d5d9e5",
       "rarity": "レジェンド",
@@ -54,12 +59,145 @@
     {
       "id": "emerald-meowru",
       "name": "エメラルドミャオル",
-      "emoji": "💚",
+      "emoji": "💚🐱",
+      "type": "cat",
       "color": "#21d39a",
       "accent": "#caffed",
       "rarity": "シークレット",
       "price": 2000,
       "income": 150
+    },
+    {
+      "id": "dragon-tawashi",
+      "name": "ドラゴンたわし",
+      "emoji": "🐉",
+      "type": "dragon",
+      "color": "#7a5be7",
+      "accent": "#ffbd66",
+      "rarity": "エピック",
+      "price": 3500,
+      "income": 220
+    },
+    {
+      "id": "lucky-block",
+      "name": "ラッキーブロック",
+      "emoji": "🎁",
+      "type": "block",
+      "color": "#ffd34e",
+      "accent": "#fff3a1",
+      "rarity": "レジェンド",
+      "price": 6000,
+      "income": 400
+    },
+    {
+      "id": "strawberry-king",
+      "name": "ストロベリーキング",
+      "emoji": "🍓👑",
+      "type": "berryking",
+      "color": "#e83d69",
+      "accent": "#fff0f3",
+      "rarity": "レジェンド",
+      "price": 12000,
+      "income": 800
+    },
+    {
+      "id": "robot-waffle",
+      "name": "ロボわっふる",
+      "emoji": "🤖",
+      "type": "robot",
+      "color": "#4b9fe8",
+      "accent": "#bdf5ff",
+      "rarity": "エピック",
+      "price": 18000,
+      "income": 1200
+    },
+    {
+      "id": "ghost-meowru",
+      "name": "ゴーストミャオル",
+      "emoji": "👻",
+      "type": "ghost",
+      "color": "#a9b9ff",
+      "accent": "#f3f5ff",
+      "rarity": "レジェンド",
+      "price": 35000,
+      "income": 2500
+    },
+    {
+      "id": "mushroom-tawashi",
+      "name": "キノコたわし",
+      "emoji": "🍄",
+      "type": "mushroom",
+      "color": "#c64b45",
+      "accent": "#ffe8c9",
+      "rarity": "エピック",
+      "price": 50000,
+      "income": 3600
+    },
+    {
+      "id": "turtle-waffle",
+      "name": "カメわっふる",
+      "emoji": "🐢",
+      "type": "turtle",
+      "color": "#4cae79",
+      "accent": "#d7f3a3",
+      "rarity": "レジェンド",
+      "price": 90000,
+      "income": 6500
+    },
+    {
+      "id": "neon-robot",
+      "name": "ネオンロボ",
+      "emoji": "⚡",
+      "type": "robot",
+      "color": "#625bff",
+      "accent": "#5efffa",
+      "rarity": "シークレット",
+      "price": 150000,
+      "income": 12000
+    },
+    {
+      "id": "phantom-knight",
+      "name": "ファントム騎士",
+      "emoji": "🌑",
+      "type": "knight",
+      "color": "#34364f",
+      "accent": "#b4a5ff",
+      "rarity": "シークレット",
+      "price": 300000,
+      "income": 25000
+    },
+    {
+      "id": "emerald-elephant",
+      "name": "エメラルドエレファント",
+      "emoji": "💚🐘",
+      "type": "elephant",
+      "color": "#16bd85",
+      "accent": "#b6ffe2",
+      "rarity": "シークレット",
+      "price": 600000,
+      "income": 50000
+    },
+    {
+      "id": "golden-meowru",
+      "name": "ゴールデンミャオル",
+      "emoji": "🌟🐱",
+      "type": "cat",
+      "color": "#e6b72e",
+      "accent": "#fff1a3",
+      "rarity": "シークレット",
+      "price": 1200000,
+      "income": 100000
+    },
+    {
+      "id": "rainbow-lucky-block",
+      "name": "レインボーラッキーブロック",
+      "emoji": "🌈🎁",
+      "type": "rainbow",
+      "color": "#b06cff",
+      "accent": "#fff0a6",
+      "rarity": "シークレット",
+      "price": 5000000,
+      "income": 450000
     }
   ]
 }
