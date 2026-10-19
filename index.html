@@ -11,7 +11,6 @@
    <label style="display:block;margin:8px 0 4px">管理者ID</label>
    <select id="adminId" style="width:100%;padding:10px;border-radius:8px"><option value="kazu1haru100">kazu1haru100</option><option value="kazu1haru4sub">kazu1haru4sub</option></select>
    <label style="display:block;margin:8px 0 4px">管理者パスワード</label><input id="adminPassword" type="password" autocomplete="current-password" style="width:100%;padding:10px;border-radius:8px">
-   <label style="display:block;margin:8px 0 4px">API URL（WorkerのURL）</label><input id="apiUrl" placeholder="https://your-worker.workers.dev" style="width:100%;padding:10px;border-radius:8px">
    <button id="adminLoginBtn" style="width:100%;margin-top:10px">ログイン</button>
   </div>
   <div id="adminControls" style="display:none">
@@ -26,6 +25,18 @@
    <div id="eventStatus" style="margin-top:10px;font-size:13px;white-space:pre-wrap"></div>
    <button id="adminLogout" style="width:100%;margin-top:10px;background:#49546b">ログアウト</button>
   </div>
+ </div>
+</div>
+
+<div id="authScreen" style="position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:linear-gradient(145deg,#11182b,#243d55);padding:18px">
+ <div style="width:min(420px,95vw);background:#111827f5;border:1px solid #ffffff30;border-radius:22px;padding:22px;color:white;box-shadow:0 20px 70px #0008">
+  <div style="text-align:center;font-size:42px">🥝</div><h1 style="text-align:center;margin:4px 0 0;font-size:25px">FRIENDLOT 3D</h1><p style="text-align:center;color:#b8c5dc;font-size:13px;margin-top:5px">ログインして冒険を続けよう！</p>
+  <div style="display:flex;gap:8px;margin:18px 0 12px"><button id="tabLogin" style="flex:1">ログイン</button><button id="tabRegister" style="flex:1;background:#46536c">新規登録</button></div>
+  <label style="display:block;font-size:13px;margin:10px 0 5px">ユーザーID</label><input id="authId" autocomplete="username" maxlength="24" placeholder="英数字と _（3〜24文字）" style="width:100%;padding:12px;border-radius:10px;background:#202b40;color:white;border:1px solid #ffffff50;font:inherit">
+  <label style="display:block;font-size:13px;margin:10px 0 5px">パスワード</label><input id="authPass" type="password" autocomplete="current-password" minlength="8" placeholder="8文字以上" style="width:100%;padding:12px;border-radius:10px;background:#202b40;color:white;border:1px solid #ffffff50;font:inherit">
+  <button id="authSubmit" style="width:100%;margin-top:14px;background:#4f8dff;padding:12px">ログイン</button>
+  <p id="authMessage" style="font-size:12px;color:#ffd58a;min-height:18px;margin-bottom:0"></p>
+  <p style="font-size:11px;color:#9eabc0;line-height:1.5">※認証には専用Cloudflare Workerが必要です。登録・ログインのパスワードはサーバーで検証されます。</p>
  </div>
 </div>
 <div id="loading">FRIENDLOT 3D<br>ワールド生成中…</div></div>
@@ -137,7 +148,7 @@ ground();
 box(7,.28,61,'#35435c',0,.03,0);
 box(5.1,.14,60,'#c53e50',0,.21,0);
 box(4.65,.08,59,'#ed5262',0,.31,0);
-for(let z=-28;z<=28;z+=1.8{
+for(let z=-28;z<=28;z+=1.8){
   box(4.2,.025,.075,'#ffb7a9',0,.36,z);
   const arrow= new THREE.Mesh(new THREE.ConeGeometry(.22,.5,3),mat('#ffe9c4'));
   arrow.rotation.x=Math.PI/2;arrow.position.set(0,.4,z+.65);scene.add(arrow);
@@ -150,7 +161,7 @@ box(7,.35,.4,'#27324a',0,4,-17.2);
 box(6.3,.16,.16,'#7c7cff',0,4.22,-17.2);
 let portal=label('BRAINROT • CENTRAL SPAWN','#ffe57d');portal.position.set(0,3.35,-17.25);portal.scale.set(4.8,.85,1);scene.add(portal);
 // lamp posts with glowing bulbs
-for(let z=-25;z<=25;z+=8for(let x of [-5.5,5.5]){
+for(let z=-25;z<=25;z+=8)for(let x of [-5.5,5.5]){
  box(.16,2.3,.16,'#4a536a',x,1.1,z);
  box(.8,.16,.4,'#4a536a',x,2.25,z);
  ball(.18,'#ffeaa1',x,2.2,z,scene,[1,1,1]);
@@ -196,14 +207,45 @@ bank+=incomeRate()*dt;uiTimer+=dt;if(uiTimer>.2){uiTimer=0;updateUI()}
 camera.position.lerp(new THREE.Vector3(player.position.x,player.position.y+8,player.position.z+10),.09);camera.lookAt(player.position.x,player.position.y+1,player.position.z-1);
 renderer.render(scene,camera)}
 
+
+// Login/register: auth API runs on the Friendlot 3D Worker. No secrets are stored in this HTML.
+let authMode='login', sessionToken=null, signedInId=null;
+const API_ROOT = 'PASTE_YOUR_CLOUDFLARE_WORKER_URL_HERE';
+const authMsg=$('#authMessage');
+function authRoot(){return API_ROOT.trim().replace(/\/+$/,'')}
+function setAuthMode(mode){authMode=mode;$('#tabLogin').style.background=mode==='login'?'#4f8dff':'#46536c';$('#tabRegister').style.background=mode==='register'?'#4f8dff':'#46536c';$('#authSubmit').textContent=mode==='login'?'ログイン':'新規登録';$('#authPass').autocomplete=mode==='login'?'current-password':'new-password';authMsg.textContent=''}
+$('#tabLogin').onclick=()=>setAuthMode('login');$('#tabRegister').onclick=()=>setAuthMode('register');
+async function submitAuth(){
+ const id=$('#authId').value.trim(),password=$('#authPass').value,root=authRoot();
+ if(!root || root.includes('PASTE_YOUR_CLOUDFLARE_WORKER_URL_HERE')){authMsg.textContent='ゲームの接続設定がまだです。管理者にWorker URLの設定をしてもらってね。';return}
+ if(!/^[A-Za-z0-9_]{3,24}$/.test(id)){authMsg.textContent='ユーザーIDは英数字と _ の3〜24文字にしてね。';return}
+ if(password.length<8){authMsg.textContent='パスワードは8文字以上にしてね。';return}
+ $('#authSubmit').disabled=true;authMsg.textContent='確認中…';
+ try{
+  const endpoint=authMode==='register'?'/api/auth/register':'/api/auth/login';
+  const res=await fetch(root+endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,password})});
+  const data=await res.json().catch(()=>({error:'サーバー応答が不正です'}));
+  if(!res.ok)throw new Error(data.error||'認証できませんでした');
+  sessionToken=data.token;signedInId=data.id;
+  $('#authScreen').style.display='none';
+  // Worker URL is configured in the game source; password is never stored.
+  $('#stats').innerHTML='プレイヤー: '+signedInId+'<br>Cash: $'+fmt(cash)+'<br>収益: $'+fmt(incomeRate())+'/s<br>ベース: '+floors+'F';
+  say((authMode==='register'?'登録完了！':'ログイン成功！')+' ようこそ '+signedInId+' さん');
+  // If a profile endpoint is available, restore player progress.
+  try{const p=await fetch(root+'/api/game/save',{headers:{'Authorization':'Bearer '+sessionToken}});if(p.ok){const save=await p.json();if(save.profile){cash=Number(save.profile.cash)||cash;rebirths=Number(save.profile.rebirths)||0;floors=Math.max(1,Math.min(3,Number(save.profile.floors)||1));owned=Array.isArray(save.profile.owned)?save.profile.owned.filter(o=>catalog.some(c=>c.id===o.id)):[];rebuildOwned();updateUI()}}}catch{}
+ }catch(e){authMsg.textContent=e.message}
+ finally{$('#authSubmit').disabled=false}
+}
+$('#authSubmit').onclick=submitAuth;
+
 // 管理者機能：ログインとイベント操作はWorker側で認証する
 let adminToken=null, adminApi='';
 const adminPanel=$('#adminPanel');
 $('#adminBtn').onclick=()=>{adminPanel.style.display='grid'};
 $('#adminClose').onclick=()=>{adminPanel.style.display='none'};
-function apiRoot(){return ($('#apiUrl').value||adminApi).trim().replace(/\/+$/,'')}
+function apiRoot(){return (API_ROOT||adminApi).trim().replace(/\/+$/,'')}
 async function apiCall(path,body={},token=adminToken){
- const root=apiRoot();if(!root)throw new Error('Cloudflare WorkerのAPI URLを入力してね');
+ const root=apiRoot();if(!root || root.includes('PASTE_YOUR_CLOUDFLARE_WORKER_URL_HERE'))throw new Error('Worker URLがまだゲームに設定されていません');
  const r=await fetch(root+path,{method:'POST',headers:{'Content-Type':'application/json',...(token?{'Authorization':'Bearer '+token}:{})},body:JSON.stringify(body)});
  const data=await r.json().catch(()=>({error:'サーバー応答を読み取れません'}));if(!r.ok)throw new Error(data.error||'APIエラー');return data;
 }
@@ -218,4 +260,5 @@ setInterval(refreshEvent,1000);
 
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 $('#loading').style.display='none';updateUI();requestAnimationFrame(loop);
+window.addEventListener('error',e=>{const l=$('#loading');if(l){l.style.display='grid';l.innerHTML='読み込みエラー\n'+String(e.message||'不明なエラー')+'<br><small>ページを再読み込みしてね</small>'}});
 </script></body></html>
