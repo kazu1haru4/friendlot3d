@@ -27,19 +27,8 @@
   </div>
  </div>
 </div>
-
-<div id="authScreen" style="position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:linear-gradient(145deg,#11182b,#243d55);padding:18px">
- <div style="width:min(420px,95vw);background:#111827f5;border:1px solid #ffffff30;border-radius:22px;padding:22px;color:white;box-shadow:0 20px 70px #0008">
-  <div style="text-align:center;font-size:42px">🥝</div><h1 style="text-align:center;margin:4px 0 0;font-size:25px">FRIENDLOT 3D</h1><p style="text-align:center;color:#b8c5dc;font-size:13px;margin-top:5px">ログインして冒険を続けよう！</p>
-  <div style="display:flex;gap:8px;margin:18px 0 12px"><button id="tabLogin" style="flex:1">ログイン</button><button id="tabRegister" style="flex:1;background:#46536c">新規登録</button></div>
-  <label style="display:block;font-size:13px;margin:10px 0 5px">ユーザーID</label><input id="authId" autocomplete="username" maxlength="24" placeholder="英数字と _（3〜24文字）" style="width:100%;padding:12px;border-radius:10px;background:#202b40;color:white;border:1px solid #ffffff50;font:inherit">
-  <label style="display:block;font-size:13px;margin:10px 0 5px">パスワード</label><input id="authPass" type="password" autocomplete="current-password" minlength="8" placeholder="8文字以上" style="width:100%;padding:12px;border-radius:10px;background:#202b40;color:white;border:1px solid #ffffff50;font:inherit">
-  <button id="authSubmit" style="width:100%;margin-top:14px;background:#4f8dff;padding:12px">ログイン</button>
-  <p id="authMessage" style="font-size:12px;color:#ffd58a;min-height:18px;margin-bottom:0"></p>
-  <p style="font-size:11px;color:#9eabc0;line-height:1.5">※認証には専用Cloudflare Workerが必要です。登録・ログインのパスワードはサーバーで検証されます。</p>
- </div>
-</div>
 <div id="loading">FRIENDLOT 3D<br>ワールド生成中…</div></div>
+<script>if(!sessionStorage.getItem('friendlot3d_token')||!sessionStorage.getItem('friendlot3d_id'))location.replace('./login.html');</script>
 <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script>
 <script type="module">
 import * as THREE from 'three';
@@ -208,35 +197,13 @@ camera.position.lerp(new THREE.Vector3(player.position.x,player.position.y+8,pla
 renderer.render(scene,camera)}
 
 
-// Login/register: auth API runs on the Friendlot 3D Worker. No secrets are stored in this HTML.
-let authMode='login', sessionToken=null, signedInId=null;
+// Session is created by login.html/register.html; password is never stored in the game page.
 const API_ROOT = 'https://riendlot3d-api.kazu31-t10.workers.dev';
-const authMsg=$('#authMessage');
+let sessionToken=sessionStorage.getItem('friendlot3d_token'), signedInId=sessionStorage.getItem('friendlot3d_id');
+const authMsg={textContent:''};
 function authRoot(){return API_ROOT.trim().replace(/\/+$/,'')}
-function setAuthMode(mode){authMode=mode;$('#tabLogin').style.background=mode==='login'?'#4f8dff':'#46536c';$('#tabRegister').style.background=mode==='register'?'#4f8dff':'#46536c';$('#authSubmit').textContent=mode==='login'?'ログイン':'新規登録';$('#authPass').autocomplete=mode==='login'?'current-password':'new-password';authMsg.textContent=''}
-$('#tabLogin').onclick=()=>setAuthMode('login');$('#tabRegister').onclick=()=>setAuthMode('register');
-async function submitAuth(){
- const id=$('#authId').value.trim(),password=$('#authPass').value,root=authRoot();
- if(!root || root.includes('PASTE_YOUR_CLOUDFLARE_WORKER_URL_HERE')){authMsg.textContent='ゲームの接続設定がまだです。管理者にWorker URLの設定をしてもらってね。';return}
- if(!/^[A-Za-z0-9_]{3,24}$/.test(id)){authMsg.textContent='ユーザーIDは英数字と _ の3〜24文字にしてね。';return}
- if(password.length<8){authMsg.textContent='パスワードは8文字以上にしてね。';return}
- $('#authSubmit').disabled=true;authMsg.textContent='確認中…';
- try{
-  const endpoint=authMode==='register'?'/api/auth/register':'/api/auth/login';
-  const res=await fetch(root+endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,password})});
-  const data=await res.json().catch(()=>({error:'サーバー応答が不正です'}));
-  if(!res.ok)throw new Error(data.error||'認証できませんでした');
-  sessionToken=data.token;signedInId=data.id;
-  $('#authScreen').style.display='none';
-  // Worker URL is configured in the game source; password is never stored.
-  $('#stats').innerHTML='プレイヤー: '+signedInId+'<br>Cash: $'+fmt(cash)+'<br>収益: $'+fmt(incomeRate())+'/s<br>ベース: '+floors+'F';
-  say((authMode==='register'?'登録完了！':'ログイン成功！')+' ようこそ '+signedInId+' さん');
-  // If a profile endpoint is available, restore player progress.
-  try{const p=await fetch(root+'/api/game/save',{headers:{'Authorization':'Bearer '+sessionToken}});if(p.ok){const save=await p.json();if(save.profile){cash=Number(save.profile.cash)||cash;rebirths=Number(save.profile.rebirths)||0;floors=Math.max(1,Math.min(3,Number(save.profile.floors)||1));owned=Array.isArray(save.profile.owned)?save.profile.owned.filter(o=>catalog.some(c=>c.id===o.id)):[];rebuildOwned();updateUI()}}}catch{}
- }catch(e){authMsg.textContent=e.message}
- finally{$('#authSubmit').disabled=false}
-}
-$('#authSubmit').onclick=submitAuth;
+$('#stats').innerHTML='プレイヤー: '+signedInId+'<br>Cash: $'+fmt(cash)+'<br>収益: $'+fmt(incomeRate())+'/s<br>ベース: '+floors+'F';
+try{const p=await fetch(authRoot()+'/api/game/save',{headers:{'Authorization':'Bearer '+sessionToken}});if(p.ok){const save=await p.json();if(save.profile){cash=Number(save.profile.cash)||cash;rebirths=Number(save.profile.rebirths)||0;floors=Math.max(1,Math.min(3,Number(save.profile.floors)||1));owned=Array.isArray(save.profile.owned)?save.profile.owned.filter(o=>catalog.some(c=>c.id===o.id)):[];rebuildOwned();updateUI()}}}catch{}
 
 // 管理者機能：ログインとイベント操作はWorker側で認証する
 let adminToken=null, adminApi='';
