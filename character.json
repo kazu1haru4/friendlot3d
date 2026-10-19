@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "characters": [
+    {
+      "id": "meowru",
+      "name": "ミャオル",
+      "emoji": "🐱",
+      "color": "#ff91c8",
+      "accent": "#fff0d9",
+      "rarity": "レア"
+    },
+    {
+      "id": "strawberry-elephant",
+      "name": "ストロベリーエレファント",
+      "emoji": "🍓",
+      "color": "#f15d83",
+      "accent": "#ffd8e4",
+      "rarity": "エピック"
+    },
+    {
+      "id": "tawashi",
+      "name": "たわし",
+      "emoji": "🧽",
+      "color": "#e5b76a",
+      "accent": "#fff0bf",
+      "rarity": "コモン"
+    },
+    {
+      "id": "emerald-meowru",
+      "name": "エメラルドミャオル",
+      "emoji": "💚",
+      "color": "#21d39a",
+      "accent": "#caffed",
+      "rarity": "シークレット"
+    },
+    {
+      "id": "headless-knight",
+      "name": "首なし騎士",
+      "emoji": "🛡️",
+      "color": "#69758f",
+      "accent": "#d5d9e5",
+      "rarity": "レジェンド"
+    },
+    {
+      "id": "waffle",
+      "name": "わっふる",
+      "emoji": "🧇",
+      "color": "#e9ae65",
+      "accent": "#fff0c8",
+      "rarity": "スペシャル"
+    }
+  ]
+}
