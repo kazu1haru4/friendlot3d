@@ -2,6 +2,17 @@
   "version": 5,
   "characters": [
     {
+      "id": "pipi-kiwi",
+      "name": "ピピキウイ",
+      "emoji": "🥝🦝",
+      "type": "pipikiwi",
+      "color": "#7b5138",
+      "accent": "#6ed45e",
+      "rarity": "コモン",
+      "price": 1500,
+      "income": 13
+    },
+    {
       "id": "tawashi",
       "name": "たわし",
       "emoji": "🧽",
