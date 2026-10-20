@@ -60,27 +60,34 @@ const fmt=n=>n>=1e12?(n/1e12).toFixed(2)+'T':n>=1e9?(n/1e9).toFixed(2)+'B':n>=1e
 const say=t=>{let e=$('#notice');e.textContent=t;e.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>e.classList.remove('show'),1900)};
 let catalog=[];
 const fallback=[{"id":"tawashi","name":"たわし","type":"brush","color":"#dcb36c","accent":"#fff0bf","rarity":"コモン","price":50,"income":2,"incomePerMinute":120,"is_shop_available":true}];
-// Friendlot本家のbrainrot_catalogから最新のキャラクター設定を読む
-const SUPABASE_URL='https://yxonmqdyekwenyzekjwj.supabase.co';
-const SUPABASE_KEY='sb_publishable_IuQ6r_4vbGC9PP7cWJ9YRQ_Ai7tAfTJ';
+// キャラクターの正本は character.json。Supabase本家カタログで上書きしない
 const rarityColors={'ノーマル':'#eeeeee','コモン':'#eeeeee','レア':'#65b8ff','エピック':'#c58aff','レジェンド':'#ffb95e','神話':'#ff6464','ブレインロット・ゴッド':'#ffe66d','シークレット':'#ff7bff','GOAT':'#66ffb6','OG':'#ffdf6e'};
 function charColor(c){return rarityColors[c.rarity]||'#bfc9ff'}
 try{
- const url=SUPABASE_URL+'/rest/v1/brainrot_catalog?select=id,name,rarity,emoji,income_per_minute,purchase_price,is_fuse_only,is_shop_available,image_url&order=name.asc';
- const r=await fetch(url,{headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY},cache:'no-store'});
- if(!r.ok)throw new Error('Supabase HTTP '+r.status);
- const rows=await r.json();
- if(!Array.isArray(rows)||!rows.length)throw new Error('キャラデータが空です');
- catalog=rows.map(c=>({
-   id:String(c.id),name:String(c.name||c.id),type:inferType(c),emoji:c.emoji||'❔',rarity:String(c.rarity||'ノーマル'),
-   color:charColor(c),accent:'#fff0cf',incomePerMinute:Number(c.income_per_minute)||0,
-   income:(Number(c.income_per_minute)||0)/60,price:c.purchase_price==null?0:Number(c.purchase_price),
-   is_fuse_only:!!c.is_fuse_only,is_shop_available:!!c.is_shop_available,image_url:c.image_url||null
+ const r=await fetch('./character.json',{cache:'no-store'});
+ if(!r.ok)throw new Error('character.json HTTP '+r.status);
+ const data=await r.json();
+ if(!data||!Array.isArray(data.characters)||!data.characters.length)throw new Error('character.jsonにキャラがありません');
+ catalog=data.characters.map(c=>({
+   ...c,
+   id:String(c.id),
+   name:String(c.name||c.id),
+   type:c.type||inferType(c),
+   emoji:c.emoji||'❔',
+   rarity:String(c.rarity||'ノーマル'),
+   color:c.color||charColor(c),
+   accent:c.accent||'#fff0cf',
+   price:Number(c.price)||0,
+   income:Number(c.income)||0,
+   incomePerMinute:Number(c.incomePerMinute??((Number(c.income)||0)*60)),
+   is_fuse_only:!!c.is_fuse_only,
+   is_shop_available:c.is_shop_available!==false,
+   image_url:c.image_url||null
  }));
- console.info('Friendlot brainrot_catalog loaded:',catalog.length);
+ console.info('character.json loaded:',catalog.length);
 }catch(err){
- console.warn('Supabaseのキャラ読込に失敗。character.json / fallbackを使用します。',err);
- try{const r=await fetch('./character.json',{cache:'no-store'});if(!r.ok)throw 0;catalog=(await r.json()).characters||fallback}catch{catalog=fallback}
+ console.error('character.jsonの読み込みに失敗:',err);
+ catalog=fallback;
 }
 function inferType(c){const text=(String(c.id)+' '+String(c.name)).toLowerCase();if(/tawashi|たわし/.test(text))return 'brush';if(/meowl|meowru|ミャオル|cat|猫/.test(text))return 'cat';if(/elephant|エレファント|象/.test(text))return 'elephant';if(/knight|騎士/.test(text))return 'knight';if(/dragon|ドラゴン|カネローニ/.test(text))return 'dragon';if(/waffle|ワッフル|ヌビニピザニニ/.test(text))return 'waffle';if(/lucky_block|ラッキーブロック/.test(text))return 'rainbow';return 'block'}
 function label(text,color='#fff'){let c=document.createElement('canvas');c.width=512;c.height=112;let x=c.getContext('2d');x.fillStyle='#10182beF';x.beginPath();x.roundRect(8,8,496,96,22);x.fill();x.strokeStyle='#ffffff80';x.lineWidth=3;x.stroke();x.fillStyle=color;x.font='bold 32px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(String(text).slice(0,25),256,56);let s=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),depthTest:false}));s.scale.set(3.2,.7,1);return s}
@@ -240,7 +247,7 @@ function nearestLane(){let best=null,d=3.5;for(let o of laneChars){let dist=o.g.
 function updateUI(){let maxSlots=floors*6;$('#stats').innerHTML='Cash: $'+fmt(cash)+'<br>収益: $'+fmt(incomeRate())+'/s<br>ベース: '+floors+'F • リバース '+rebirths+'回<br>キャラ: '+owned.length+'/'+maxSlots;near=nearestLane();if(near){$('#buy').textContent='購入 $'+fmt(near.c.price);$('#catalog').textContent=near.c.emoji+' '+near.c.name+' • '+near.c.rarity+' • +$'+fmt(near.c.incomePerMinute??((near.c.income||0)*60))+'/分'}else{$('#buy').textContent='購入';$('#catalog').textContent='中央レーンのキャラに近づこう！'}}
 function buyNear(){near=nearestLane();if(!near){say('中央レーンのキャラに近づいてね！');return}if(cash<near.c.price){say('Cashが足りない！');return}if(owned.length>=floors*6){say('ベースの空きスロットがない！リバースか階層を解放しよう');return}cash-=near.c.price;owned.push(near.c);scene.remove(near.g);laneChars.splice(laneChars.indexOf(near),1);rebuildOwned();laneSpawn();say(near.c.name+' を購入！ベースに運ばれたよ');updateUI()}
 $('#buy').onclick=buyNear;$('#collect').onclick=()=>{let n=bank;cash+=n;bank=0;say('+$'+fmt(n)+' 回収！');updateUI()};$('#rebirth').onclick=()=>{let cost=1500*(rebirths+1);if(rebirths>=3){say('リバース上限は3回！');return}if(cash<cost){say('リバースには $'+fmt(cost)+' 必要！');return}cash=Math.floor(cash*.2);owned=owned.filter((_,i)=>i%2===0);rebirths++;floors=Math.min(3,floors+1);rebuildOwned();say('リバース成功！ベースが '+floors+'F になった！');updateUI()};
-$('#catalogBtn').onclick=()=>{let text=catalog.map(c=>c.emoji+' '+c.name+' — '+c.rarity+' — 購入 $'+fmt(c.price)+' / +$'+fmt(c.incomePerMinute??((c.income||0)*60))+'/分'+(c.is_fuse_only?' [合成限定]':'')+(c.is_shop_available?'':' [通常ショップ対象外]')).join('\n');alert('本家Supabaseキャラ図鑑 ('+catalog.length+'体)\n\n'+text)};
+$('#catalogBtn').onclick=()=>{let text=catalog.map(c=>c.emoji+' '+c.name+' — '+c.rarity+' — 購入 $'+fmt(c.price)+' / +$'+fmt(c.incomePerMinute??((c.income||0)*60))+'/分'+(c.is_fuse_only?' [合成限定]':'')+(c.is_shop_available?'':' [通常ショップ対象外]')).join('\n');alert('フレンドロット3D キャラ図鑑 ('+catalog.length+'体)\n\n'+text)};
 
 const gearPanel=$('#gearShopPanel');
 function refreshGearShop(){
