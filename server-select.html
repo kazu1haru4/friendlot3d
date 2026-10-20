@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10152b"><title>サーバー選択 | FRIENDLOT 3D</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at top,#304a78,#10152b 65%);color:#fff;font-family:system-ui,-apple-system,sans-serif;padding:22px;display:grid;place-items:center}
+main{width:min(760px,100%)}h1{text-align:center;margin:0;font-size:clamp(25px,6vw,38px)}.sub{text-align:center;color:#c7d4f2;margin:8px 0 24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.card{background:#17223bee;border:1px solid #ffffff2b;border-radius:18px;padding:18px;box-shadow:0 12px 32px #0004}.card h2{margin:0 0 8px}.card p{color:#c8d3e8;line-height:1.55;font-size:14px;min-height:62px}button,input{font:inherit}button{width:100%;border:0;border-radius:11px;padding:12px;font-weight:800;color:white;background:#4d8bff;cursor:pointer;margin-top:8px}button:disabled{opacity:.55;cursor:wait}.secondary{background:#46536c}.private{background:#7c58e8}.options{display:none;margin-top:14px;padding-top:14px;border-top:1px solid #ffffff2b}.options.show{display:block}.choice{display:block;padding:12px;border:1px solid #ffffff30;border-radius:12px;margin:8px 0;background:#ffffff08}.choice input{margin-right:8px}.field{width:100%;padding:11px;border-radius:9px;border:1px solid #ffffff30;background:#0d1527;color:white;margin:6px 0 10px}#msg{min-height:24px;text-align:center;color:#ffe39a;margin-top:14px;white-space:pre-wrap}.back{display:block;text-align:center;color:#b8cbff;margin-top:18px}small{color:#aab9d8}
+</style></head>
+<body><main>
+<h1>🌀 FRIENDLOT 3D</h1><div class="sub">どのサーバーで遊ぶ？</div>
+<div class="grid">
+<section class="card"><h2>🌎 公開サーバー</h2><p>ほかのプレイヤーと同じワールドで遊ぼう。参加可能な公開サーバーを探して入室する。</p><button id="publicBtn">公開サーバーに入る</button></section>
+<section class="card"><h2>🔒 プライベートサーバー</h2><p>自分専用、または招待した友達だけのワールドを作成・利用する。</p><button id="privateBtn" class="private">プライベートを選ぶ</button>
+<div id="options" class="options">
+<label class="choice"><input type="radio" name="mode" value="solo" checked> <b>自分専用</b><br><small>自分だけが参加できる</small></label>
+<label class="choice"><input type="radio" name="mode" value="invite"> <b>招待制</b><br><small>招待コードを知っている友達だけが参加できる</small></label>
+<label for="roomName">サーバー名（任意）</label><input id="roomName" class="field" maxlength="32" placeholder="マイサーバー">
+<button id="createBtn">サーバーを作成</button>
+<div id="joinBox"><label for="inviteCode">友達の招待コードで参加</label><input id="inviteCode" class="field" maxlength="32" placeholder="招待コード"><button id="joinBtn" class="secondary">招待コードで参加</button></div>
+</div></section></div>
+<div id="msg" role="status" aria-live="polite"></div><a class="back" href="./auth.html">ログイン画面に戻る</a>
+</main>
+<script>
+const API='https://riendlot3d-api.kazu31-t10.workers.dev';
+const token=sessionStorage.getItem('friendlot3d_token'), playerId=sessionStorage.getItem('friendlot3d_id');
+const $=s=>document.querySelector(s), msg=$('#msg');
+if(!token||!playerId){location.replace('./auth.html')}
+$('#privateBtn').onclick=()=>$('#options').classList.toggle('show');
+async function call(path,body){
+ const r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8','Authorization':'Bearer '+token},body:JSON.stringify(body||{})});
+ const raw=await r.text();let d;try{d=JSON.parse(raw)}catch{throw Error('サーバーの応答を読み取れません（HTTP '+r.status+'）')}
+ if(!r.ok)throw Error(d.error||'処理に失敗しました（HTTP '+r.status+'）');return d;
+}
+function enter(room){sessionStorage.setItem('friendlot3d_server',JSON.stringify(room));location.href='./index.html'}
+$('#publicBtn').onclick=async()=>{msg.textContent='公開サーバーを検索中…';$('#publicBtn').disabled=true;try{const d=await call('/api/servers/public/join',{});if(!d.room)throw Error('公開サーバーが見つかりません。Worker側のサーバーAPIを設定してください。');enter(d.room)}catch(e){msg.textContent=e.message}finally{$('#publicBtn').disabled=false}};
+$('#createBtn').onclick=async()=>{const mode=document.querySelector('input[name=mode]:checked').value;msg.textContent='サーバーを作成中…';$('#createBtn').disabled=true;try{const d=await call('/api/servers/private/create',{mode,name:$('#roomName').value.trim()});if(!d.room)throw Error('サーバー情報が返されませんでした。');if(d.inviteCode)msg.textContent='作成完了！招待コード：'+d.inviteCode;enter(d.room)}catch(e){msg.textContent=e.message}finally{$('#createBtn').disabled=false}};
+$('#joinBtn').onclick=async()=>{const code=$('#inviteCode').value.trim();if(!code){msg.textContent='招待コードを入力してね。';return}msg.textContent='参加中…';$('#joinBtn').disabled=true;try{const d=await call('/api/servers/private/join',{inviteCode:code});if(!d.room)throw Error('サーバー情報が返されませんでした。');enter(d.room)}catch(e){msg.textContent=e.message}finally{$('#joinBtn').disabled=false}};
+</script></body></html>
