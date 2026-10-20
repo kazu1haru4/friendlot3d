@@ -2,7 +2,7 @@
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="theme-color" content="#10152b"><title>フレンドロット3D</title>
 <style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#9ddcff;color:#fff;font-family:system-ui,-apple-system,sans-serif;touch-action:none}#game{position:fixed;inset:0}canvas{display:block}#hud{position:fixed;inset:0;pointer-events:none}.panel{background:#11182be8;border:1px solid #ffffff3d;border-radius:14px;padding:9px 12px;box-shadow:0 5px 18px #0003;backdrop-filter:blur(7px)}#brand{position:absolute;left:10px;top:10px;font-weight:1000;font-size:14px}#stats{position:absolute;left:10px;top:53px;font-size:12px;line-height:1.55}#help{position:absolute;right:10px;top:10px;max-width:46vw;text-align:right;font-size:11px}#actions{position:absolute;right:10px;top:94px;display:flex;flex-direction:column;gap:7px;pointer-events:auto}button{border:1px solid #ffffff70;border-radius:12px;background:#635bdb;color:white;font-weight:900;padding:10px 12px;font:inherit;box-shadow:0 3px 0 #27225e}button:active{transform:translateY(2px);box-shadow:none}input,select{background:#10182b;color:#fff;border:1px solid #ffffff60;font:inherit}#buy{position:absolute;right:20px;bottom:25px;width:82px;height:82px;border-radius:50%;background:#ffb82e;color:#36220a;border:3px solid #fff;pointer-events:auto;font-weight:1000}#stickpad{position:absolute;left:18px;bottom:20px;width:116px;height:116px;border-radius:50%;background:#ffffff28;border:2px solid #ffffff80;pointer-events:auto}#stick{position:absolute;left:33px;top:33px;width:46px;height:46px;border-radius:50%;background:#e8f1ffdd;border:2px solid white}#notice{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);opacity:0;transition:opacity .18s;max-width:85vw;text-align:center;font-weight:900}#notice.show{opacity:1}#loading{position:absolute;inset:0;display:grid;place-items:center;background:#9ddcff;color:#172445;font-weight:1000;font-size:22px;text-align:center}#catalog{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);font-size:11px;white-space:nowrap}@media(min-width:850px){#stickpad{display:none}#help{font-size:13px}#brand{font-size:17px}}
-</style></head><body><div id="game"></div><div id="hud"><div id="brand" class="panel">🌀 FRIENDLOT 3D <span style="color:#ffe37b">REBORN</span></div><div id="stats" class="panel">Cash: $500<br>収益: $0/s<br>ベース: 1F</div><div id="help" class="panel">WASD / 矢印キーで移動<br>ドラッグ・スワイプで視点回転<br>ホイール・ピンチでズーム</div><div id="actions"><button id="collect">💵 収益回収</button><button id="rebirth">🔁 リバース</button><button id="catalogBtn">📚 キャラ図鑑</button><button id="cameraMode">👁️ 一人称に切替</button><button id="adminBtn" style="background:#a33c56">🛡️ 管理者</button></div><div id="stickpad"><div id="stick"></div></div><button id="buy">購入</button><div id="catalog" class="panel">キャラを購入してベースに運ぼう！</div><div id="eventBanner" class="panel" style="position:absolute;left:50%;top:10px;transform:translateX(-50%);display:none;color:#fff36b;font-weight:1000;text-align:center"></div><div id="notice" class="panel"></div>
+</style></head><body><div id="game"></div><div id="hud"><div id="brand" class="panel">🌀 FRIENDLOT 3D <span style="color:#ffe37b">REBORN</span></div><div id="stats" class="panel">Cash: $500<br>収益: $0/s<br>ベース: 1F</div><div id="help" class="panel">WASD / 矢印キーで移動<br>ドラッグ・スワイプで視点回転<br>ホイール・ピンチでズーム</div><div id="actions"><button id="collect">💵 収益回収</button><button id="rebirth">🔁 リバース</button><button id="catalogBtn">📚 キャラ図鑑</button><button id="gearShopBtn">🛠️ ギアショップ</button><button id="cameraMode">👁️ 一人称に切替</button><button id="adminBtn" style="background:#a33c56">🛡️ 管理者</button></div><div id="stickpad"><div id="stick"></div></div><button id="buy">購入</button><div id="catalog" class="panel">キャラを購入してベースに運ぼう！</div><div id="eventBanner" class="panel" style="position:absolute;left:50%;top:10px;transform:translateX(-50%);display:none;color:#fff36b;font-weight:1000;text-align:center"></div><div id="notice" class="panel"></div>
 <div id="adminPanel" style="display:none;position:fixed;inset:0;background:#080d1bd9;z-index:20;place-items:center;padding:16px;pointer-events:auto">
  <div class="panel" style="width:min(440px,94vw);max-height:88vh;overflow:auto">
   <div style="display:flex;justify-content:space-between;align-items:center"><b>🛡️ フレンドロット 管理者パネル</b><button id="adminClose">閉じる</button></div>
@@ -27,6 +27,23 @@
   </div>
  </div>
 </div>
+<div id="gearShopPanel" style="display:none;position:fixed;inset:0;background:#080d1bd9;z-index:19;place-items:center;padding:16px;pointer-events:auto">
+ <div class="panel" style="width:min(440px,94vw);max-height:88vh;overflow:auto">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>🛠️ ギアショップ</b><button id="gearShopClose">閉じる</button></div>
+  <p style="font-size:12px;color:#dce5ff">Cashでギアを購入して、移動や収益を強化しよう！</p>
+  <div id="gearShopCash" style="margin:8px 0;font-weight:900"></div>
+  <div style="border-top:1px solid #ffffff35;padding-top:10px;margin-top:10px">
+   <b>⚡ スピードコイル — $500</b><p style="font-size:12px">移動速度が1.5倍になる（1回購入）</p><button id="buySpeedCoil" style="width:100%">購入</button>
+  </div>
+  <div style="border-top:1px solid #ffffff35;padding-top:10px;margin-top:10px">
+   <b>💨 ゴールデンコイル — $2,000</b><p style="font-size:12px">移動速度が2倍になる（1回購入）</p><button id="buyGoldenCoil" style="width:100%">購入</button>
+  </div>
+  <div style="border-top:1px solid #ffffff35;padding-top:10px;margin-top:10px">
+   <b>💰 収益チャーム — $1,000</b><p style="font-size:12px">キャラの収益が20%アップ（1回購入）</p><button id="buyIncomeCharm" style="width:100%">購入</button>
+  </div>
+  <p id="gearShopStatus" style="font-size:12px;white-space:pre-wrap"></p>
+ </div>
+</div>
 <div id="loading">FRIENDLOT 3D<br>ワールド生成中…</div></div>
 <script>if(!sessionStorage.getItem('friendlot3d_token')||!sessionStorage.getItem('friendlot3d_id'))location.replace('./auth.html');</script>
 <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script>
@@ -37,7 +54,8 @@ const camera=new THREE.PerspectiveCamera(64,innerWidth/innerHeight,.1,180);
 const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.08;renderer.outputColorSpace=THREE.SRGBColorSpace;$('#game').appendChild(renderer.domElement);
 scene.add(new THREE.HemisphereLight('#ffffff','#61718c',2.1));const sun=new THREE.DirectionalLight('#fff1d3',3);sun.position.set(-18,32,12);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);scene.add(sun);
 const mat=c=>new THREE.MeshStandardMaterial({color:c,roughness:.76});const box=(w,h,d,c,x,y,z,parent=scene)=>{let m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat(c));m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m};const ball=(r,c,x,y,z,parent=scene,scale=[1,1,1])=>{let m=new THREE.Mesh(new THREE.SphereGeometry(r,16,12),mat(c));m.position.set(x,y,z);m.scale.set(...scale);m.castShadow=true;parent.add(m);return m};
-let cash=1500,bank=0,rebirths=0,floors=1,owned=[],near=null,toastTimer,selectedIndex=0;const bases=[],laneChars=[],keys=new Set(),joy={x:0,y:0};let player,playerBody;
+let cash=1500,bank=0,rebirths=0,floors=1,owned=[],near=null,toastTimer,selectedIndex=0;
+let gearOwned={speedCoil:false,goldenCoil:false,incomeCharm:false};const bases=[],laneChars=[],keys=new Set(),joy={x:0,y:0};let player,playerBody;
 const fmt=n=>n>=1e12?(n/1e12).toFixed(2)+'T':n>=1e9?(n/1e9).toFixed(2)+'B':n>=1e6?(n/1e6).toFixed(2)+'M':n>=1e3?(n/1e3).toFixed(1)+'K':Math.floor(n).toLocaleString();
 const say=t=>{let e=$('#notice');e.textContent=t;e.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>e.classList.remove('show'),1900)};
 let catalog=[];const fallback=[{"id":"tawashi","name":"たわし","type":"brush","color":"#dcb36c","accent":"#fff0bf","rarity":"コモン","price":50,"income":2},{"id":"meowru","name":"ミャオル","type":"cat","color":"#ff91c8","accent":"#fff0d9","rarity":"レア","price":100,"income":5},{"id":"waffle","name":"わっふる","type":"waffle","color":"#e9ae65","accent":"#fff0c8","rarity":"レア","price":150,"income":8},{"id":"strawberry-elephant","name":"ストロベリーエレファント","type":"elephant","color":"#f15d83","accent":"#ffd8e4","rarity":"エピック","price":300,"income":18},{"id":"headless-knight","name":"首なし騎士","type":"knight","color":"#69758f","accent":"#d5d9e5","rarity":"レジェンド","price":900,"income":55},{"id":"emerald-meowru","name":"エメラルドミャオル","type":"cat","color":"#21d39a","accent":"#caffed","rarity":"シークレット","price":2000,"income":150}];
@@ -110,7 +128,7 @@ function ground(){
  }
 }
 function buildBase(i){
- const side=i<4?-1:1, row=i%4, x=side*13.2, z=-22+row*14.6;
+ const side=i<4?-1:1, row=i%4, x=side*17.5, z=-22+row*14.6;
  const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=side<0?Math.PI/2:-Math.PI/2;scene.add(g);
  const col=['#e65c66','#4d91e8','#a66be8','#f2b843','#36b98a','#e77ac5','#42b9cb','#df8652'][i];
  box(8.6,.42,8.6,'#aeb9c8',0,.05,0,g);box(8.2,.16,8.2,'#4b5568',0,.32,0,g);box(8,.12,8,col,0,.43,0,g);
@@ -179,12 +197,37 @@ createPlayer();
 function laneSpawn(){let c=(laneChars.length===0?catalog.find(v=>v.id==='pipi-kiwi'):null)||catalog[Math.floor(Math.random()*catalog.length)];let g=makeChar(c);g.position.set(0,0,-15);scene.add(g);let p=label('$'+fmt(c.price)+' • '+c.rarity,c.rarity==='シークレット'?'#ff89ff':'#fff');p.position.set(0,2.05,0);g.add(p);laneChars.push({g,c,progress:0,dir:1});}
 laneSpawn();laneChars[0].g.position.z=-5;for(let i=1;i<4;i++){laneSpawn();laneChars[i].progress=i*.23;laneChars[i].g.position.z=-15+i*7.5}
 function rebuildOwned(){for(let b of bases)for(let s of b.slots){if(s.world){s.world.parent?.remove(s.world);s.world=null}}let my=bases[0];owned.forEach((o,i)=>{let s=my.slots.filter(q=>q.floor<floors)[i];if(!s)return;let g=makeChar(o);g.position.set(s.x,s.y,s.z);g.rotation.y=Math.PI;s.group.add(g);s.world=g})}
-function incomeRate(){return owned.reduce((n,c)=>n+(c.income||0),0)*(1+rebirths*.25)}
+function movementSpeed(){return gearOwned.goldenCoil?14:gearOwned.speedCoil?10.5:7}
+function incomeRate(){return owned.reduce((n,c)=>n+(c.income||0),0)*(1+rebirths*.25)*(gearOwned.incomeCharm?1.2:1)}
 function nearestLane(){let best=null,d=3.5;for(let o of laneChars){let dist=o.g.position.distanceTo(player.position);if(dist<d){best=o;d=dist}}return best}
 function updateUI(){let maxSlots=floors*6;$('#stats').innerHTML='Cash: $'+fmt(cash)+'<br>収益: $'+fmt(incomeRate())+'/s<br>ベース: '+floors+'F • リバース '+rebirths+'回<br>キャラ: '+owned.length+'/'+maxSlots;near=nearestLane();if(near){$('#buy').textContent='購入 $'+fmt(near.c.price);$('#catalog').textContent=near.c.name+' • '+near.c.rarity+' • +$'+fmt(near.c.income)+'/秒'}else{$('#buy').textContent='購入';$('#catalog').textContent='中央レーンのキャラに近づこう！'}}
 function buyNear(){near=nearestLane();if(!near){say('中央レーンのキャラに近づいてね！');return}if(cash<near.c.price){say('Cashが足りない！');return}if(owned.length>=floors*6){say('ベースの空きスロットがない！リバースか階層を解放しよう');return}cash-=near.c.price;owned.push(near.c);scene.remove(near.g);laneChars.splice(laneChars.indexOf(near),1);rebuildOwned();laneSpawn();say(near.c.name+' を購入！ベースに運ばれたよ');updateUI()}
 $('#buy').onclick=buyNear;$('#collect').onclick=()=>{let n=bank;cash+=n;bank=0;say('+$'+fmt(n)+' 回収！');updateUI()};$('#rebirth').onclick=()=>{let cost=1500*(rebirths+1);if(rebirths>=3){say('リバース上限は3回！');return}if(cash<cost){say('リバースには $'+fmt(cost)+' 必要！');return}cash=Math.floor(cash*.2);owned=owned.filter((_,i)=>i%2===0);rebirths++;floors=Math.min(3,floors+1);rebuildOwned();say('リバース成功！ベースが '+floors+'F になった！');updateUI()};
 $('#catalogBtn').onclick=()=>{let text=catalog.map(c=>c.name+' — '+c.rarity+' — $'+fmt(c.price)+' / +$'+fmt(c.income)+'s').join('\n');alert('キャラ図鑑 ('+catalog.length+'体)\n\n'+text)};
+
+const gearPanel=$('#gearShopPanel');
+function refreshGearShop(){
+ $('#gearShopCash').textContent='所持Cash: $'+fmt(cash);
+ $('#buySpeedCoil').textContent=gearOwned.speedCoil?'購入済み ✓':'購入 $500';
+ $('#buyGoldenCoil').textContent=gearOwned.goldenCoil?'購入済み ✓':'購入 $2,000';
+ $('#buyIncomeCharm').textContent=gearOwned.incomeCharm?'購入済み ✓':'購入 $1,000';
+ $('#buySpeedCoil').disabled=gearOwned.speedCoil||gearOwned.goldenCoil;
+ $('#buyGoldenCoil').disabled=gearOwned.goldenCoil;
+ $('#buyIncomeCharm').disabled=gearOwned.incomeCharm;
+ $('#gearShopStatus').textContent='現在の移動速度: '+(gearOwned.goldenCoil?'2倍':gearOwned.speedCoil?'1.5倍':'通常')+'\\n収益ボーナス: '+(gearOwned.incomeCharm?'+20%':'なし');
+}
+function buyGear(key,cost,label){
+ if(gearOwned[key]){say('これは購入済みだよ');return}
+ if(key==='speedCoil'&&gearOwned.goldenCoil){say('ゴールデンコイルを所持しているよ');return}
+ if(cash<cost){say('Cashが足りない！');return}
+ cash-=cost;gearOwned[key]=true;refreshGearShop();updateUI();say(label+'を購入！');
+}
+$('#gearShopBtn').onclick=()=>{gearPanel.style.display='grid';refreshGearShop()};
+$('#gearShopClose').onclick=()=>{gearPanel.style.display='none'};
+$('#buySpeedCoil').onclick=()=>buyGear('speedCoil',500,'スピードコイル');
+$('#buyGoldenCoil').onclick=()=>buyGear('goldenCoil',2000,'ゴールデンコイル');
+$('#buyIncomeCharm').onclick=()=>buyGear('incomeCharm',1000,'収益チャーム');
+
 const keyMap={ArrowUp:'w',ArrowDown:'s',ArrowLeft:'a',ArrowRight:'d'};addEventListener('keydown',e=>{keys.add((keyMap[e.key]||e.key).toLowerCase());if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key))e.preventDefault()});addEventListener('keyup',e=>keys.delete((keyMap[e.key]||e.key).toLowerCase()));
 let stick=$('#stick'),pad=$('#stickpad');function joyStart(e){e.preventDefault();let r=pad.getBoundingClientRect(),x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2,max=35,len=Math.hypot(x,y)||1;let k=Math.min(1,max/len);joy.x=x*k/max;joy.y=y*k/max;stick.style.transform=`translate(${joy.x*35}px,${joy.y*35}px)`}pad.addEventListener('pointerdown',e=>{pad.setPointerCapture(e.pointerId);joyStart(e)});pad.addEventListener('pointermove',e=>{if(e.buttons)joyStart(e)});for(let ev of ['pointerup','pointercancel'])pad.addEventListener(ev,()=>{joy.x=joy.y=0;stick.style.transform=''});
 
@@ -249,7 +292,7 @@ cameraCanvas.addEventListener('wheel',e=>{
 
 let last=performance.now(),spawnTimer=0,uiTimer=0;
 function loop(now){requestAnimationFrame(loop);let dt=Math.min(.05,(now-last)/1000);last=now;
-const strafe=(keys.has('d')?1:0)-(keys.has('a')?1:0)+joy.x;const forward=(keys.has('w')?1:0)-(keys.has('s')?1:0)-joy.y;let x=strafe*Math.cos(cameraYaw)+forward*Math.sin(cameraYaw),z=strafe*Math.sin(cameraYaw)-forward*Math.cos(cameraYaw);let len=Math.hypot(x,z);if(len>1){x/=len;z/=len}if(len>.05){player.position.x+=x*7*dt;player.position.z+=z*7*dt;playerBody.rotation.y=Math.atan2(x,z)}player.position.x=THREE.MathUtils.clamp(player.position.x,-31,31);player.position.z=THREE.MathUtils.clamp(player.position.z,-31,31);
+const strafe=(keys.has('d')?1:0)-(keys.has('a')?1:0)+joy.x;const forward=(keys.has('w')?1:0)-(keys.has('s')?1:0)-joy.y;let x=strafe*Math.cos(cameraYaw)+forward*Math.sin(cameraYaw),z=strafe*Math.sin(cameraYaw)-forward*Math.cos(cameraYaw);let len=Math.hypot(x,z);if(len>1){x/=len;z/=len}if(len>.05){player.position.x+=x*movementSpeed()*dt;player.position.z+=z*movementSpeed()*dt;playerBody.rotation.y=Math.atan2(x,z)}player.position.x=THREE.MathUtils.clamp(player.position.x,-31,31);player.position.z=THREE.MathUtils.clamp(player.position.z,-31,31);
 for(let o of laneChars){o.progress+=dt*.07;o.g.position.z=-15+((o.progress*30)%30);o.g.position.y=.05+Math.sin(now*.004+o.progress*8)*.08;o.g.rotation.y=Math.PI}
 spawnTimer+=dt;if(spawnTimer>5&&laneChars.length<5){spawnTimer=0;laneSpawn()}
 bank+=incomeRate()*dt;uiTimer+=dt;if(uiTimer>.2){uiTimer=0;updateUI()}
