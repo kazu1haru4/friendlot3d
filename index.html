@@ -2,7 +2,7 @@
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="theme-color" content="#10152b"><title>フレンドロット3D</title>
 <style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#9ddcff;color:#fff;font-family:system-ui,-apple-system,sans-serif;touch-action:none}#game{position:fixed;inset:0}canvas{display:block}#hud{position:fixed;inset:0;pointer-events:none}.panel{background:#11182be8;border:1px solid #ffffff3d;border-radius:14px;padding:9px 12px;box-shadow:0 5px 18px #0003;backdrop-filter:blur(7px)}#brand{position:absolute;left:10px;top:10px;font-weight:1000;font-size:14px}#stats{position:absolute;left:10px;top:53px;font-size:12px;line-height:1.55}#help{position:absolute;right:10px;top:10px;max-width:46vw;text-align:right;font-size:11px}#actions{position:absolute;right:10px;top:94px;display:flex;flex-direction:column;gap:7px;pointer-events:auto}button{border:1px solid #ffffff70;border-radius:12px;background:#635bdb;color:white;font-weight:900;padding:10px 12px;font:inherit;box-shadow:0 3px 0 #27225e}button:active{transform:translateY(2px);box-shadow:none}input,select{background:#10182b;color:#fff;border:1px solid #ffffff60;font:inherit}#buy{position:absolute;right:20px;bottom:25px;width:82px;height:82px;border-radius:50%;background:#ffb82e;color:#36220a;border:3px solid #fff;pointer-events:auto;font-weight:1000}#stickpad{position:absolute;left:18px;bottom:20px;width:116px;height:116px;border-radius:50%;background:#ffffff28;border:2px solid #ffffff80;pointer-events:auto}#stick{position:absolute;left:33px;top:33px;width:46px;height:46px;border-radius:50%;background:#e8f1ffdd;border:2px solid white}#notice{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);opacity:0;transition:opacity .18s;max-width:85vw;text-align:center;font-weight:900}#notice.show{opacity:1}#loading{position:absolute;inset:0;display:grid;place-items:center;background:#9ddcff;color:#172445;font-weight:1000;font-size:22px;text-align:center}#catalog{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);font-size:11px;white-space:nowrap}@media(min-width:850px){#stickpad{display:none}#help{font-size:13px}#brand{font-size:17px}}
-</style></head><body><div id="game"></div><div id="hud"><div id="brand" class="panel">🌀 FRIENDLOT 3D <span style="color:#ffe37b">REBORN</span></div><div id="stats" class="panel">Cash: $500<br>収益: $0/s<br>ベース: 1F</div><div id="help" class="panel">WASD / 矢印キーで移動<br>中央レーンのキャラに近づいて購入<br>自分のベースで収益を回収！</div><div id="actions"><button id="collect">💵 収益回収</button><button id="rebirth">🔁 リバース</button><button id="catalogBtn">📚 キャラ図鑑</button><button id="adminBtn" style="background:#a33c56">🛡️ 管理者</button></div><div id="stickpad"><div id="stick"></div></div><button id="buy">購入</button><div id="catalog" class="panel">キャラを購入してベースに運ぼう！</div><div id="eventBanner" class="panel" style="position:absolute;left:50%;top:10px;transform:translateX(-50%);display:none;color:#fff36b;font-weight:1000;text-align:center"></div><div id="notice" class="panel"></div>
+</style></head><body><div id="game"></div><div id="hud"><div id="brand" class="panel">🌀 FRIENDLOT 3D <span style="color:#ffe37b">REBORN</span></div><div id="stats" class="panel">Cash: $500<br>収益: $0/s<br>ベース: 1F</div><div id="help" class="panel">WASD / 矢印キーで移動<br>ドラッグ・スワイプで視点回転<br>ホイール・ピンチでズーム</div><div id="actions"><button id="collect">💵 収益回収</button><button id="rebirth">🔁 リバース</button><button id="catalogBtn">📚 キャラ図鑑</button><button id="cameraMode">👁️ 一人称に切替</button><button id="adminBtn" style="background:#a33c56">🛡️ 管理者</button></div><div id="stickpad"><div id="stick"></div></div><button id="buy">購入</button><div id="catalog" class="panel">キャラを購入してベースに運ぼう！</div><div id="eventBanner" class="panel" style="position:absolute;left:50%;top:10px;transform:translateX(-50%);display:none;color:#fff36b;font-weight:1000;text-align:center"></div><div id="notice" class="panel"></div>
 <div id="adminPanel" style="display:none;position:fixed;inset:0;background:#080d1bd9;z-index:20;place-items:center;padding:16px;pointer-events:auto">
  <div class="panel" style="width:min(440px,94vw);max-height:88vh;overflow:auto">
   <div style="display:flex;justify-content:space-between;align-items:center"><b>🛡️ フレンドロット 管理者パネル</b><button id="adminClose">閉じる</button></div>
@@ -187,13 +187,94 @@ $('#buy').onclick=buyNear;$('#collect').onclick=()=>{let n=bank;cash+=n;bank=0;s
 $('#catalogBtn').onclick=()=>{let text=catalog.map(c=>c.name+' — '+c.rarity+' — $'+fmt(c.price)+' / +$'+fmt(c.income)+'s').join('\n');alert('キャラ図鑑 ('+catalog.length+'体)\n\n'+text)};
 const keyMap={ArrowUp:'w',ArrowDown:'s',ArrowLeft:'a',ArrowRight:'d'};addEventListener('keydown',e=>{keys.add((keyMap[e.key]||e.key).toLowerCase());if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key))e.preventDefault()});addEventListener('keyup',e=>keys.delete((keyMap[e.key]||e.key).toLowerCase()));
 let stick=$('#stick'),pad=$('#stickpad');function joyStart(e){e.preventDefault();let r=pad.getBoundingClientRect(),x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2,max=35,len=Math.hypot(x,y)||1;let k=Math.min(1,max/len);joy.x=x*k/max;joy.y=y*k/max;stick.style.transform=`translate(${joy.x*35}px,${joy.y*35}px)`}pad.addEventListener('pointerdown',e=>{pad.setPointerCapture(e.pointerId);joyStart(e)});pad.addEventListener('pointermove',e=>{if(e.buttons)joyStart(e)});for(let ev of ['pointerup','pointercancel'])pad.addEventListener(ev,()=>{joy.x=joy.y=0;stick.style.transform=''});
+
+// カメラ操作：ドラッグ/スワイプで回転、ホイール/ピンチでズーム
+let cameraMode='third', cameraYaw=0, cameraPitch=0.48, cameraDistance=10;
+const cameraPointers=new Map();
+let pinchStartDistance=0, pinchStartZoom=10, lastDragX=0, lastDragY=0, dragPointer=null;
+const cameraCanvas=renderer.domElement;
+const cameraButton=$('#cameraMode');
+function updateCameraButton(){
+ cameraButton.textContent=cameraMode==='third'?'👁️ 一人称に切替':'🌎 三人称に切替';
+}
+cameraButton.addEventListener('click',()=>{
+ cameraMode=cameraMode==='third'?'first':'third';
+ updateCameraButton();
+ say(cameraMode==='first'?'一人称視点':'三人称視点');
+});
+updateCameraButton();
+function pointerDistance(a,b){return Math.hypot(a.x-b.x,a.y-b.y)}
+cameraCanvas.addEventListener('pointerdown',e=>{
+ if(e.pointerType==='mouse'&&e.button!==0)return;
+ cameraPointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ if(cameraPointers.size===1){
+  dragPointer=e.pointerId;lastDragX=e.clientX;lastDragY=e.clientY;
+ }
+ if(cameraPointers.size===2){
+  const p=[...cameraPointers.values()];
+  pinchStartDistance=pointerDistance(p[0],p[1]);pinchStartZoom=cameraDistance;dragPointer=null;
+ }
+ if(e.pointerType!=='mouse'&&cameraCanvas.setPointerCapture)cameraCanvas.setPointerCapture(e.pointerId);
+});
+cameraCanvas.addEventListener('pointermove',e=>{
+ if(!cameraPointers.has(e.pointerId))return;
+ cameraPointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ if(cameraPointers.size>=2){
+  const p=[...cameraPointers.values()],d=pointerDistance(p[0],p[1]);
+  if(pinchStartDistance>0)cameraDistance=THREE.MathUtils.clamp(pinchStartZoom*(pinchStartDistance/Math.max(1,d)),3,22);
+  return;
+ }
+ if(dragPointer===e.pointerId){
+  const dx=e.clientX-lastDragX,dy=e.clientY-lastDragY;
+  cameraYaw-=dx*.006;
+  cameraPitch=THREE.MathUtils.clamp(cameraPitch+dy*.005,-.05,1.25);
+  lastDragX=e.clientX;lastDragY=e.clientY;
+ }
+});
+function endCameraPointer(e){
+ cameraPointers.delete(e.pointerId);
+ if(cameraPointers.size<2){pinchStartDistance=0;pinchStartZoom=cameraDistance}
+ if(dragPointer===e.pointerId)dragPointer=null;
+ if(cameraPointers.size===1){
+  const entry=[...cameraPointers.entries()][0];
+  dragPointer=entry[0];lastDragX=entry[1].x;lastDragY=entry[1].y;
+ }
+}
+cameraCanvas.addEventListener('pointerup',endCameraPointer);
+cameraCanvas.addEventListener('pointercancel',endCameraPointer);
+cameraCanvas.addEventListener('wheel',e=>{
+ e.preventDefault();
+ cameraDistance=THREE.MathUtils.clamp(cameraDistance*Math.exp(e.deltaY*.001),3,22);
+},{passive:false});
+
 let last=performance.now(),spawnTimer=0,uiTimer=0;
 function loop(now){requestAnimationFrame(loop);let dt=Math.min(.05,(now-last)/1000);last=now;
 let x=(keys.has('d')?1:0)-(keys.has('a')?1:0)+joy.x,z=(keys.has('s')?1:0)-(keys.has('w')?1:0)+joy.y;let len=Math.hypot(x,z);if(len>1){x/=len;z/=len}if(len>.05){player.position.x+=x*7*dt;player.position.z+=z*7*dt;playerBody.rotation.y=Math.atan2(x,z)}player.position.x=THREE.MathUtils.clamp(player.position.x,-31,31);player.position.z=THREE.MathUtils.clamp(player.position.z,-31,31);
 for(let o of laneChars){o.progress+=dt*.07;o.g.position.z=-15+((o.progress*30)%30);o.g.position.y=.05+Math.sin(now*.004+o.progress*8)*.08;o.g.rotation.y=Math.PI}
 spawnTimer+=dt;if(spawnTimer>5&&laneChars.length<5){spawnTimer=0;laneSpawn()}
 bank+=incomeRate()*dt;uiTimer+=dt;if(uiTimer>.2){uiTimer=0;updateUI()}
-camera.position.lerp(new THREE.Vector3(player.position.x,player.position.y+8,player.position.z+10),.09);camera.lookAt(player.position.x,player.position.y+1,player.position.z-1);
+if(cameraMode==='first'){
+ playerBody.visible=false;
+ const eye=new THREE.Vector3(player.position.x,player.position.y+1.52,player.position.z);
+ camera.position.lerp(eye,.24);
+ const dir=new THREE.Vector3(
+  Math.sin(cameraYaw)*Math.cos(cameraPitch),
+  Math.sin(cameraPitch),
+  -Math.cos(cameraYaw)*Math.cos(cameraPitch)
+ );
+ camera.lookAt(eye.clone().add(dir.multiplyScalar(12)));
+}else{
+ playerBody.visible=true;
+ const target=new THREE.Vector3(player.position.x,player.position.y+1,player.position.z);
+ const horizontal=Math.cos(cameraPitch)*cameraDistance;
+ const desired=new THREE.Vector3(
+  player.position.x+Math.sin(cameraYaw)*horizontal,
+  player.position.y+1+Math.sin(cameraPitch)*cameraDistance,
+  player.position.z+Math.cos(cameraYaw)*horizontal
+ );
+ camera.position.lerp(desired,.16);
+ camera.lookAt(target);
+}
 renderer.render(scene,camera)}
 
 
