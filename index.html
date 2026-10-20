@@ -32,8 +32,6 @@
 <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script>
 <script type="module">
 import * as THREE from 'three';
-
-try {
 const $=s=>document.querySelector(s);const scene=new THREE.Scene();scene.background=new THREE.Color('#9ddcff');scene.fog=new THREE.Fog('#9ddcff',48,100);
 const camera=new THREE.PerspectiveCamera(64,innerWidth/innerHeight,.1,180);
 const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.08;renderer.outputColorSpace=THREE.SRGBColorSpace;$('#game').appendChild(renderer.domElement);
@@ -250,7 +248,7 @@ cameraCanvas.addEventListener('wheel',e=>{
 },{passive:false});
 
 let last=performance.now(),spawnTimer=0,uiTimer=0;
-function loop(now){requestAnimationFrame(loop);let dt=Math.min(.05,(now-last)/1000);last=now;
+function loop(now){try{requestAnimationFrame(loop);let dt=Math.min(.05,(now-last)/1000);last=now;
 const strafe=(keys.has('d')?1:0)-(keys.has('a')?1:0)+joy.x;const forward=(keys.has('s')?1:0)-(keys.has('w')?1:0)+joy.y;let x=strafe*Math.cos(cameraYaw)+forward*Math.sin(cameraYaw),z=strafe*Math.sin(cameraYaw)-forward*Math.cos(cameraYaw);let len=Math.hypot(x,z);if(len>1){x/=len;z/=len}if(len>.05){player.position.x+=x*7*dt;player.position.z+=z*7*dt;playerBody.rotation.y=Math.atan2(x,z)}player.position.x=THREE.MathUtils.clamp(player.position.x,-31,31);player.position.z=THREE.MathUtils.clamp(player.position.z,-31,31);
 for(let o of laneChars){o.progress+=dt*.07;o.g.position.z=-15+((o.progress*30)%30);o.g.position.y=.05+Math.sin(now*.004+o.progress*8)*.08;o.g.rotation.y=Math.PI}
 spawnTimer+=dt;if(spawnTimer>5&&laneChars.length<5){spawnTimer=0;laneSpawn()}
@@ -288,7 +286,7 @@ if(cameraMode==='first'){
  camera.position.lerp(safePosition,.28);
  camera.lookAt(target);
 }
-renderer.render(scene,camera)}
+renderer.render(scene,camera)}catch(err){const l=document.querySelector('#loading');if(l){l.style.display='grid';l.replaceChildren();const h=document.createElement('div');h.textContent='ゲーム実行エラー';const p=document.createElement('pre');p.style.cssText='white-space:pre-wrap;overflow-wrap:anywhere;max-width:92vw;max-height:45vh;overflow:auto;font-size:12px;font-weight:600;text-align:left;margin:12px;padding:12px;background:#fff;border:1px solid #667;color:#172445;border-radius:8px';p.textContent=String(err&& (err.stack||err.message)||err||'詳細不明');const s=document.createElement('small');s.textContent='この画面をスクリーンショットで送ってね';l.append(h,p,s)}console.error('Friendlot3D loop error:',err)}}
 
 
 // Session is created by auth.html; the game page restores the signed-in session.
@@ -320,24 +318,5 @@ setInterval(refreshEvent,1000);
 
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 $('#loading').style.display='none';updateUI();requestAnimationFrame(loop);
-window.addEventListener('error',e=>{const l=document.querySelector('#loading');if(l){l.style.display='grid';l.replaceChildren();const h=document.createElement('div');h.textContent='読み込みエラー';const p=document.createElement('pre');p.style.cssText='white-space:pre-wrap;overflow-wrap:anywhere;max-width:92vw;font-size:12px;text-align:left;margin:12px;padding:12px;background:#fff;color:#172445;border-radius:8px';p.textContent=String(e.message||'Script error.')+(e.filename?'\\n'+e.filename:'')+(e.lineno?'\\n行: '+e.lineno:'');l.append(h,p)}});
-
-} catch (err) {
-
-  const l = document.querySelector('#loading');
-  const detail = String(err && (err.stack || err.message) || err || '詳細不明');
-  if (l) {
-    l.style.display = 'grid';
-    l.replaceChildren();
-    const title = document.createElement('div');
-    title.textContent = 'ゲーム起動エラー';
-    const pre = document.createElement('pre');
-    pre.style.cssText = 'white-space:pre-wrap;overflow-wrap:anywhere;max-width:92vw;max-height:45vh;overflow:auto;font-size:12px;font-weight:600;text-align:left;margin:12px;padding:12px;background:#fff;border:1px solid #667;color:#172445;border-radius:8px';
-    pre.textContent = detail;
-    const hint = document.createElement('small');
-    hint.textContent = 'この画面をスクリーンショットで送ってね';
-    l.append(title, pre, hint);
-  }
-  console.error('Friendlot3D startup error:', err);
-}
+window.addEventListener('error',e=>{const l=$('#loading');if(l){l.style.display='grid';l.innerHTML='読み込みエラー\n'+String(e.message||'不明なエラー')+'<br><small>ページを再読み込みしてね</small>'}});
 </script></body></html>
