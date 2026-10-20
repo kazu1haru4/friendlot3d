@@ -249,14 +249,15 @@ cameraCanvas.addEventListener('wheel',e=>{
 
 let last=performance.now(),spawnTimer=0,uiTimer=0;
 function loop(now){requestAnimationFrame(loop);let dt=Math.min(.05,(now-last)/1000);last=now;
-const strafe=(keys.has('d')?1:0)-(keys.has('a')?1:0)+joy.x;const forward=(keys.has('s')?1:0)-(keys.has('w')?1:0)+joy.y;let x=strafe*Math.cos(cameraYaw)+forward*Math.sin(cameraYaw),z=strafe*Math.sin(cameraYaw)+forward*Math.cos(cameraYaw);let len=Math.hypot(x,z);if(len>1){x/=len;z/=len}if(len>.05){player.position.x+=x*7*dt;player.position.z+=z*7*dt;playerBody.rotation.y=Math.atan2(x,z)}player.position.x=THREE.MathUtils.clamp(player.position.x,-31,31);player.position.z=THREE.MathUtils.clamp(player.position.z,-31,31);
+const strafe=(keys.has('d')?1:0)-(keys.has('a')?1:0)+joy.x;const forward=(keys.has('s')?1:0)-(keys.has('w')?1:0)+joy.y;let x=strafe*Math.cos(cameraYaw)+forward*Math.sin(cameraYaw),z=strafe*Math.sin(cameraYaw)-forward*Math.cos(cameraYaw);let len=Math.hypot(x,z);if(len>1){x/=len;z/=len}if(len>.05){player.position.x+=x*7*dt;player.position.z+=z*7*dt;playerBody.rotation.y=Math.atan2(x,z)}player.position.x=THREE.MathUtils.clamp(player.position.x,-31,31);player.position.z=THREE.MathUtils.clamp(player.position.z,-31,31);
 for(let o of laneChars){o.progress+=dt*.07;o.g.position.z=-15+((o.progress*30)%30);o.g.position.y=.05+Math.sin(now*.004+o.progress*8)*.08;o.g.rotation.y=Math.PI}
 spawnTimer+=dt;if(spawnTimer>5&&laneChars.length<5){spawnTimer=0;laneSpawn()}
 bank+=incomeRate()*dt;uiTimer+=dt;if(uiTimer>.2){uiTimer=0;updateUI()}
 if(cameraMode==='first'){
  playerBody.visible=false;
+ // 目線位置を直接設定し、近くの建物で視点が遅れてめり込むのを防ぐ
  const eye=new THREE.Vector3(player.position.x,player.position.y+1.52,player.position.z);
- camera.position.lerp(eye,.24);
+ camera.position.copy(eye);
  const dir=new THREE.Vector3(
   Math.sin(cameraYaw)*Math.cos(cameraPitch),
   Math.sin(cameraPitch),
@@ -268,11 +269,21 @@ if(cameraMode==='first'){
  const target=new THREE.Vector3(player.position.x,player.position.y+1,player.position.z);
  const horizontal=Math.cos(cameraPitch)*cameraDistance;
  const desired=new THREE.Vector3(
-  player.position.x+Math.sin(cameraYaw)*horizontal,
+  player.position.x-Math.sin(cameraYaw)*horizontal,
   player.position.y+1+Math.sin(cameraPitch)*cameraDistance,
   player.position.z+Math.cos(cameraYaw)*horizontal
  );
- camera.position.lerp(desired,.16);
+ // ベースの壁などがカメラとプレイヤーの間にある場合、壁の手前にカメラを寄せる
+ const offset=desired.clone().sub(target);
+ const desiredDistance=offset.length();
+ const rayDirection=offset.clone().normalize();
+ const raycaster=new THREE.Raycaster(target,rayDirection,0.25,desiredDistance);
+ const blockers=scene.children.filter(o=>o!==player);
+ const hits=raycaster.intersectObjects(blockers,true);
+ let safeDistance=desiredDistance;
+ if(hits.length) safeDistance=Math.max(0.8,Math.min(desiredDistance,hits[0].distance-0.45));
+ const safePosition=target.clone().add(rayDirection.multiplyScalar(safeDistance));
+ camera.position.lerp(safePosition,.28);
  camera.lookAt(target);
 }
 renderer.render(scene,camera)}
