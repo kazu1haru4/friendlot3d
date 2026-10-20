@@ -226,8 +226,8 @@ cameraCanvas.addEventListener('pointermove',e=>{
  }
  if(dragPointer===e.pointerId){
   const dx=e.clientX-lastDragX,dy=e.clientY-lastDragY;
-  cameraYaw-=dx*.006;
-  cameraPitch=THREE.MathUtils.clamp(cameraPitch+dy*.005,-.05,1.25);
+  cameraYaw+=dx*.006;
+  cameraPitch=THREE.MathUtils.clamp(cameraPitch-dy*.005,-.05,1.25);
   lastDragX=e.clientX;lastDragY=e.clientY;
  }
 });
@@ -249,7 +249,7 @@ cameraCanvas.addEventListener('wheel',e=>{
 
 let last=performance.now(),spawnTimer=0,uiTimer=0;
 function loop(now){requestAnimationFrame(loop);let dt=Math.min(.05,(now-last)/1000);last=now;
-const strafe=(keys.has('d')?1:0)-(keys.has('a')?1:0)+joy.x;const forward=(keys.has('s')?1:0)-(keys.has('w')?1:0)+joy.y;let x=strafe*Math.cos(cameraYaw)+forward*Math.sin(cameraYaw),z=strafe*Math.sin(cameraYaw)-forward*Math.cos(cameraYaw);let len=Math.hypot(x,z);if(len>1){x/=len;z/=len}if(len>.05){player.position.x+=x*7*dt;player.position.z+=z*7*dt;playerBody.rotation.y=Math.atan2(x,z)}player.position.x=THREE.MathUtils.clamp(player.position.x,-31,31);player.position.z=THREE.MathUtils.clamp(player.position.z,-31,31);
+const strafe=(keys.has('d')?1:0)-(keys.has('a')?1:0)+joy.x;const forward=(keys.has('w')?1:0)-(keys.has('s')?1:0)-joy.y;let x=strafe*Math.cos(cameraYaw)+forward*Math.sin(cameraYaw),z=strafe*Math.sin(cameraYaw)-forward*Math.cos(cameraYaw);let len=Math.hypot(x,z);if(len>1){x/=len;z/=len}if(len>.05){player.position.x+=x*7*dt;player.position.z+=z*7*dt;playerBody.rotation.y=Math.atan2(x,z)}player.position.x=THREE.MathUtils.clamp(player.position.x,-31,31);player.position.z=THREE.MathUtils.clamp(player.position.z,-31,31);
 for(let o of laneChars){o.progress+=dt*.07;o.g.position.z=-15+((o.progress*30)%30);o.g.position.y=.05+Math.sin(now*.004+o.progress*8)*.08;o.g.rotation.y=Math.PI}
 spawnTimer+=dt;if(spawnTimer>5&&laneChars.length<5){spawnTimer=0;laneSpawn()}
 bank+=incomeRate()*dt;uiTimer+=dt;if(uiTimer>.2){uiTimer=0;updateUI()}
