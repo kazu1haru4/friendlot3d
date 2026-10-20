@@ -30,6 +30,38 @@
 <div id="loading">FRIENDLOT 3D<br>ワールド生成中…</div></div>
 <script>if(!sessionStorage.getItem('friendlot3d_token')||!sessionStorage.getItem('friendlot3d_id'))location.replace('./auth.html');</script>
 <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script>
+<script>
+(function(){
+  function showError(title, details){
+    var l=document.querySelector('#loading');
+    if(!l) return;
+    l.style.display='grid';
+    l.replaceChildren();
+    var h=document.createElement('div'); h.textContent=title;
+    var d=document.createElement('pre');
+    d.style.cssText='white-space:pre-wrap;overflow-wrap:anywhere;max-width:92vw;max-height:45vh;overflow:auto;font-size:12px;font-weight:600;text-align:left;margin:12px;padding:12px;background:#fff;border:1px solid #667;color:#172445;border-radius:8px';
+    d.textContent=details || '詳細情報を取得できませんでした';
+    var hint=document.createElement('small'); hint.textContent='この画面をスクリーンショットで送ってね';
+    l.append(h,d,hint);
+  }
+  window.addEventListener('error',function(e){
+    var detail = e.message || 'Script error.（ブラウザが詳細を隠しています）';
+    if(e.filename) detail += '\\nファイル: '+e.filename;
+    if(e.lineno) detail += '\\n行: '+e.lineno+' / 列: '+(e.colno||0);
+    showError('読み込みエラー',detail);
+  });
+  window.addEventListener('unhandledrejection',function(e){
+    var r=e.reason;
+    showError('非同期エラー',String(r && (r.stack || r.message) || r || '詳細不明'));
+  });
+  window.addEventListener('DOMContentLoaded',function(){
+    var scripts=document.querySelectorAll('script[type="module"]');
+    scripts.forEach(function(s){
+      s.addEventListener('error',function(){showError('モジュール読み込みエラー','ゲームのJavaScriptモジュールを読み込めませんでした。通信/CDN/構文エラーの可能性があります。\\nURL: '+(s.src || 'ページ内のmodule script'));});
+    });
+  });
+})();
+</script>
 <script type="module">
 import * as THREE from 'three';
 const $=s=>document.querySelector(s);const scene=new THREE.Scene();scene.background=new THREE.Color('#9ddcff');scene.fog=new THREE.Fog('#9ddcff',48,100);
@@ -318,5 +350,5 @@ setInterval(refreshEvent,1000);
 
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 $('#loading').style.display='none';updateUI();requestAnimationFrame(loop);
-window.addEventListener('error',e=>{const l=document.querySelector('#loading');if(l){l.style.display='grid';const msg=String(e.message||'不明なエラー');const file=String(e.filename||'ファイル情報なし');const line=Number(e.lineno||0),col=Number(e.colno||0);l.replaceChildren();const title=document.createElement('div');title.textContent='読み込みエラー';const detail=document.createElement('pre');detail.style.cssText='white-space:pre-wrap;overflow-wrap:anywhere;max-width:92vw;max-height:45vh;overflow:auto;font-size:12px;font-weight:600;text-align:left;margin:12px;padding:12px;background:#fff;border:1px solid #667;color:#172445;border-radius:8px';detail.textContent=msg+'\\n'+file+(line?'\\n行: '+line+' / 列: '+col:'');const hint=document.createElement('small');hint.textContent='この画面の内容をスクリーンショットで送ってね';l.append(title,detail,hint)}});window.addEventListener('unhandledrejection',e=>{const l=document.querySelector('#loading');if(l){l.style.display='grid';const d=document.createElement('pre');d.style.cssText='white-space:pre-wrap;overflow-wrap:anywhere;max-width:92vw;max-height:45vh;overflow:auto;font-size:12px;text-align:left;margin:12px;padding:12px;background:#fff;border:1px solid #667;color:#172445;border-radius:8px';const r=e.reason;d.textContent='非同期エラー\\n'+String(r&&r.stack||r&&r.message||r||'詳細不明');l.replaceChildren(document.createTextNode('読み込みエラー'),d,document.createElement('small'));l.lastChild.textContent='この画面の内容をスクリーンショットで送ってね'}});
+
 </script></body></html>
