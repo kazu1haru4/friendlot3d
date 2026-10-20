@@ -66,7 +66,7 @@ const SUPABASE_KEY='sb_publishable_IuQ6r_4vbGC9PP7cWJ9YRQ_Ai7tAfTJ';
 const rarityColors={'ノーマル':'#eeeeee','コモン':'#eeeeee','レア':'#65b8ff','エピック':'#c58aff','レジェンド':'#ffb95e','神話':'#ff6464','ブレインロット・ゴッド':'#ffe66d','シークレット':'#ff7bff','GOAT':'#66ffb6','OG':'#ffdf6e'};
 function charColor(c){return rarityColors[c.rarity]||'#bfc9ff'}
 try{
- const url=SUPABASE_URL+'/rest/v1/brainrot_catalog?select=id,name,rarity,emoji,income_per_minute,purchase_price,is_fuse_only,is_shop_available,image_url,type,color,accent&order=name.asc';
+ const url=SUPABASE_URL+'/rest/v1/brainrot_catalog?select=id,name,rarity,emoji,income_per_minute,purchase_price,is_fuse_only,is_shop_available,image_url&order=name.asc';
  const r=await fetch(url,{headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY},cache:'no-store'});
  if(!r.ok)throw new Error('Supabase HTTP '+r.status+'：'+(await r.text()).slice(0,180));
  const rows=await r.json();
