@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Three.js 読み込みテスト</title>
+<style>body{font-family:system-ui;padding:20px;background:#eaf6ff;color:#172445}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #789;padding:12px;border-radius:8px}button{padding:10px 14px;font-size:16px}</style></head>
+<body><h2>Three.js 読み込みテスト</h2><p>このページはゲーム本体を変更しません。</p><pre id="result">確認中…</pre>
+<script>
+const out=document.querySelector('#result');
+window.addEventListener('error',e=>{out.textContent='エラー: '+(e.message||'Script error.')+(e.filename?'\\nファイル: '+e.filename:'')+(e.lineno?'\\n行: '+e.lineno:'')});
+window.addEventListener('unhandledrejection',e=>{out.textContent='非同期エラー: '+String(e.reason?.stack||e.reason?.message||e.reason)});
+</script>
+<script type="module">
+try {
+ const THREE = await import('https://unpkg.com/three@0.160.0/build/three.module.js');
+ const scene = new THREE.Scene();
+ const camera = new THREE.PerspectiveCamera(70, 1, 0.1, 10);
+ const renderer = new THREE.WebGLRenderer();
+ renderer.setSize(220,160);
+ scene.background = new THREE.Color('#b8e3ff');
+ const cube = new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshBasicMaterial({color:0x635bdb}));
+ scene.add(cube); camera.position.z=3; renderer.render(scene,camera);
+ document.body.appendChild(renderer.domElement);
+ out.textContent='成功：Three.js を読み込めました。\nThree.js r'+THREE.REVISION+'\nWebGL描画も成功しました。';
+} catch(e) {
+ out.textContent='失敗：'+String(e?.stack||e?.message||e);
+}
+</script></body></html>
