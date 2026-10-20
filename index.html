@@ -30,40 +30,10 @@
 <div id="loading">FRIENDLOT 3D<br>ワールド生成中…</div></div>
 <script>if(!sessionStorage.getItem('friendlot3d_token')||!sessionStorage.getItem('friendlot3d_id'))location.replace('./auth.html');</script>
 <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script>
-<script>
-(function(){
-  function showError(title, details){
-    var l=document.querySelector('#loading');
-    if(!l) return;
-    l.style.display='grid';
-    l.replaceChildren();
-    var h=document.createElement('div'); h.textContent=title;
-    var d=document.createElement('pre');
-    d.style.cssText='white-space:pre-wrap;overflow-wrap:anywhere;max-width:92vw;max-height:45vh;overflow:auto;font-size:12px;font-weight:600;text-align:left;margin:12px;padding:12px;background:#fff;border:1px solid #667;color:#172445;border-radius:8px';
-    d.textContent=details || '詳細情報を取得できませんでした';
-    var hint=document.createElement('small'); hint.textContent='この画面をスクリーンショットで送ってね';
-    l.append(h,d,hint);
-  }
-  window.addEventListener('error',function(e){
-    var detail = e.message || 'Script error.（ブラウザが詳細を隠しています）';
-    if(e.filename) detail += '\\nファイル: '+e.filename;
-    if(e.lineno) detail += '\\n行: '+e.lineno+' / 列: '+(e.colno||0);
-    showError('読み込みエラー',detail);
-  });
-  window.addEventListener('unhandledrejection',function(e){
-    var r=e.reason;
-    showError('非同期エラー',String(r && (r.stack || r.message) || r || '詳細不明'));
-  });
-  window.addEventListener('DOMContentLoaded',function(){
-    var scripts=document.querySelectorAll('script[type="module"]');
-    scripts.forEach(function(s){
-      s.addEventListener('error',function(){showError('モジュール読み込みエラー','ゲームのJavaScriptモジュールを読み込めませんでした。通信/CDN/構文エラーの可能性があります。\\nURL: '+(s.src || 'ページ内のmodule script'));});
-    });
-  });
-})();
-</script>
 <script type="module">
 import * as THREE from 'three';
+
+try {
 const $=s=>document.querySelector(s);const scene=new THREE.Scene();scene.background=new THREE.Color('#9ddcff');scene.fog=new THREE.Fog('#9ddcff',48,100);
 const camera=new THREE.PerspectiveCamera(64,innerWidth/innerHeight,.1,180);
 const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.08;renderer.outputColorSpace=THREE.SRGBColorSpace;$('#game').appendChild(renderer.domElement);
@@ -350,5 +320,24 @@ setInterval(refreshEvent,1000);
 
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 $('#loading').style.display='none';updateUI();requestAnimationFrame(loop);
+window.addEventListener('error',e=>{const l=document.querySelector('#loading');if(l){l.style.display='grid';l.replaceChildren();const h=document.createElement('div');h.textContent='読み込みエラー';const p=document.createElement('pre');p.style.cssText='white-space:pre-wrap;overflow-wrap:anywhere;max-width:92vw;font-size:12px;text-align:left;margin:12px;padding:12px;background:#fff;color:#172445;border-radius:8px';p.textContent=String(e.message||'Script error.')+(e.filename?'\\n'+e.filename:'')+(e.lineno?'\\n行: '+e.lineno:'');l.append(h,p)}});
 
+} catch (err) {
+
+  const l = document.querySelector('#loading');
+  const detail = String(err && (err.stack || err.message) || err || '詳細不明');
+  if (l) {
+    l.style.display = 'grid';
+    l.replaceChildren();
+    const title = document.createElement('div');
+    title.textContent = 'ゲーム起動エラー';
+    const pre = document.createElement('pre');
+    pre.style.cssText = 'white-space:pre-wrap;overflow-wrap:anywhere;max-width:92vw;max-height:45vh;overflow:auto;font-size:12px;font-weight:600;text-align:left;margin:12px;padding:12px;background:#fff;border:1px solid #667;color:#172445;border-radius:8px';
+    pre.textContent = detail;
+    const hint = document.createElement('small');
+    hint.textContent = 'この画面をスクリーンショットで送ってね';
+    l.append(title, pre, hint);
+  }
+  console.error('Friendlot3D startup error:', err);
+}
 </script></body></html>
