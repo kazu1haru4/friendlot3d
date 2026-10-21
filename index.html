@@ -391,7 +391,7 @@ function buildBase(i){
  }
  bases.push({i,x,z,g,slots,color:frame,gateGroup});
 }
-ground();
+window.__friendlotSetStage?.('マップ生成: 地面');ground();
 // 中央の赤いショップレーン。基地を左右に並べるマップ構成。
 box(6.4,.12,68,'#4b342e',0,.01,-3);
 box(5.8,.07,67,'#d62f32',0,.10,-3);
@@ -421,7 +421,7 @@ for(let z=-25;z<=25;z+=8)for(let x of [-5.5,5.5]){
  ball(.18,'#ffeaa1',x,2.2,z,scene,[1,1,1]);
 }
 // build the 8 colored player plots
-for(let i=0;i<8;i++)buildBase(i);
+window.__friendlotSetStage?.('マップ生成: ベース');for(let i=0;i<8;i++)buildBase(i);
  // 参考画像のように左右の基地をマップ上に並べて表示する。自分の所持キャラは引き続きbases[0]へ配置。
  for(const b of bases){b.g.visible=true;b.occupied=(b.i===0);}
 // 木は一旦非表示。地面まわりの岩だけを残す。
@@ -438,7 +438,7 @@ for(let i=0;i<9;i++){
  ball(1.2,'#f5fbff',1.1,-.12,0,cloud,[1.2,.65,1]);
 }
 function createPlayer(){player=new THREE.Group();player.position.set(0,0,11);playerBody=new THREE.Group();player.add(playerBody);let shirt=mat('#4268ff'),skin=mat('#f0c49a'),pants=mat('#29324b');box(.65,.75,.38,'#4268ff',0,1.0,0,playerBody);ball(.3,'#f0c49a',0,1.62,0,playerBody);box(.22,.55,.24,'#29324b',-.17,.38,0,playerBody);box(.22,.55,.24,'#29324b',.17,.38,0,playerBody);box(.17,.56,.2,'#f0c49a',-.43,1,0,playerBody);box(.17,.56,.2,'#f0c49a',.43,1,0,playerBody);scene.add(player)}
-createPlayer();
+window.__friendlotSetStage?.('プレイヤー生成');createPlayer();
 // 動画風の豪華な金色・黄色の飛行カーペット。WASDとSpace/Shiftで飛行。
 function makeFlyingCarpet(){
  const g=new THREE.Group();
@@ -603,7 +603,7 @@ cameraCanvas.addEventListener('wheel',e=>{
 },{passive:false});
 
 let last=performance.now(),spawnTimer=0,uiTimer=0;
-function loop(now){requestAnimationFrame(loop);let dt=Math.min(.05,(now-last)/1000);last=now;
+function loop(now){requestAnimationFrame(loop);try{window.__friendlotSetStage?.('ゲームループ: 移動・キャラ更新');let dt=Math.min(.05,(now-last)/1000);last=now;
 const strafe=(keys.has('d')?1:0)-(keys.has('a')?1:0)+joy.x;const forward=(keys.has('w')?1:0)-(keys.has('s')?1:0)-joy.y;let x=strafe*Math.cos(cameraYaw)+forward*Math.sin(cameraYaw),z=strafe*Math.sin(cameraYaw)-forward*Math.cos(cameraYaw);let len=Math.hypot(x,z);if(len>1){x/=len;z/=len}if(len>.05){
  const nx=player.position.x+x*movementSpeed()*dt,nz=player.position.z+z*movementSpeed()*dt;
  let blocked=false;
@@ -679,7 +679,7 @@ if(cameraMode==='first'){
  camera.position.copy(safePosition);
  camera.lookAt(target);
 }
-renderer.render(scene,camera)}
+window.__friendlotSetStage?.('ゲームループ: 3D描画');renderer.render(scene,camera);window.__friendlotSetStage?.('ゲームループ正常動作')}catch(e){console.error('Friendlot game loop error:',e);window.__friendlotDiag?.('ゲームループ実行エラー',(e&&e.stack)||String(e));}}
 
 
 // サイト版FriendlotのSupabase Auth・既存Brainrot RPCを使用。独自game_savesは使わない。
@@ -734,7 +734,6 @@ window.__friendlotSetStage?.('ショップ初期化');
 await refreshSharedShop();setInterval(refreshSharedShop,15000);
 
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
-window.__friendlotSetStage?.('ゲーム起動完了');
-$('#loading').style.display='none';updateUI();requestAnimationFrame(loop);
+window.__friendlotSetStage?.('初回描画開始');$('#loading').style.display='none';updateUI();requestAnimationFrame(loop);
 window.addEventListener('error',e=>{const l=$('#loading');if(l){l.style.display='grid';l.innerHTML='読み込みエラー\n'+String(e.message||'不明なエラー')+'<br><small>ページを再読み込みしてね</small>'}});
 </script></body></html>
