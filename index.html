@@ -677,6 +677,14 @@ if(cameraMode==='first'){
    const blockers=[];
    scene.traverse(o=>{
      if(o===player || o===flyingCarpet || !o.isMesh || !o.visible || !o.geometry) return;
+     // ベースロックの赤いレーザー・ゲート部品はカメラ衝突判定から除外。
+     // ゲートの表示とプレイヤー移動時のロック判定はそのまま維持する。
+     let ancestor=o, isBaseLockGate=false;
+     while(ancestor){
+       if(ancestor.name==='baseLockGate'){isBaseLockGate=true;break;}
+       ancestor=ancestor.parent;
+     }
+     if(isBaseLockGate) return;
      if(!o.geometry.attributes || !o.geometry.attributes.position) return;
      if(o.geometry.boundingSphere===null) o.geometry.computeBoundingSphere();
      blockers.push(o);
