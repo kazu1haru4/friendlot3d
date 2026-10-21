@@ -720,9 +720,13 @@ if(cameraMode==='first'){
    scene.traverse(o=>{
      // プレイヤー本体だけでなく、playerBody配下の頭・胴体・手足も
      // カメラ衝突判定から除外する。建物など他の障害物判定は維持。
-     let playerPart=o;
-     while(playerPart && playerPart!==player) playerPart=playerPart.parent;
-     if(playerPart===player || o===flyingCarpet || !o.isMesh || !o.visible || !o.geometry) return;
+     let playerPart=o, isPlayerPart=false;
+     while(playerPart){
+       if(playerPart===player || playerPart===playerBody){isPlayerPart=true;break;}
+       playerPart=playerPart.parent;
+     }
+     // 頭の球体を含め、playerBody配下の全メッシュをカメラ判定から除外。
+     if(isPlayerPart || o===player || o===playerBody || o===flyingCarpet || !o.isMesh || !o.visible || !o.geometry) return;
      // ベースロックの赤いレーザー・ゲート部品はカメラ衝突判定から除外。
      // ゲートの表示とプレイヤー移動時のロック判定はそのまま維持する。
      let ancestor=o, isBaseLockGate=false;
