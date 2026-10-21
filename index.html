@@ -446,7 +446,7 @@ window.__friendlotSetStage?.('マップ生成: ベース');for(let i=0;i<8;i++)b
    const own=bases[0];if(!own)return;
    own.g.updateMatrixWorld(true);
    const lp=new THREE.Vector3(player.position.x,0,player.position.z).applyMatrix4(own.g.matrixWorld.clone().invert());
-   if(Math.abs(lp.x-6.35)>.82||Math.abs(lp.z)>.82){say('エレベーターのかごの中に入ってね');return;}
+   if(Math.abs(lp.x)>.82||Math.abs(lp.z-3.65)>.82){say('エレベーターのかごの中に入ってね');return;}
    elevatorTargetFloor=level;elevatorMoving=true;
    const lift=elevatorCars.find(v=>v.baseIndex===0);if(lift)lift.targetY=.68+level*2.97;
    say((level+1)+'階へ移動します');
@@ -641,7 +641,7 @@ function loop(now){requestAnimationFrame(loop);try{window.__friendlotSetStage?.(
      if(lift.baseIndex===0){
        const base=bases[0];base.g.updateMatrixWorld(true);
        const local=new THREE.Vector3(player.position.x,0,player.position.z).applyMatrix4(base.g.matrixWorld.clone().invert());
-       if(Math.abs(local.x-6.35)<.82&&Math.abs(local.z)<.82){player.position.y=THREE.MathUtils.clamp((lift.currentY-.68)*1.22,0,7.25);}
+       if(Math.abs(local.x)<.82&&Math.abs(local.z-3.65)<.82){player.position.y=THREE.MathUtils.clamp((lift.currentY-.68)*1.22,0,7.25);}
      }
    }else{lift.currentY=lift.targetY;lift.car.position.y=lift.currentY;if(lift.baseIndex===0)elevatorMoving=false;}
  }
@@ -669,8 +669,8 @@ function loop(now){requestAnimationFrame(loop);try{window.__friendlotSetStage?.(
   ownForElevator.g.updateMatrixWorld(true);
   const localPos=new THREE.Vector3(player.position.x,0,player.position.z).applyMatrix4(ownForElevator.g.matrixWorld.clone().invert());
   insideOwnBase=Math.abs(localPos.x)<6.25&&Math.abs(localPos.z)<5.1;
-  nearElevator=Math.abs(localPos.x-6.35)<2.0&&Math.abs(localPos.z)<2.05;
-  onElevator=Math.abs(localPos.x-6.35)<.82&&Math.abs(localPos.z)<.82;
+  nearElevator=Math.abs(localPos.x)<2.0&&Math.abs(localPos.z-3.65)<2.05;
+  onElevator=Math.abs(localPos.x)<.82&&Math.abs(localPos.z-3.65)<.82;
   $('#elevatorPanel').style.display=nearElevator?'block':'none';
   // ベースの各階床に論理的な当たり判定を追加。
   // プレイヤーが床の範囲内にいる間は、現在階の床面より下へ落ちないようにする。
