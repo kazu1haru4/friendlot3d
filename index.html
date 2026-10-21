@@ -160,7 +160,7 @@ function buildBase(i){
  const side=i<4?-1:1, row=i%4, x=side*17.5, z=-27+row*17;
  const g=new THREE.Group();g.position.set(x,0,z);
  // 自分の基地は正面が見える向き。他の区画はワールド配置に合わせて回転する。
- g.rotation.y=i===0?Math.PI:(side<0?Math.PI/2:-Math.PI/2);scene.add(g);
+ g.rotation.y=side<0?-Math.PI/2:Math.PI/2;scene.add(g);
  const frame='#45464f', dark='#242731', edge='#666873', concrete='#85858d', window='#111923', wood='#8b4d2e', woodTop='#a96540';
  // Roblox版の画像に合わせた横長の土台と、レンガ色の縁取り
  box(11.8,.48,9.2,'#777982',0,.08,0,g);box(11.45,.18,8.9,'#343741',0,.39,0,g);box(11.15,.12,8.6,'#269b35',0,.53,0,g);
