@@ -43,7 +43,7 @@
     if(original)original.dataset.diagnosticReady='1';
   });
 })();
-</script><div id="game"></div><div id="hud"><div id="brand" class="panel">🌀 FRIENDLOT 3D <span style="color:#ffe37b">REBORN</span></div><div id="stats" class="panel">Cash: $500<br>収益: $0/s<br>ベース: 1F</div><div id="help" class="panel">WASD / 矢印キーで移動<br>ドラッグ・スワイプで視点回転<br>ホイール・ピンチでズーム</div><button id="actionsToggle" type="button" aria-expanded="false">☰ メニューを開く</button><div id="actions" class="collapsed"><button id="collect">💵 収益回収</button><button id="rebirth">🔁 リバース</button><button id="catalogBtn">📚 キャラ図鑑</button><button id="gearShopBtn" style="display:none">🛠️ ギアショップ</button><button id="carryBtn">🤲 キャラを持ち上げる</button><button id="stealBtn" style="display:none">🕵️ 盗み挑戦</button><button id="baseLockBtn" style="display:none">🔒 ベースロック</button><button id="cameraMode">👁️ 一人称に切替</button><button id="carpetBtn" style="display:none;background:#188b58">🟩 飛行カーペット</button><div id="flightControls" style="display:none;pointer-events:auto;gap:6px;flex-direction:column"><div id="carpetSpeedPanel" style="display:block"><label for="carpetSpeed">🛸 カーペット速度：<span id="carpetSpeedValue">12</span></label><input id="carpetSpeed" type="range" min="3" max="30" step="1" value="12" aria-label="カーペット速度"></div><button id="flyUp" style="background:#188b58">⬆ 上昇</button><button id="flyDown" style="background:#188b58">⬇ 下降</button></div><button id="adminBtn" style="background:#a33c56;display:none">🛡️ 管理者</button></div><button id="gearToggle" type="button" aria-expanded="true">🎒 ギア欄を隠す</button><div id="gearInventory" aria-label="ギア装備欄"><div class="gearInvTitle">🎒 ギア</div><div id="gearSlots"><button class="gearSlot active" data-gear="none">なし</button><button class="gearSlot" data-gear="speedCoil" disabled>⚡<small>未所持</small></button><button class="gearSlot" data-gear="goldenCoil" disabled>💨<small>未所持</small></button><button class="gearSlot" data-gear="incomeCharm" disabled>💰<small>未所持</small></button></div></div><div id="stickpad"><div id="stick"></div></div><button id="buy">購入</button><div id="catalog" class="panel">キャラを購入してベースに運ぼう！</div><div id="eventBanner" class="panel" style="position:absolute;left:50%;top:10px;transform:translateX(-50%);display:none;color:#fff36b;font-weight:1000;text-align:center"></div><div id="notice" class="panel"></div>
+</script><div id="game"></div><div id="hud"><div id="brand" class="panel">🌀 FRIENDLOT 3D <span style="color:#ffe37b">REBORN</span></div><div id="stats" class="panel">Cash: $500<br>収益: $0/s<br>ベース: 1F</div><div id="help" class="panel">WASD / 矢印キーで移動<br>ドラッグ・スワイプで視点回転<br>ホイール・ピンチでズーム</div><button id="actionsToggle" type="button" aria-expanded="false">☰ メニューを開く</button><div id="actions" class="collapsed"><button id="collect">💵 収益回収</button><button id="rebirth">🔁 リバース</button><button id="catalogBtn">📚 キャラ図鑑</button><button id="gearShopBtn" style="display:none">🛠️ ギアショップ</button><button id="carryBtn">🤲 キャラを持ち上げる</button><button id="stealBtn" style="display:none">🕵️ 盗み挑戦</button><button id="baseLockBtn" style="display:none">🔒 ベースロック</button><button id="cameraMode">👁️ 一人称に切替</button><button id="carpetBtn" style="display:none;background:#188b58">🟩 飛行カーペット</button><div id="flightControls" style="display:none;pointer-events:auto;gap:6px;flex-direction:column"><div id="carpetSpeedPanel" style="display:block"><label for="carpetSpeed">🛸 カーペット速度：<span id="carpetSpeedValue">12</span></label><input id="carpetSpeed" type="range" min="3" max="30" step="1" value="12" aria-label="カーペット速度"></div><button id="flyUp" style="background:#188b58">⬆ 上昇</button><button id="flyDown" style="background:#188b58">⬇ 下降</button></div><button id="adminBtn" style="background:#a33c56;display:none">🛡️ 管理者</button></div><button id="gearToggle" type="button" aria-expanded="true">🎒 ギア欄を隠す</button><div id="gearInventory" aria-label="ギア装備欄"><div class="gearInvTitle">🎒 ギア</div><div id="gearSlots"><button class="gearSlot active" data-gear="none">なし</button><button class="gearSlot" data-gear="speedCoil" disabled>⚡<small>未所持</small></button><button class="gearSlot" data-gear="goldenCoil" disabled>💨<small>未所持</small></button><button class="gearSlot" data-gear="incomeCharm" disabled>💰<small>未所持</small></button></div></div><div id="stickpad"><div id="stick"></div></div><button id="buy">購入</button><div id="catalog" class="panel">キャラを購入してベースに運ぼう！</div><div id="eventBanner" class="panel" style="position:absolute;left:50%;top:10px;transform:translateX(-50%);display:none;color:#fff36b;font-weight:1000;text-align:center"></div><div id="elevatorPanel" class="panel" style="display:none;position:absolute;left:50%;top:58%;transform:translate(-50%,-50%);pointer-events:auto;text-align:center;min-width:190px;border:2px solid #f4c95d;background:#241a0deF;z-index:6"><div style="font-weight:1000;color:#ffdf79;margin-bottom:7px">👑 GOLD ELEVATOR</div><div style="display:flex;gap:6px"><button type="button" data-elevator-floor="0" style="background:#a87922;color:#fff5c8;flex:1">1F</button><button type="button" data-elevator-floor="1" style="background:#a87922;color:#fff5c8;flex:1">2F</button><button type="button" data-elevator-floor="2" style="background:#a87922;color:#fff5c8;flex:1">3F</button></div><div style="font-size:10px;margin-top:6px;color:#ffe9a6">エレベーターの近くで階を選択</div></div><div id="notice" class="panel"></div>
 <div id="adminPanel" style="display:none;position:fixed;inset:0;background:#080d1bd9;z-index:20;place-items:center;padding:16px;pointer-events:auto">
  <div class="panel" style="width:min(440px,94vw);max-height:88vh;overflow:auto">
   <div style="display:flex;justify-content:space-between;align-items:center"><b>🛡️ フレンドロット 管理者パネル</b><button id="adminClose">閉じる</button></div>
@@ -125,7 +125,7 @@ const camera=new THREE.PerspectiveCamera(64,innerWidth/innerHeight,.1,180);
 const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.08;renderer.outputColorSpace=THREE.SRGBColorSpace;$('#game').appendChild(renderer.domElement);
 scene.add(new THREE.HemisphereLight('#ffffff','#61718c',2.1));const sun=new THREE.DirectionalLight('#fff1d3',3);sun.position.set(-18,32,12);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);scene.add(sun);
 const mat=c=>new THREE.MeshStandardMaterial({color:c,roughness:.76});const box=(w,h,d,c,x,y,z,parent=scene)=>{let m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat(c));m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m};const ball=(r,c,x,y,z,parent=scene,scale=[1,1,1])=>{let m=new THREE.Mesh(new THREE.SphereGeometry(r,16,12),mat(c));m.position.set(x,y,z);m.scale.set(...scale);m.castShadow=true;parent.add(m);return m};
-let cash=1500,bank=0,rebirths=0,floors=1,owned=[],near=null,toastTimer,selectedIndex=0;
+let cash=1500,bank=0,rebirths=0,floors=1,owned=[],near=null,toastTimer,selectedIndex=0;let elevatorTargetFloor=0,elevatorMoving=false,elevatorCars=[];
 let gearOwned={speedCoil:false,goldenCoil:false,incomeCharm:false};let equippedGear='none';const bases=[],laneChars=[],keys=new Set(),joy={x:0,y:0};let player,playerBody;let flyingCarpet=null,carpetFlying=false,carpetVertical=0;let carpetSpeed=12;
 const fmt=n=>n>=1e12?(n/1e12).toFixed(2)+'T':n>=1e9?(n/1e9).toFixed(2)+'B':n>=1e6?(n/1e6).toFixed(2)+'M':n>=1e3?(n/1e3).toFixed(1)+'K':Math.floor(n).toLocaleString();
 const say=t=>{let e=$('#notice');e.textContent=t;e.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>e.classList.remove('show'),1900)};
@@ -369,14 +369,32 @@ function buildBase(i){
  // 正面の茶色い看板
  box(9.5,.98,.42,wood,0,3.82,-5.55,g);box(9.54,.13,.45,woodTop,0,4.36,-5.55,g);box(9.54,.11,.45,'#65371f',0,3.28,-5.55,g);
  const sign=label(i===0?(signedInId?String(signedInId)+'の基地':'あなたの基地'):'基地 '+(i+1),'#fff4e8');sign.position.set(0,3.82,-5.8);sign.scale.set(3.85,.72,1);g.add(sign);
- // 右側の階段：1～3階を歩いて移動できるように、奥行き方向へ長い段を配置
- for(let n=0;n<24;n++){
-   const stepY=.14+n*.25, stepZ=4.45-n*.38;
-   box(1.9,.18,.46,'#777982',6.35,stepY,stepZ,g);
-   box(1.94,.045,.48,'#a5a8b0',6.35,stepY+.105,stepZ,g);
+ // 右側の階段を撤去し、金色の高級エレベーターに置き換える。
+ // シャフトは固定、かごは1F～3Fの間を上下する。
+ const elevatorGroup=new THREE.Group();elevatorGroup.name='goldLuxuryElevator';elevatorGroup.position.set(6.35,0,0);g.add(elevatorGroup);
+ const gold='#e7b947',goldLight='#ffe6a0',goldDark='#8d5e16',glass='#9de7f2';
+ // シャフトの四隅の金属レール
+ for(const ex of [-1.05,1.05])for(const ez of [-1.12,1.12]){
+   box(.13,8.15,.13,goldDark,ex,4.25,ez,elevatorGroup);
+   box(.045,8.0,.045,goldLight,ex+(ex<0?.08:-.08),4.25,ez+(ez<0?.08:-.08),elevatorGroup);
  }
- box(1.98,.18,1.0,'#555963',6.35,.12,4.75,g);
- box(1.98,.18,1.0,'#555963',6.35,6.0,-4.75,g);
+ // 各階の金色フレームと床位置の目印
+ for(const ey of [.68,3.65,6.62]){
+   for(const ex of [-1.12,1.12])box(.22,.16,2.5,gold,ex,ey,0,elevatorGroup);
+   box(2.35,.12,.18,gold,0,ey,-1.18,elevatorGroup);
+   box(2.35,.12,.18,gold,0,ey,1.18,elevatorGroup);
+ }
+ const elevatorCar=new THREE.Group();elevatorCar.name='elevatorCar';elevatorCar.position.set(0,.68,0);elevatorGroup.add(elevatorCar);
+ box(1.92,.16,2.12,goldDark,0,0,0,elevatorCar);box(1.78,.08,1.98,goldLight,0,.105,0,elevatorCar);
+ // 高級感のある金色の側壁、背面、前面の左右スライド扉
+ for(const ex of [-.88,.88]){box(.12,2.35,1.98,gold,ex,1.28,0,elevatorCar);box(.035,2.18,1.7,glass,ex+(ex<0?.07:-.07),1.28,0,elevatorCar);}
+ box(1.72,2.35,.10,goldDark,0,1.28,.95,elevatorCar);box(1.55,2.12,.035,glass,0,1.3,.90,elevatorCar);
+ box(.78,2.18,.09,gold, -.43,1.28,-.98,elevatorCar);box(.78,2.18,.09,gold,.43,1.28,-.98,elevatorCar);
+ box(.05,2.05,.035,goldLight,0,1.28,-1.035,elevatorCar);
+ // 屋根の装飾と階数表示
+ box(2.0,.12,2.18,gold,0,2.48,0,elevatorCar);box(.78,.18,.06,'#202330',0,2.59,-.8,elevatorCar);
+ const elevatorLabel=label('GOLD LIFT','#ffe37b');elevatorLabel.position.set(0,2.9,-1.15);elevatorLabel.scale.set(1.7,.35,1);elevatorCar.add(elevatorLabel);
+ elevatorCars.push({baseIndex:i,group:elevatorGroup,car:elevatorCar,currentY:.68,targetY:.68,level:0});
  // キャラ台と3階分のスロット。既存の所持キャラ・階数ロジックを維持。
  let slots=[];
  for(let floor=0;floor<3;floor++){
@@ -389,7 +407,7 @@ function buildBase(i){
      slots.push({x:sx,y:fy+.36,z:sz,group:g,world:null,floor});
    }
  }
- bases.push({i,x,z,g,slots,color:frame,gateGroup});
+ bases.push({i,x,z,g,slots,color:frame,gateGroup,elevatorGroup,elevatorCar});
 }
 window.__friendlotSetStage?.('マップ生成: 地面');ground();
 // 中央の赤いショップレーン。基地を左右に並べるマップ構成。
@@ -422,7 +440,18 @@ for(let z=-25;z<=25;z+=8)for(let x of [-5.5,5.5]){
 }
 // build the 8 colored player plots
 window.__friendlotSetStage?.('マップ生成: ベース');for(let i=0;i<8;i++)buildBase(i);
- // 参考画像のように左右の基地をマップ上に並べて表示する。自分の所持キャラは引き続きbases[0]へ配置。
+ // エレベーターの階ボタン。自分の基地のかごをアニメーションさせ、乗っているプレイヤーも同じ高さへ運ぶ。
+ document.querySelectorAll('[data-elevator-floor]').forEach(btn=>btn.addEventListener('click',()=>{
+   const level=Number(btn.dataset.elevatorFloor);if(!Number.isInteger(level)||level<0||level>2)return;
+   const own=bases[0];if(!own)return;
+   own.g.updateMatrixWorld(true);
+   const lp=new THREE.Vector3(player.position.x,0,player.position.z).applyMatrix4(own.g.matrixWorld.clone().invert());
+   if(Math.abs(lp.x-6.35)>.82||Math.abs(lp.z)>.82){say('エレベーターのかごの中に入ってね');return;}
+   elevatorTargetFloor=level;elevatorMoving=true;
+   const lift=elevatorCars.find(v=>v.baseIndex===0);if(lift)lift.targetY=.68+level*2.97;
+   say((level+1)+'階へ移動します');
+ }));
+  // 参考画像のように左右の基地をマップ上に並べて表示する。自分の所持キャラは引き続きbases[0]へ配置。
  for(const b of bases){b.g.visible=true;b.occupied=(b.i===0);}
 // 木は一旦非表示。地面まわりの岩だけを残す。
 for(let i=0;i<20;i++){
@@ -604,7 +633,19 @@ cameraCanvas.addEventListener('wheel',e=>{
 
 let last=performance.now(),spawnTimer=0,uiTimer=0;
 function loop(now){requestAnimationFrame(loop);try{window.__friendlotSetStage?.('ゲームループ: 移動・キャラ更新');let dt=Math.min(.05,(now-last)/1000);last=now;
-const strafe=(keys.has('d')?1:0)-(keys.has('a')?1:0)+joy.x;const forward=(keys.has('w')?1:0)-(keys.has('s')?1:0)-joy.y;let x=strafe*Math.cos(cameraYaw)+forward*Math.sin(cameraYaw),z=strafe*Math.sin(cameraYaw)-forward*Math.cos(cameraYaw);let len=Math.hypot(x,z);if(len>1){x/=len;z/=len}if(len>.05){
+// エレベーターかごの滑らかな上下移動
+ for(const lift of elevatorCars){
+   const diff=lift.targetY-lift.currentY;
+   if(Math.abs(diff)>.015){
+     const step=Math.sign(diff)*Math.min(Math.abs(diff),dt*3.8);lift.currentY+=step;lift.car.position.y=lift.currentY;
+     if(lift.baseIndex===0){
+       const base=bases[0];base.g.updateMatrixWorld(true);
+       const local=new THREE.Vector3(player.position.x,0,player.position.z).applyMatrix4(base.g.matrixWorld.clone().invert());
+       if(Math.abs(local.x-6.35)<.82&&Math.abs(local.z)<.82){player.position.y=THREE.MathUtils.clamp((lift.currentY-.68)*1.22,0,7.25);}
+     }
+   }else{lift.currentY=lift.targetY;lift.car.position.y=lift.currentY;if(lift.baseIndex===0)elevatorMoving=false;}
+ }
+ const strafe=(keys.has('d')?1:0)-(keys.has('a')?1:0)+joy.x;const forward=(keys.has('w')?1:0)-(keys.has('s')?1:0)-joy.y;let x=strafe*Math.cos(cameraYaw)+forward*Math.sin(cameraYaw),z=strafe*Math.sin(cameraYaw)-forward*Math.cos(cameraYaw);let len=Math.hypot(x,z);if(len>1){x/=len;z/=len}if(len>.05){
  const nx=player.position.x+x*movementSpeed()*dt,nz=player.position.z+z*movementSpeed()*dt;
  let blocked=false;
  // ロック中だけ、基地正面のゲート面に当たり判定を持たせる。解除中は衝突判定を行わない。
@@ -621,19 +662,20 @@ const strafe=(keys.has('d')?1:0)-(keys.has('a')?1:0)+joy.x;const forward=(keys.h
  flyingCarpet.position.set(player.position.x,player.position.y-.45,player.position.z);
  flyingCarpet.rotation.y=playerBody.rotation.y;
  }else{
- // 自分の基地内では階段の位置に応じて高さを変え、床上では階ごとの高さを維持する
- let stairY=0, onStairs=false, insideOwnBase=false;
- const ownForStairs=bases[0];
- if(ownForStairs){
-  ownForStairs.g.updateMatrixWorld(true);
-  const localPos=new THREE.Vector3(player.position.x,0,player.position.z).applyMatrix4(ownForStairs.g.matrixWorld.clone().invert());
+ // エレベーター付近では選択した階へ移動。階段による高さ変化は廃止。
+ let insideOwnBase=false,nearElevator=false,onElevator=false;
+ const ownForElevator=bases[0];
+ if(ownForElevator){
+  ownForElevator.g.updateMatrixWorld(true);
+  const localPos=new THREE.Vector3(player.position.x,0,player.position.z).applyMatrix4(ownForElevator.g.matrixWorld.clone().invert());
   insideOwnBase=Math.abs(localPos.x)<6.25&&Math.abs(localPos.z)<5.1;
-  onStairs=Math.abs(localPos.x-6.35)<1.25&&localPos.z<=4.7&&localPos.z>=-4.8;
-  if(onStairs){stairY=THREE.MathUtils.clamp((4.45-localPos.z)/9.12*5.75,0,5.75)*1.22;}
-  if(onStairs){player.position.y=stairY;}
+  nearElevator=Math.abs(localPos.x-6.35)<2.0&&Math.abs(localPos.z)<2.05;
+  onElevator=Math.abs(localPos.x-6.35)<.82&&Math.abs(localPos.z)<.82;
+  $('#elevatorPanel').style.display=nearElevator?'block':'none';
+  if(onElevator){if(!elevatorMoving)player.position.y=[0,3.62,7.25][elevatorTargetFloor]||0;}
   else if(insideOwnBase&&player.position.y>0.5){player.position.y=player.position.y<3.62?0:player.position.y<7.25?3.62:7.25;}
-  else {player.position.y=0;}
- }else{player.position.y=0;}
+  else if(!onElevator){player.position.y=0;}
+ }else{$('#elevatorPanel').style.display='none';player.position.y=0;}
 }
 player.position.x=THREE.MathUtils.clamp(player.position.x,-31,31);player.position.z=THREE.MathUtils.clamp(player.position.z,-31,31);
 // ベースロックは自分の基地付近、盗みは他の基地付近にいるときだけ操作可能。
@@ -685,6 +727,10 @@ if(cameraMode==='first'){
        ancestor=ancestor.parent;
      }
      if(isBaseLockGate) return;
+     // エレベーターの金属フレームやガラスはカメラを押し戻さない。
+     let elevatorPart=o, isElevatorPart=false;
+     while(elevatorPart){if(elevatorPart.name==='goldLuxuryElevator'){isElevatorPart=true;break;}elevatorPart=elevatorPart.parent;}
+     if(isElevatorPart) return;
      if(!o.geometry.attributes || !o.geometry.attributes.position) return;
      if(o.geometry.boundingSphere===null) o.geometry.computeBoundingSphere();
      blockers.push(o);
