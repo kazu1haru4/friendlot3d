@@ -163,7 +163,7 @@ function buildBase(i){
  g.rotation.y=side<0?-Math.PI/2:Math.PI/2;scene.add(g);
  const frame='#45464f', dark='#171b24', edge='#747780', concrete='#8a8b93', window='#080f19', wood='#8b4d2e', woodTop='#a96540', white='#e8e9ed';
  // 広いコンクリート基礎。動画のように中央は赤い通路、左右は緑の配置エリア。
- box(12.4,.42,9.7,'#777982',0,.05,0,g);box(12.05,.16,9.35,'#343741',0,.34,0,g);box(11.75,.12,9.05,'#777982',0,.48,0,g);
+ box(14.4,.42,11.8,'#777982',0,.05,0,g);box(14.05,.16,11.45,'#343741',0,.34,0,g);box(13.75,.12,11.15,'#777982',0,.48,0,g);
  // 中央の赤いレンガ風通路と、通路脇の金属レール
  box(3.35,.035,8.65,'#d82b35',0,.565,-.05,g);
  for(let zz=-4.0;zz<=4.0;zz+=.55){box(3.28,.018,.035,'#a9232c',0,.59,zz,g);}
@@ -173,23 +173,23 @@ function buildBase(i){
  for(let f=0;f<3;f++){
    const y=floorsY[f], h=2.72, top=y+h;
    // 四隅の太いグレー柱
-   for(const xx of [-5.55,5.55])for(const zz of [-4.25,4.25])box(.52,h+.28,.52,frame,xx,y+h/2,zz,g);
+   for(const xx of [-6.55,6.55])for(const zz of [-5.25,5.25])box(.52,h+.28,.52,frame,xx,y+h/2,zz,g);
    // 左右の長い窓帯（黒ガラス、白い窓枠、分割柱）
-   for(const xx of [-5.28,5.28]){
-     box(.16,2.12,7.72,window,xx,y+1.38,0,g);
-     for(const yy of [y+.27,y+2.48])box(.26,.18,7.95,white,xx,yy,0,g);
-     for(const zz of [-2.55,0,2.55])box(.28,2.16,.16,edge,xx,y+1.38,zz,g);
-     box(.3,.12,7.96,edge,xx,y+.04,0,g);
+   for(const xx of [-6.28,6.28]){
+     box(.16,2.12,9.72,window,xx,y+1.38,0,g);
+     for(const yy of [y+.27,y+2.48])box(.26,.18,9.95,white,xx,yy,0,g);
+     for(const zz of [-3.25,0,3.25])box(.28,2.16,.16,edge,xx,y+1.38,zz,g);
+     box(.3,.12,9.96,edge,xx,y+.04,0,g);
    }
    // 背面側の窓帯
-   box(10.45,2.12,.13,window,0,y+1.38,4.25,g);
-   for(const yy of [y+.27,y+2.48])box(10.7,.18,.22,white,0,yy,4.25,g);
-   for(const xx of [-3.4,0,3.4])box(.18,2.16,.25,edge,xx,y+1.38,4.25,g);
+   box(12.45,2.12,.13,window,0,y+1.38,5.25,g);
+   for(const yy of [y+.27,y+2.48])box(12.7,.18,.22,white,0,yy,5.25,g);
+   for(const xx of [-4.1,0,4.1])box(.18,2.16,.25,edge,xx,y+1.38,5.25,g);
    // 階床・外周梁
-   if(f>0)box(11.7,.3,9.15,concrete,0,y-.12,0,g);
-   box(12.15,.22,.42,edge,0,top,-4.25,g);box(12.15,.22,.42,edge,0,top,4.25,g);
+   if(f>0)box(13.7,.3,11.15,concrete,0,y-.12,0,g);
+   box(14.15,.22,.42,edge,0,top,-5.25,g);box(14.15,.22,.42,edge,0,top,5.25,g);
    // 正面の白い大窓枠は看板の上下を含めて各階に見せる
-   if(f>0){box(10.65,.16,.24,white,0,y+.32,-4.25,g);box(10.65,.16,.24,white,0,top-.18,-4.25,g);}
+   if(f>0){box(12.65,.16,.24,white,0,y+.32,-5.25,g);box(12.65,.16,.24,white,0,top-.18,-5.25,g);}
  }
  // 動画風のロックゲート：太い赤いレーザー、黄色い警告ビーム、重厚なグレー基部。
  const gateGroup=new THREE.Group();gateGroup.name='baseLockGate';g.add(gateGroup);
@@ -211,31 +211,31 @@ function buildBase(i){
  gateGroup.visible=false;
  // ゲート奥のネオングリーン配置パッド。各枠に暗い縁取りを付けて立体感を出す。
  for(let j=0;j<9;j++){
-   const px=-5.0+j*1.25;
-   box(.9,.045,.78,'#252a30',px,.575,-2.72,g);
-   const pad=box(.78,.055,.66,'#39ff14',px,.61,-2.72,g);pad.material.emissive=new THREE.Color('#168a08');pad.material.emissiveIntensity=.22;
+   const px=-4.8+j*1.2;
+   box(.9,.045,.78,'#252a30',px,.575,-3.5,g);
+   const pad=box(.78,.055,.66,'#39ff14',px,.61,-3.5,g);pad.material.emissive=new THREE.Color('#168a08');pad.material.emissiveIntensity=.22;
  }
  // 屋根と張り出した梁
- box(12.55,.36,9.8,'#5b5d66',0,9.42,0,g);box(11.95,.14,9.2,'#30323a',0,9.67,0,g);
- for(const xx of [-5.9,5.9])box(.25,.3,9.9,'#777982',xx,9.42,0,g);
+ box(14.55,.36,11.9,'#5b5d66',0,9.42,0,g);box(13.95,.14,11.3,'#30323a',0,9.67,0,g);
+ for(const xx of [-6.9,6.9])box(.25,.3,12.0,'#777982',xx,9.42,0,g);
  // 正面の茶色い看板
- box(8.5,.98,.42,wood,0,3.82,-4.55,g);box(8.54,.13,.45,woodTop,0,4.36,-4.55,g);box(8.54,.11,.45,'#65371f',0,3.28,-4.55,g);
- const sign=label(i===0?(signedInId?String(signedInId)+'の基地':'あなたの基地'):'基地 '+(i+1),'#fff4e8');sign.position.set(0,3.82,-4.8);sign.scale.set(3.55,.72,1);g.add(sign);
+ box(9.5,.98,.42,wood,0,3.82,-5.55,g);box(9.54,.13,.45,woodTop,0,4.36,-5.55,g);box(9.54,.11,.45,'#65371f',0,3.28,-5.55,g);
+ const sign=label(i===0?(signedInId?String(signedInId)+'の基地':'あなたの基地'):'基地 '+(i+1),'#fff4e8');sign.position.set(0,3.82,-5.8);sign.scale.set(3.85,.72,1);g.add(sign);
  // 右側の階段（ゲーム内の基地正面から見て右側面）
  for(let n=0;n<12;n++){
-   const stepY=.16+n*.23, stepZ=3.55-n*.55;
-   box(1.9,.18,.62,'#777982',6.35,stepY,stepZ,g);
+   const stepY=.16+n*.23, stepZ=4.4-n*.62;
+   box(1.9,.18,.62,'#777982',7.25,stepY,stepZ,g);
  }
- box(1.95,.18,7.0,'#555963',6.35,1.5,.5,g);
+ box(1.95,.18,7.5,'#555963',7.25,1.5,.5,g);
  // キャラ台と3階分のスロット。既存の所持キャラ・階数ロジックを維持。
  let slots=[];
  for(let floor=0;floor<3;floor++){
    const fy=.58+floor*2.97;
-   if(floor>0){box(10.4,.2,7.7,'#777a82',0,fy,0,g);for(const xx of [-5.0,5.0])for(const zz of [-3.65,3.65])box(.2,2.75,.2,frame,xx,fy-1.35,zz,g);}
-   // 左右の端に5枠ずつ。壁・ゲートに重ならないよう内側へ配置する。
-   for(let sideIndex=0;sideIndex<2;sideIndex++)for(let n=0;n<5;n++){
-     const sx=-4.15+n*2.075, sz=sideIndex===0?-2.45:2.45;
-     box(1.55,.14,1.48,'#555963',sx,fy+.18,sz,g);box(1.38,.09,1.30,'#252a30',sx,fy+.28,sz,g);const pad=box(1.25,.065,1.17,'#39ff14',sx,fy+.34,sz,g);pad.material.emissive=new THREE.Color('#168a08');pad.material.emissiveIntensity=.2;
+   if(floor>0){box(12.8,.2,9.7,'#777a82',0,fy,0,g);for(const xx of [-6.0,6.0])for(const zz of [-4.6,4.6])box(.2,2.75,.2,frame,xx,fy-1.35,zz,g);}
+   // 中央レーンから基地の奥へ向かう向きに、2列×5段でキャラ枠を配置。
+   for(let rowIndex=0;rowIndex<5;rowIndex++)for(let colIndex=0;colIndex<2;colIndex++){
+     const sx=colIndex===0?-2.35:2.35, sz=-3.9+rowIndex*1.9;
+     box(1.72,.14,1.52,'#555963',sx,fy+.18,sz,g);box(1.54,.09,1.34,'#252a30',sx,fy+.28,sz,g);const pad=box(1.40,.065,1.20,'#39ff14',sx,fy+.34,sz,g);pad.material.emissive=new THREE.Color('#168a08');pad.material.emissiveIntensity=.2;
      slots.push({x:sx,y:fy+.35,z:sz,group:g,world:null,floor});
    }
  }
