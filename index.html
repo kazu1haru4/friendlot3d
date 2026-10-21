@@ -369,9 +369,9 @@ function buildBase(i){
  // 正面の茶色い看板
  box(9.5,.98,.42,wood,0,3.82,-5.55,g);box(9.54,.13,.45,woodTop,0,4.36,-5.55,g);box(9.54,.11,.45,'#65371f',0,3.28,-5.55,g);
  const sign=label(i===0?(signedInId?String(signedInId)+'の基地':'あなたの基地'):'基地 '+(i+1),'#fff4e8');sign.position.set(0,3.82,-5.8);sign.scale.set(3.85,.72,1);g.add(sign);
- // 右側の階段を撤去し、金色の高級エレベーターに置き換える。
+ // ベースの最奥部中央に、金色の高級エレベーターを配置する。
  // シャフトは固定、かごは1F～3Fの間を上下する。
- const elevatorGroup=new THREE.Group();elevatorGroup.name='goldLuxuryElevator';elevatorGroup.position.set(6.35,0,0);g.add(elevatorGroup);
+ const elevatorGroup=new THREE.Group();elevatorGroup.name='goldLuxuryElevator';elevatorGroup.position.set(0,0,3.65);g.add(elevatorGroup);
  const gold='#e7b947',goldLight='#ffe6a0',goldDark='#8d5e16',glass='#9de7f2';
  // シャフトの四隅の金属レール
  for(const ex of [-1.05,1.05])for(const ez of [-1.12,1.12]){
