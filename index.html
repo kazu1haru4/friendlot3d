@@ -5,10 +5,14 @@
 </style></head><body><script>
 // 起動前からエラー情報を拾い、真っ青な画面だけにならないよう診断表示する。
 (function(){
-  const errors=[]; let panel;
+  const errors=[]; let panel; let lastErrorKey='';
+  window.__friendlotBootStage='HTML初期化';
   function show(kind, detail){
-    const text='['+new Date().toLocaleTimeString()+'] '+kind+'\n'+String(detail||'詳細不明');
+    const key=kind+'|'+String(detail||'詳細不明');
+    if(key===lastErrorKey) return; lastErrorKey=key;
+    const text='['+new Date().toLocaleTimeString()+'] '+kind+'\n'+String(detail||'詳細不明')+'\n起動段階: '+String(window.__friendlotBootStage||'不明');
     errors.push(text);
+    window.__friendlotLastDiagnostics=errors.join('\n\n');
     try{
       if(!panel){
         panel=document.createElement('div');
@@ -24,6 +28,8 @@
       const out=panel.querySelector('#diagnosticErrorText'); if(out)out.textContent=errors.join('\n\n');
     }catch(_){ console.error(text); }
   }
+  window.__friendlotDiag=show;
+  window.__friendlotSetStage=function(stage){window.__friendlotBootStage=stage;};
   window.addEventListener('error',function(e){
     if(e.target && e.target!==window){const el=e.target;show('リソース読み込み失敗',(el.tagName||'RESOURCE')+' '+(el.src||el.href||'(URL不明)'));return;}
     const where=[e.filename||'(ファイル名不明)',e.lineno?'行 '+e.lineno:'',e.colno?'列 '+e.colno:''].filter(Boolean).join(' ');
@@ -98,8 +104,22 @@
 </script>
 <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script>
 <script type="module">
-import * as THREE from 'three';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+let THREE, createClient;
+try {
+  window.__friendlotSetStage?.('外部ライブラリ読み込み: Three.js / Supabase');
+  const [threeModule, supabaseModule] = await Promise.all([
+    import('https://unpkg.com/three@0.160.0/build/three.module.js'),
+    import('https://esm.sh/@supabase/supabase-js@2')
+  ]);
+  THREE = threeModule; createClient = supabaseModule.createClient;
+  if (!createClient) throw new Error('Supabaseモジュールに createClient がありません');
+  window.__friendlotSetStage?.('3Dエンジン初期化');
+} catch (e) {
+  const msg = (e && (e.stack || e.message)) || String(e);
+  window.__friendlotDiag?.('外部ライブラリ読み込み失敗', msg + '\nThree.js: https://unpkg.com/three@0.160.0/build/three.module.js\nSupabase: https://esm.sh/@supabase/supabase-js@2');
+  throw e;
+}
+window.__friendlotSetStage?.('Three.jsシーン作成');
 const $=s=>document.querySelector(s);const scene=new THREE.Scene();scene.background=new THREE.Color('#9ddcff');scene.fog=new THREE.Fog('#9ddcff',48,100);
 const camera=new THREE.PerspectiveCamera(64,innerWidth/innerHeight,.1,180);
 const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.08;renderer.outputColorSpace=THREE.SRGBColorSpace;$('#game').appendChild(renderer.domElement);
@@ -112,12 +132,14 @@ const say=t=>{let e=$('#notice');e.textContent=t;e.classList.add('show');clearTi
 let catalog=[];
 const fallback=[{"id":"tawashi","name":"たわし","type":"brush","color":"#dcb36c","accent":"#fff0bf","rarity":"コモン","price":50,"income":2,"incomePerMinute":120,"is_shop_available":true}];
 // Friendlot本家のbrainrot_catalogから最新のキャラクター設定を読む
+window.__friendlotSetStage?.('Supabase認証初期化');
 const SUPABASE_URL='https://yxonmqdyekwenyzekjwj.supabase.co';
 const SUPABASE_KEY='sb_publishable_IuQ6r_4vbGC9PP7cWJ9YRQ_Ai7tAfTJ';
 const db=createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
 let signedInId=sessionStorage.getItem('friendlot3d_id')||'';
 const storedSession=(()=>{try{return JSON.parse(sessionStorage.getItem('friendlot3d_supabase_session')||'null')}catch{return null}})();
 if(storedSession?.access_token&&storedSession?.refresh_token){const {error}=await db.auth.setSession({access_token:storedSession.access_token,refresh_token:storedSession.refresh_token});if(error)console.warn('Supabase session restore failed',error)}
+window.__friendlotSetStage?.('Supabaseログインセッション確認');
 const {data:{session:activeSession}}=await db.auth.getSession();
 if(!activeSession){location.replace('./auth.html');throw new Error('ログインが必要です')}
 
@@ -673,6 +695,7 @@ async function refreshSharedState({rebuild=true}={}){
  owned=inv.map(item=>{const c=catalog.find(x=>x.id===String(item.character_id));if(!c)return null;return {...c,inventoryId:item.id,mutation:item.mutation||null,trait:item.trait||null,income:Number(item.income_per_minute||c.incomePerMinute||0)/60}}).filter(Boolean);
  if(rebuild)rebuildOwned();updateUI();
 }
+window.__friendlotSetStage?.('共有ゲームデータ読み込み');
 try{await refreshSharedState()}catch(e){console.error(e);$('#loading').style.display='grid';$('#loading').innerHTML='サイト版データを読み込めませんでした。<br><small>'+String(e.message||e)+'</small>';throw e}
 
 // 管理者機能：ログインとイベント操作はWorker側で認証する
@@ -707,9 +730,11 @@ $('#eventStart').onclick=async()=>{try{let d=await apiCall('/api/admin/event/sta
 $('#eventEnd').onclick=async()=>{try{let d=await apiCall('/api/admin/event/end',{});$('#eventStatus').textContent=d.message||'イベントを終了しました';await refreshEvent();say('イベント終了')}catch(e){$('#eventStatus').textContent='失敗: '+e.message}};
 $('#adminLogout').onclick=()=>{adminToken=null;$('#adminPassword').value='';$('#adminLogin').style.display='block';$('#adminControls').style.display='none';say('ログアウトしました')};
 setInterval(refreshEvent,1000);
+window.__friendlotSetStage?.('ショップ初期化');
 await refreshSharedShop();setInterval(refreshSharedShop,15000);
 
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+window.__friendlotSetStage?.('ゲーム起動完了');
 $('#loading').style.display='none';updateUI();requestAnimationFrame(loop);
 window.addEventListener('error',e=>{const l=$('#loading');if(l){l.style.display='grid';l.innerHTML='読み込みエラー\n'+String(e.message||'不明なエラー')+'<br><small>ページを再読み込みしてね</small>'}});
 </script></body></html>
