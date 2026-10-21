@@ -670,11 +670,23 @@ if(cameraMode==='first'){
  const desiredDistance=offset.length();
  const rayDirection=offset.clone().normalize();
  const raycaster=new THREE.Raycaster(target,rayDirection,0.25,desiredDistance);
- // グループ内の基地の壁・床も含めて再帰的に判定し、カメラが建物を突き抜けないようにする。
- const blockers=scene.children.filter(o=>o!==player && o!==flyingCarpet && o.visible);
- const hits=raycaster.intersectObjects(blockers,true).filter(hit=>hit.object.isMesh && hit.object.visible);
+ // カメラ衝突判定：RaycasterにはGroupではなく、検証済みのMeshだけを渡す。
+ // 不正な外部/動的オブジェクトがあってもゲームループ全体を停止させない。
  let safeDistance=desiredDistance;
- if(hits.length) safeDistance=Math.max(0.65,Math.min(desiredDistance,hits[0].distance-0.38));
+ try {
+   const blockers=[];
+   scene.traverse(o=>{
+     if(o===player || o===flyingCarpet || !o.isMesh || !o.visible || !o.geometry) return;
+     if(!o.geometry.attributes || !o.geometry.attributes.position) return;
+     if(o.geometry.boundingSphere===null) o.geometry.computeBoundingSphere();
+     blockers.push(o);
+   });
+   const hits=raycaster.intersectObjects(blockers,false);
+   if(hits.length && Number.isFinite(hits[0].distance)) safeDistance=Math.max(0.65,Math.min(desiredDistance,hits[0].distance-0.38));
+ } catch(collisionError) {
+   console.warn('カメラ当たり判定を一時スキップ:',collisionError);
+   window.__friendlotDiag?.('カメラ当たり判定エラー',(collisionError&&collisionError.stack)||String(collisionError));
+ }
  const safePosition=target.clone().add(rayDirection.multiplyScalar(safeDistance));
  camera.position.copy(safePosition);
  camera.lookAt(target);
