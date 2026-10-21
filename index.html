@@ -159,50 +159,62 @@ function ground(){
 function buildBase(i){
  const side=i<4?-1:1, row=i%4, x=side*17.5, z=-27+row*17;
  const g=new THREE.Group();g.position.set(x,0,z);
- // 自分の基地は正面が見える向き。他の区画はワールド配置に合わせて回転する。
+ // 正面（ゲート・看板）を中央道路へ向ける。左列は右向き、右列は左向き。
  g.rotation.y=side<0?-Math.PI/2:Math.PI/2;scene.add(g);
- const frame='#45464f', dark='#242731', edge='#666873', concrete='#85858d', window='#111923', wood='#8b4d2e', woodTop='#a96540';
- // Roblox版の画像に合わせた横長の土台と、レンガ色の縁取り
- box(11.8,.48,9.2,'#777982',0,.08,0,g);box(11.45,.18,8.9,'#343741',0,.39,0,g);box(11.15,.12,8.6,'#269b35',0,.53,0,g);
- // 下階：角の太いグレー柱、左右の長い窓帯
- for(const xx of [-5.35,5.35])for(const zz of [-4.05,4.05])box(.48,4.7,.48,frame,xx,2.85,zz,g);
- box(10.75,.28,.38,edge,0,.78,-4.05,g);box(10.75,.28,.38,edge,0,.78,4.05,g);
- for(const xx of [-5.12,5.12]){
-   box(.2,2.65,7.65,dark,xx,2.25,0,g);
-   box(.27,.18,7.75,edge,xx,3.62,0,g);box(.27,.18,7.75,edge,xx,.92,0,g);
-   for(const zz of [-2.55,0,2.55])box(.3,2.55,.15,concrete,xx,2.25,zz,g);
-   for(const zz of [-1.7,1.7])box(.32,.1,1.15,'#d5d6dc',xx,2.45,zz,g);
+ const frame='#45464f', dark='#171b24', edge='#747780', concrete='#8a8b93', window='#080f19', wood='#8b4d2e', woodTop='#a96540', white='#e8e9ed';
+ // 広い基礎と緑の床
+ box(12.4,.42,9.7,'#777982',0,.05,0,g);box(12.05,.16,9.35,'#343741',0,.34,0,g);box(11.75,.12,9.05,'#269b35',0,.48,0,g);
+ // 3階建ての外周フレーム。各階は白い窓枠＋黒いガラス帯の構成。
+ const floorsY=[.58,3.55,6.52];
+ for(let f=0;f<3;f++){
+   const y=floorsY[f], h=2.72, top=y+h;
+   // 四隅の太いグレー柱
+   for(const xx of [-5.55,5.55])for(const zz of [-4.25,4.25])box(.52,h+.28,.52,frame,xx,y+h/2,zz,g);
+   // 左右の長い窓帯（黒ガラス、白い窓枠、分割柱）
+   for(const xx of [-5.28,5.28]){
+     box(.16,2.12,7.72,window,xx,y+1.38,0,g);
+     for(const yy of [y+.27,y+2.48])box(.26,.18,7.95,white,xx,yy,0,g);
+     for(const zz of [-2.55,0,2.55])box(.28,2.16,.16,edge,xx,y+1.38,zz,g);
+     box(.3,.12,7.96,edge,xx,y+.04,0,g);
+   }
+   // 背面側の窓帯
+   box(10.45,2.12,.13,window,0,y+1.38,4.25,g);
+   for(const yy of [y+.27,y+2.48])box(10.7,.18,.22,white,0,yy,4.25,g);
+   for(const xx of [-3.4,0,3.4])box(.18,2.16,.25,edge,xx,y+1.38,4.25,g);
+   // 階床・外周梁
+   if(f>0)box(11.7,.3,9.15,concrete,0,y-.12,0,g);
+   box(12.15,.22,.42,edge,0,top,-4.25,g);box(12.15,.22,.42,edge,0,top,4.25,g);
+   // 正面の白い大窓枠は看板の上下を含めて各階に見せる
+   if(f>0){box(10.65,.16,.24,white,0,y+.32,-4.25,g);box(10.65,.16,.24,white,0,top-.18,-4.25,g);}
  }
- // 正面の赤い縦バーゲートと明るい赤い横レール
- box(10.25,.24,.32,edge,0,3.52,-4.05,g);box(10.25,.24,.32,edge,0,.95,-4.05,g);
- for(let j=0;j<17;j++){const bx=-4.85+j*(9.7/16);box(.14,2.5,.16,'#ed2939',bx,2.23,-4.08,g);box(.18,.09,.2,'#ff6269',bx,3.45,-4.08,g);}
- box(10.1,.13,.18,'#b71f2c',0,1.05,-4.1,g);box(10.1,.13,.18,'#b71f2c',0,3.32,-4.1,g);
- // 入り口内側の緑の床マーク
- for(let j=0;j<9;j++)box(.52,.035,.62,'#65e64d',-3.75+j*.94,.61,-2.75,g);
- // 上階の厚いコンクリート床と黒い室内
- box(12.05,.48,9.35,concrete,0,5.15,0,g);box(11.5,.18,8.9,dark,0,5.49,0,g);
- // 上階の柱・窓・外周梁。正面は大きく開け、画像の多層基地らしい形にする
- for(const xx of [-5.35,5.35]){
-   box(.48,3.55,.48,frame,xx,7.25,-4.05,g);
-   box(.48,3.55,.48,frame,xx,7.25,4.05,g);
-   box(.18,2.5,7.8,window,xx,7.1,0,g);
-   box(.32,.18,7.9,edge,xx,8.38,0,g);box(.32,.18,7.9,edge,xx,5.85,0,g);
-   for(const zz of [-2.55,0,2.55])box(.3,2.35,.16,concrete,xx,7.1,zz,g);
+ // 1階正面の赤いセキュリティゲート。柱の間を縦バーで埋める。
+ box(10.55,.22,.34,edge,0,3.25,-4.28,g);box(10.55,.22,.34,edge,0,.72,-4.28,g);
+ for(let j=0;j<19;j++){const bx=-5.05+j*(10.1/18);box(.14,2.42,.18,'#ed2939',bx,1.98,-4.32,g);box(.18,.08,.2,'#ff6269',bx,3.12,-4.32,g);}
+ box(10.25,.12,.2,'#b71f2c',0,.84,-4.34,g);
+ // ゲート奥の緑の配置スペース
+ for(let j=0;j<9;j++)box(.58,.035,.66,'#65e64d',-3.8+j*.95,.56,-2.72,g);
+ // 屋根と張り出した梁
+ box(12.55,.36,9.8,'#5b5d66',0,9.42,0,g);box(11.95,.14,9.2,'#30323a',0,9.67,0,g);
+ for(const xx of [-5.9,5.9])box(.25,.3,9.9,'#777982',xx,9.42,0,g);
+ // 正面の茶色い看板
+ box(8.5,.98,.42,wood,0,3.82,-4.55,g);box(8.54,.13,.45,woodTop,0,4.36,-4.55,g);box(8.54,.11,.45,'#65371f',0,3.28,-4.55,g);
+ const sign=label(i===0?(signedInId?String(signedInId)+'の基地':'あなたの基地'):'基地 '+(i+1),'#fff4e8');sign.position.set(0,3.82,-4.8);sign.scale.set(3.55,.72,1);g.add(sign);
+ // 右側の階段（ゲーム内の基地正面から見て右側面）
+ for(let n=0;n<12;n++){
+   const stepY=.16+n*.23, stepZ=3.55-n*.55;
+   box(1.9,.18,.62,'#777982',6.35,stepY,stepZ,g);
  }
- box(11.1,.28,.38,edge,0,5.85,-4.05,g);box(11.1,.28,.38,edge,0,8.62,-4.05,g);
- box(11.1,.28,.38,edge,0,5.85,4.05,g);box(11.1,.28,.38,edge,0,8.62,4.05,g);
- // 最上部の屋根と太い張り出し梁
- box(12.2,.32,9.5,'#5b5d66',0,9.12,0,g);box(11.6,.16,8.9,'#30323a',0,9.34,0,g);
- for(const xx of [-5.7,5.7])box(.24,.28,9.65,'#777982',xx,9.1,0,g);
- // 茶色い基地名看板（正面上部）
- box(8.4,1.0,.36,wood,0,4.35,-4.32,g);box(8.42,.14,.4,woodTop,0,4.91,-4.32,g);box(8.42,.12,.4,'#65371f',0,3.79,-4.32,g);
- let sign=label(i===0?(signedInId?String(signedInId)+'の基地':'あなたの基地'):'基地 '+(i+1),'#fff4e8');sign.position.set(0,4.34,-4.55);sign.scale.set(3.5,.78,1);g.add(sign);
- // キャラ台は既存の所持キャラ・階数ロジックを維持
+ box(1.95,.18,7.0,'#555963',6.35,1.5,.5,g);
+ // キャラ台と3階分のスロット。既存の所持キャラ・階数ロジックを維持。
  let slots=[];
  for(let floor=0;floor<3;floor++){
-   const fy=.55+floor*3.0;
-   if(floor>0){box(10.5,.2,7.8,'#777a82',0,fy,0,g);for(let xx of [-5.0,5.0])for(let zz of [-3.7,3.7])box(.22,2.8,.22,frame,xx,fy-1.4,zz,g);}
-   for(let rr=0;rr<2;rr++)for(let cc=0;cc<3;cc++){let sx=-3.1+cc*3.1,sz=-1.35+rr*2.4;box(1.75,.12,1.65,'#dce4ed',sx,fy+.18,sz,g);box(1.45,.08,1.38,'#6ce18e',sx,fy+.28,sz,g);slots.push({x:sx,y:fy+.35,z:sz,group:g,world:null,floor});}
+   const fy=.58+floor*2.97;
+   if(floor>0){box(10.4,.2,7.7,'#777a82',0,fy,0,g);for(const xx of [-5.0,5.0])for(const zz of [-3.65,3.65])box(.2,2.75,.2,frame,xx,fy-1.35,zz,g);}
+   for(let rr=0;rr<2;rr++)for(let cc=0;cc<3;cc++){
+     const sx=-3.1+cc*3.1,sz=-1.35+rr*2.4;
+     box(1.75,.12,1.65,'#dce4ed',sx,fy+.18,sz,g);box(1.45,.08,1.38,'#6ce18e',sx,fy+.28,sz,g);
+     slots.push({x:sx,y:fy+.35,z:sz,group:g,world:null,floor});
+   }
  }
  bases.push({i,x,z,g,slots,color:frame});
 }
