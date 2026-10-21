@@ -157,7 +157,7 @@ function ground(){
  }
 }
 function buildBase(i){
- const side=i<4?-1:1, row=i%4, x=i===0?0:side*17.5, z=i===0?-24:-24+row*15;
+ const side=i<4?-1:1, row=i%4, x=side*17.5, z=-27+row*17;
  const g=new THREE.Group();g.position.set(x,0,z);
  // 自分の基地は正面が見える向き。他の区画はワールド配置に合わせて回転する。
  g.rotation.y=i===0?Math.PI:(side<0?Math.PI/2:-Math.PI/2);scene.add(g);
@@ -207,13 +207,11 @@ function buildBase(i){
  bases.push({i,x,z,g,slots,color:frame});
 }
 ground();
-// 中央レーン：芝生になじむ細い走行ライン。手前いっぱいのピンク道路は置かない。
-box(4.2,.07,42,'#4e5a52',0,.06,-5);
-box(3.8,.035,41,'#328b3c',0,.11,-5);
-for(let z=-25;z<=15;z+=2.4){
-  box(.10,.025,.8,'#a6e78c',0,.14,z);
-}
-for(let x of [-2.25,2.25])box(.12,.18,42,'#777982',x,.13,-5);
+// 中央の赤いショップレーン。基地を左右に並べるマップ構成。
+box(6.4,.12,68,'#4b342e',0,.01,-3);
+box(5.8,.07,67,'#d62f32',0,.10,-3);
+for(let z=-35;z<=29;z+=4){box(.12,.025,1.2,'#f7d8c8',0,.15,z);}
+for(let x of [-3.25,3.25])box(.16,.22,68,'#6f727a',x,.12,-3);
 // マップ上の物理ショップ（青白ストライプの屋根、木製カウンター、NPC）
 const shopGroup=new THREE.Group();shopGroup.position.set(7.8,0,1.5);shopGroup.rotation.y=-Math.PI/2;scene.add(shopGroup);
 box(7.2,.28,5.0,'#cbd5df',0,.08,0,shopGroup);
@@ -239,8 +237,8 @@ for(let z=-25;z<=25;z+=8)for(let x of [-5.5,5.5]){
 }
 // build the 8 colored player plots
 for(let i=0;i<8;i++)buildBase(i);
- // 空きベースは表示しない。マルチプレイヤーの占有データが接続されるまでは自分のベースだけ表示する。
- for(const b of bases){b.g.visible=(b.i===0);b.occupied=(b.i===0);}
+ // 参考画像のように左右の基地をマップ上に並べて表示する。自分の所持キャラは引き続きbases[0]へ配置。
+ for(const b of bases){b.g.visible=true;b.occupied=(b.i===0);}
 // Low-poly decorative trees, rocks, shrubs and floating clouds around the island
 for(let i=0;i<20;i++){
  const a=i/20*Math.PI*2,x=Math.sin(a)*39,z=Math.cos(a)*39;
