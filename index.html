@@ -323,7 +323,7 @@ try{
 }
 function inferType(c){const text=(String(c.id)+' '+String(c.name)).toLowerCase();if(/dragon\s*cannelloni|ドラゴン.?カネローニ|カネローニドラゴン/.test(text))return 'dragonCannelloni';if(/ストロベリーエレファント|ストエレ|strawberry.?elephant|strawberryelephant/.test(text))return 'strawberryElephant';if(/首なし騎士|headless.?knight|headlessknight/.test(text))return 'headlessKnight';if(/ミャオル|meowl|meowru/.test(text))return 'meowl';if(/tawashi|たわし/.test(text))return 'brush';if(/cat|猫/.test(text))return 'cat';if(/elephant|エレファント|象/.test(text))return 'elephant';if(/knight|騎士/.test(text))return 'knight';if(/dragon|ドラゴン|カネローニ/.test(text))return 'dragon';if(/waffle|ワッフル|ヌビニピザニニ/.test(text))return 'waffle';if(/lucky_block|ラッキーブロック/.test(text))return 'rainbow';return 'block'}
 function label(text,color='#fff'){let c=document.createElement('canvas');c.width=512;c.height=112;let x=c.getContext('2d');x.fillStyle='#10182beF';x.beginPath();x.roundRect(8,8,496,96,22);x.fill();x.strokeStyle='#ffffff80';x.lineWidth=3;x.stroke();x.fillStyle=color;x.font='bold 32px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(String(text).slice(0,25),256,56);let s=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),depthTest:false}));s.scale.set(3.2,.7,1);return s}
-function makeChar(c){const g=new THREE.Group(),body=mat(c.color||'#aaaaff'),accent=mat(c.accent||'#fff0cf'),dark=mat('#1a1a2a'),white=mat('#ffffff');const sph=(r,x,y,z,sx=1,sy=1,sz=1,m=body)=>ball(r,'#ffffff',x,y,z,g,[sx,sy,sz]);const S=(r,x,y,z,sx=1,sy=1,sz=1,m=body)=>{let o=new THREE.Mesh(new THREE.SphereGeometry(r,16,12),m);o.position.set(x,y,z);o.scale.set(sx,sy,sz);o.castShadow=true;g.add(o);return o};const B=(w,h,d,x,y,z,m=body,rz=0)=>{let o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.rotation.z=rz;o.castShadow=true;g.add(o);return o};const C=(r,h,x,y,z,m=body,rz=0)=>{let o=new THREE.Mesh(new THREE.ConeGeometry(r,h,12),m);o.position.set(x,y,z);o.rotation.z=rz;o.castShadow=true;g.add(o);return o};
+function makeCharSingle(c){const g=new THREE.Group(),body=mat(c.color||'#aaaaff'),accent=mat(c.accent||'#fff0cf'),dark=mat('#1a1a2a'),white=mat('#ffffff');const sph=(r,x,y,z,sx=1,sy=1,sz=1,m=body)=>ball(r,'#ffffff',x,y,z,g,[sx,sy,sz]);const S=(r,x,y,z,sx=1,sy=1,sz=1,m=body)=>{let o=new THREE.Mesh(new THREE.SphereGeometry(r,16,12),m);o.position.set(x,y,z);o.scale.set(sx,sy,sz);o.castShadow=true;g.add(o);return o};const B=(w,h,d,x,y,z,m=body,rz=0)=>{let o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.rotation.z=rz;o.castShadow=true;g.add(o);return o};const C=(r,h,x,y,z,m=body,rz=0)=>{let o=new THREE.Mesh(new THREE.ConeGeometry(r,h,12),m);o.position.set(x,y,z);o.rotation.z=rz;o.castShadow=true;g.add(o);return o};
 const type=c.type||c.id;
 if(type==='pipikiwi'){
 // Pipi Kiwi: kiwi fruit torso, raccoon head/mask, ringed tail, human-like legs/feet.
@@ -493,6 +493,24 @@ else{S(.4,0,.6,0,1,1,.9,body);C(.2,.3,-.22,.96,0,accent);C(.2,.3,.22,.96,0,accen
 // Small legs + face-forward orientation
 for(let x of [-.22,.22])B(.14,.24,.16,x,.13,0,body);
 let tag=label(c.name,c.rarity==='シークレット'?'#ff8bff':c.rarity==='レジェンド'?'#ffd36a':'#fff');tag.position.y=type==='dragonCannelloni'?2.65:type==='headlessKnight'?2.75:type==='meowl'?2.35:type==='strawberryElephant'?2.05:1.8;g.add(tag);g.scale.setScalar(1.22);g.userData.charData=c;return g}
+
+// ロスシリーズは小さい個体3体をひとまとめにして表示。ドラゴンカネローニ等は通常の1体。
+function makeChar(c){
+ const inferred=inferType(c);
+ const isLos=String(c.name||'').includes('ロス') && ['meowl','strawberryElephant','headlessKnight','brush'].includes(inferred);
+ if(!isLos)return makeCharSingle({...c,type:inferred});
+ const group=new THREE.Group();
+ const offsets=[-.68,0,.68];
+ offsets.forEach((x,i)=>{
+   const one=makeCharSingle({...c,type:inferred});
+   one.scale.setScalar(.48);
+   one.position.x=x;
+   one.position.z=(i===1?0:(i===0?.06:-.06));
+   group.add(one);
+ });
+ return group;
+}
+
 function ground(){
  // Roblox風の広い緑のスタッド地面。派手な道路は作らず、画像のような芝生を主役にする。
  box(86,.8,86,'#287b35',0,-.55,0);
