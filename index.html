@@ -252,7 +252,7 @@ function buildBase(i){
  const side=i<4?-1:1, row=i%4, x=side*17.5, z=-27+row*17;
  const g=new THREE.Group();g.position.set(x,0,z);
  // ベース全体を少し拡大。床・窓枠・ゲート・キャラ台も一緒に大きくする。
- g.scale.set(1.2,1,1.2);
+ g.scale.set(1.2,1.22,1.2);
  // 正面（ゲート・看板）を中央道路へ向ける。左列は右向き、右列は左向き。
  g.rotation.y=side<0?-Math.PI/2:Math.PI/2;scene.add(g);
  const frame='#303440', dark='#171b24', edge='#d8d9df', concrete='#8d8e96', window='#080f19', wood='#65412f', woodTop='#7d5039', white='#f0f0f4';
@@ -367,13 +367,9 @@ for(let z=-25;z<=25;z+=8)for(let x of [-5.5,5.5]){
 for(let i=0;i<8;i++)buildBase(i);
  // 参考画像のように左右の基地をマップ上に並べて表示する。自分の所持キャラは引き続きbases[0]へ配置。
  for(const b of bases){b.g.visible=true;b.occupied=(b.i===0);}
-// Low-poly decorative trees, rocks, shrubs and floating clouds around the island
+// 木は一旦非表示。地面まわりの岩だけを残す。
 for(let i=0;i<20;i++){
  const a=i/20*Math.PI*2,x=Math.sin(a)*39,z=Math.cos(a)*39;
- box(.38,1.25,.38,'#8a603f',x,.45,z);
- const crown=ball(.88,'#2eaa68',x,1.45,z,scene,[1,1.15,1]);
- ball(.52,'#53c66b',x-.42,1.42,z+.12,scene,[1,1,1]);
- ball(.48,'#237f57',x+.38,1.25,z-.08,scene,[1,1,1]);
  if(i%2===0){ball(.42,'#8b9ba8',x+1.2,.1,z+.7,scene,[1,.7,1]);ball(.25,'#a6b6c2',x+1.5,.15,z+.5,scene,[1,.8,1]);}
 }
 // soft stylized clouds, visible in the sky around the play area
@@ -576,9 +572,9 @@ const strafe=(keys.has('d')?1:0)-(keys.has('a')?1:0)+joy.x;const forward=(keys.h
   const localPos=new THREE.Vector3(player.position.x,0,player.position.z).applyMatrix4(ownForStairs.g.matrixWorld.clone().invert());
   insideOwnBase=Math.abs(localPos.x)<6.25&&Math.abs(localPos.z)<5.1;
   onStairs=Math.abs(localPos.x-6.35)<1.25&&localPos.z<=4.7&&localPos.z>=-4.8;
-  if(onStairs){stairY=THREE.MathUtils.clamp((4.45-localPos.z)/9.12*5.75,0,5.75);}
+  if(onStairs){stairY=THREE.MathUtils.clamp((4.45-localPos.z)/9.12*5.75,0,5.75)*1.22;}
   if(onStairs){player.position.y=stairY;}
-  else if(insideOwnBase&&player.position.y>0.5){player.position.y=player.position.y<2.97?0:player.position.y<5.94?2.97:5.94;}
+  else if(insideOwnBase&&player.position.y>0.5){player.position.y=player.position.y<3.62?0:player.position.y<7.25?3.62:7.25;}
   else {player.position.y=0;}
  }else{player.position.y=0;}
 }
@@ -617,13 +613,13 @@ if(cameraMode==='first'){
  const desiredDistance=offset.length();
  const rayDirection=offset.clone().normalize();
  const raycaster=new THREE.Raycaster(target,rayDirection,0.25,desiredDistance);
- // Raycast対象をgeometryを持つ直接のMeshだけに限定して、再帰的な判定エラーを回避する。
- const blockers=scene.children.filter(o=>o!==player && o.isMesh && o.geometry);
- const hits=raycaster.intersectObjects(blockers,false);
+ // グループ内の基地の壁・床も含めて再帰的に判定し、カメラが建物を突き抜けないようにする。
+ const blockers=scene.children.filter(o=>o!==player && o!==flyingCarpet && o.visible);
+ const hits=raycaster.intersectObjects(blockers,true).filter(hit=>hit.object.isMesh && hit.object.visible);
  let safeDistance=desiredDistance;
- if(hits.length) safeDistance=Math.max(0.8,Math.min(desiredDistance,hits[0].distance-0.45));
+ if(hits.length) safeDistance=Math.max(0.65,Math.min(desiredDistance,hits[0].distance-0.38));
  const safePosition=target.clone().add(rayDirection.multiplyScalar(safeDistance));
- camera.position.lerp(safePosition,.28);
+ camera.position.copy(safePosition);
  camera.lookAt(target);
 }
 renderer.render(scene,camera)}
