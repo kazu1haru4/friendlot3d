@@ -648,11 +648,15 @@ function loop(now){requestAnimationFrame(loop);try{window.__friendlotSetStage?.(
  const strafe=(keys.has('d')?1:0)-(keys.has('a')?1:0)+joy.x;const forward=(keys.has('w')?1:0)-(keys.has('s')?1:0)-joy.y;let x=strafe*Math.cos(cameraYaw)+forward*Math.sin(cameraYaw),z=strafe*Math.sin(cameraYaw)-forward*Math.cos(cameraYaw);let len=Math.hypot(x,z);if(len>1){x/=len;z/=len}if(len>.05){
  const nx=player.position.x+x*movementSpeed()*dt,nz=player.position.z+z*movementSpeed()*dt;
  let blocked=false;
- // ロック中だけ、基地正面のゲート面に当たり判定を持たせる。解除中は衝突判定を行わない。
+ // プレイヤーの移動当たり判定は足元を基準にする（頭・胴体の見た目サイズに引っ張られない）。
+ // 水平方向は足元の半径で判定し、床に立った状態でゲートを通過できるか確認する。
+ const playerFootRadius=.28;
  if(brainrotState?.base_locked){
   const base=bases[0];if(base){base.g.updateMatrixWorld(true);const local=new THREE.Vector3(nx,0,nz).applyMatrix4(base.g.matrixWorld.clone().invert());
    const prev=new THREE.Vector3(player.position.x,0,player.position.z).applyMatrix4(base.g.matrixWorld.clone().invert());
-   if(Math.abs(local.x)<5.35 && ((prev.z>=-4.05 && local.z< -4.05)||(prev.z<=-4.55 && local.z> -4.55)))blocked=true;
+   const insideGateWidth=Math.abs(local.x)<(5.35+playerFootRadius);
+   const crossedGate=(prev.z>=-4.05-playerFootRadius && local.z< -4.05-playerFootRadius)||(prev.z<=-4.55+playerFootRadius && local.z> -4.55+playerFootRadius);
+   if(insideGateWidth && crossedGate)blocked=true;
   }
  }
  if(!blocked){player.position.x=nx;player.position.z=nz;}playerBody.rotation.y=Math.atan2(x,z)
