@@ -2,7 +2,7 @@
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="theme-color" content="#10152b"><title>フレンドロット3D</title>
 <style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#9ddcff;color:#fff;font-family:system-ui,-apple-system,sans-serif;touch-action:none}#game{position:fixed;inset:0}canvas{display:block}#hud{position:fixed;inset:0;pointer-events:none}.panel{background:#11182be8;border:1px solid #ffffff3d;border-radius:14px;padding:9px 12px;box-shadow:0 5px 18px #0003;backdrop-filter:blur(7px)}#brand{position:absolute;left:10px;top:10px;font-weight:1000;font-size:14px}#stats{position:absolute;left:10px;top:53px;font-size:12px;line-height:1.55}#help{position:absolute;right:10px;top:10px;max-width:46vw;text-align:right;font-size:11px}#actions{position:absolute;right:10px;top:94px;display:flex;flex-direction:column;gap:7px;pointer-events:auto}button{border:1px solid #ffffff70;border-radius:12px;background:#635bdb;color:white;font-weight:900;padding:10px 12px;font:inherit;box-shadow:0 3px 0 #27225e}button:active{transform:translateY(2px);box-shadow:none}input,select{background:#10182b;color:#fff;border:1px solid #ffffff60;font:inherit}#buy{position:absolute;right:20px;bottom:25px;width:82px;height:82px;border-radius:50%;background:#ffb82e;color:#36220a;border:3px solid #fff;pointer-events:auto;font-weight:1000}#stickpad{position:absolute;left:18px;bottom:20px;width:116px;height:116px;border-radius:50%;background:#ffffff28;border:2px solid #ffffff80;pointer-events:auto}#stick{position:absolute;left:33px;top:33px;width:46px;height:46px;border-radius:50%;background:#e8f1ffdd;border:2px solid white}#notice{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);opacity:0;transition:opacity .18s;max-width:85vw;text-align:center;font-weight:900}#notice.show{opacity:1}#loading{position:absolute;inset:0;display:grid;place-items:center;background:#9ddcff;color:#172445;font-weight:1000;font-size:22px;text-align:center}#catalog{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);font-size:11px;white-space:nowrap}@media(min-width:850px){#stickpad{display:none}#help{font-size:13px}#brand{font-size:17px}}
-</style></head><body><div id="game"></div><div id="hud"><div id="brand" class="panel">🌀 FRIENDLOT 3D <span style="color:#ffe37b">REBORN</span></div><div id="stats" class="panel">Cash: $500<br>収益: $0/s<br>ベース: 1F</div><div id="help" class="panel">WASD / 矢印キーで移動<br>ドラッグ・スワイプで視点回転<br>ホイール・ピンチでズーム</div><div id="actions"><button id="collect">💵 収益回収</button><button id="rebirth">🔁 リバース</button><button id="catalogBtn">📚 キャラ図鑑</button><button id="gearShopBtn" style="display:none">🛠️ ギアショップ</button><button id="carryBtn">🤲 キャラを持ち上げる</button><button id="stealBtn" style="display:none">🕵️ 盗み挑戦</button><button id="baseLockBtn" style="display:none">🔒 ベースロック</button><button id="cameraMode">👁️ 一人称に切替</button><button id="adminBtn" style="background:#a33c56;display:none">🛡️ 管理者</button></div><div id="stickpad"><div id="stick"></div></div><button id="buy">購入</button><div id="catalog" class="panel">キャラを購入してベースに運ぼう！</div><div id="eventBanner" class="panel" style="position:absolute;left:50%;top:10px;transform:translateX(-50%);display:none;color:#fff36b;font-weight:1000;text-align:center"></div><div id="notice" class="panel"></div>
+</style></head><body><div id="game"></div><div id="hud"><div id="brand" class="panel">🌀 FRIENDLOT 3D <span style="color:#ffe37b">REBORN</span></div><div id="stats" class="panel">Cash: $500<br>収益: $0/s<br>ベース: 1F</div><div id="help" class="panel">WASD / 矢印キーで移動<br>ドラッグ・スワイプで視点回転<br>ホイール・ピンチでズーム</div><div id="actions"><button id="collect">💵 収益回収</button><button id="rebirth">🔁 リバース</button><button id="catalogBtn">📚 キャラ図鑑</button><button id="gearShopBtn" style="display:none">🛠️ ギアショップ</button><button id="carryBtn">🤲 キャラを持ち上げる</button><button id="stealBtn" style="display:none">🕵️ 盗み挑戦</button><button id="baseLockBtn" style="display:none">🔒 ベースロック</button><button id="cameraMode">👁️ 一人称に切替</button><button id="carpetBtn" style="display:none;background:#188b58">🟩 飛行カーペット</button><div id="flightControls" style="display:none;position:absolute;right:112px;bottom:30px;pointer-events:auto;gap:6px;flex-direction:column"><button id="flyUp" style="background:#188b58">⬆ 上昇</button><button id="flyDown" style="background:#188b58">⬇ 下降</button></div><button id="adminBtn" style="background:#a33c56;display:none">🛡️ 管理者</button></div><div id="stickpad"><div id="stick"></div></div><button id="buy">購入</button><div id="catalog" class="panel">キャラを購入してベースに運ぼう！</div><div id="eventBanner" class="panel" style="position:absolute;left:50%;top:10px;transform:translateX(-50%);display:none;color:#fff36b;font-weight:1000;text-align:center"></div><div id="notice" class="panel"></div>
 <div id="adminPanel" style="display:none;position:fixed;inset:0;background:#080d1bd9;z-index:20;place-items:center;padding:16px;pointer-events:auto">
  <div class="panel" style="width:min(440px,94vw);max-height:88vh;overflow:auto">
   <div style="display:flex;justify-content:space-between;align-items:center"><b>🛡️ フレンドロット 管理者パネル</b><button id="adminClose">閉じる</button></div>
@@ -55,7 +55,7 @@ const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(
 scene.add(new THREE.HemisphereLight('#ffffff','#61718c',2.1));const sun=new THREE.DirectionalLight('#fff1d3',3);sun.position.set(-18,32,12);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);scene.add(sun);
 const mat=c=>new THREE.MeshStandardMaterial({color:c,roughness:.76});const box=(w,h,d,c,x,y,z,parent=scene)=>{let m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat(c));m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m};const ball=(r,c,x,y,z,parent=scene,scale=[1,1,1])=>{let m=new THREE.Mesh(new THREE.SphereGeometry(r,16,12),mat(c));m.position.set(x,y,z);m.scale.set(...scale);m.castShadow=true;parent.add(m);return m};
 let cash=1500,bank=0,rebirths=0,floors=1,owned=[],near=null,toastTimer,selectedIndex=0;
-let gearOwned={speedCoil:false,goldenCoil:false,incomeCharm:false};const bases=[],laneChars=[],keys=new Set(),joy={x:0,y:0};let player,playerBody;
+let gearOwned={speedCoil:false,goldenCoil:false,incomeCharm:false};const bases=[],laneChars=[],keys=new Set(),joy={x:0,y:0};let player,playerBody;let flyingCarpet=null,carpetFlying=false,carpetVertical=0;
 const fmt=n=>n>=1e12?(n/1e12).toFixed(2)+'T':n>=1e9?(n/1e9).toFixed(2)+'B':n>=1e6?(n/1e6).toFixed(2)+'M':n>=1e3?(n/1e3).toFixed(1)+'K':Math.floor(n).toLocaleString();
 const say=t=>{let e=$('#notice');e.textContent=t;e.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>e.classList.remove('show'),1900)};
 let catalog=[];
@@ -273,6 +273,22 @@ for(let i=0;i<9;i++){
 }
 function createPlayer(){player=new THREE.Group();player.position.set(0,0,11);playerBody=new THREE.Group();player.add(playerBody);let shirt=mat('#4268ff'),skin=mat('#f0c49a'),pants=mat('#29324b');box(.65,.75,.38,'#4268ff',0,1.0,0,playerBody);ball(.3,'#f0c49a',0,1.62,0,playerBody);box(.22,.55,.24,'#29324b',-.17,.38,0,playerBody);box(.22,.55,.24,'#29324b',.17,.38,0,playerBody);box(.17,.56,.2,'#f0c49a',-.43,1,0,playerBody);box(.17,.56,.2,'#f0c49a',.43,1,0,playerBody);scene.add(player)}
 createPlayer();
+// 管理者限定の緑色飛行カーペット。プレイヤーの足元に出現し、WASDとSpace/Shiftで飛行。
+function makeFlyingCarpet(){
+ const g=new THREE.Group();
+ const base=box(1.8,.12,1.15,'#19b84b',0,0,0,g);base.material.metalness=.08;base.material.roughness=.42;
+ box(1.62,.035,.98,'#31e66b',0,.08,0,g);
+ for(const x of [-.72,.72])for(const z of [-.42,.42])box(.12,.08,.12,'#087b35',x,.1,z,g);
+ const glow=new THREE.PointLight('#37ff75',.7,3);glow.position.set(0,.25,0);g.add(glow);
+ g.visible=false;scene.add(g);return g;
+}
+flyingCarpet=makeFlyingCarpet();
+function setCarpetFlying(on){
+ if(!isAdminAccount){say('飛行カーペットは管理者限定だよ');return;}
+ carpetFlying=!!on;flyingCarpet.visible=carpetFlying;$('#flightControls').style.display=carpetFlying?'flex':'none';
+ if(carpetFlying){player.position.y=Math.max(player.position.y,1.35);say('🟩 飛行カーペット起動！ Space/↑で上昇、Shift/↓で下降');$('#carpetBtn').textContent='🟩 カーペットをしまう';}
+ else {player.position.y=0;carpetVertical=0;say('飛行カーペットをしまったよ');$('#carpetBtn').textContent='🟩 飛行カーペット';}
+}
 function laneSpawn(){const spawnPool=catalog.filter(v=>v.is_shop_available && !v.is_fuse_only && Number(v.price)>0);const pool=spawnPool.length?spawnPool:catalog.filter(v=>Number(v.price)>0);let c=pool[Math.floor(Math.random()*pool.length)]||catalog[0];let g=makeChar(c);g.position.set(0,0,-15);scene.add(g);let p=label('$'+fmt(c.price)+' • '+c.rarity,c.rarity==='シークレット'?'#ff89ff':'#fff');p.position.set(0,2.05,0);g.add(p);laneChars.push({g,c,progress:0,dir:1});}
 laneSpawn();laneChars[0].g.position.z=-5;for(let i=1;i<4;i++){laneSpawn();laneChars[i].progress=i*.23;laneChars[i].g.position.z=-15+i*7.5}
 function rebuildOwned(){for(let b of bases)for(let s of b.slots){if(s.world){s.world.parent?.remove(s.world);s.world=null}}let my=bases[0];owned.forEach((o,i)=>{let s=my.slots.filter(q=>q.floor<floors)[i];if(!s)return;let g=makeChar(o);g.position.set(s.x,s.y,s.z);g.rotation.y=Math.PI;s.group.add(g);s.world=g})}
@@ -393,7 +409,7 @@ cameraCanvas.addEventListener('wheel',e=>{
 
 let last=performance.now(),spawnTimer=0,uiTimer=0;
 function loop(now){requestAnimationFrame(loop);let dt=Math.min(.05,(now-last)/1000);last=now;
-const strafe=(keys.has('d')?1:0)-(keys.has('a')?1:0)+joy.x;const forward=(keys.has('w')?1:0)-(keys.has('s')?1:0)-joy.y;let x=strafe*Math.cos(cameraYaw)+forward*Math.sin(cameraYaw),z=strafe*Math.sin(cameraYaw)-forward*Math.cos(cameraYaw);let len=Math.hypot(x,z);if(len>1){x/=len;z/=len}if(len>.05){
+const strafe=(keys.has('d')?1:0)-(keys.has('a')?1:0)+joy.x;const forward=(keys.has('w')?1:0)-(keys.has('s')?1:0)-(carpetFlying?0:joy.y);let x=strafe*Math.cos(cameraYaw)+forward*Math.sin(cameraYaw),z=strafe*Math.sin(cameraYaw)-forward*Math.cos(cameraYaw);let len=Math.hypot(x,z);if(len>1){x/=len;z/=len}if(len>.05){
  const nx=player.position.x+x*movementSpeed()*dt,nz=player.position.z+z*movementSpeed()*dt;
  let blocked=false;
  // ロック中だけ、基地正面のゲート面に当たり判定を持たせる。解除中は衝突判定を行わない。
@@ -404,7 +420,13 @@ const strafe=(keys.has('d')?1:0)-(keys.has('a')?1:0)+joy.x;const forward=(keys.h
   }
  }
  if(!blocked){player.position.x=nx;player.position.z=nz;}playerBody.rotation.y=Math.atan2(x,z)
-}player.position.x=THREE.MathUtils.clamp(player.position.x,-31,31);player.position.z=THREE.MathUtils.clamp(player.position.z,-31,31);
+}if(carpetFlying){
+ const up=keys.has(' ')||keys.has('r')||carpetVertical>0;const down=keys.has('shift')||keys.has('f')||carpetVertical<0;
+ carpetVertical=(up?1:0)-(down?1:0);player.position.y=THREE.MathUtils.clamp(player.position.y+carpetVertical*9*dt,1.25,24);
+ flyingCarpet.position.set(player.position.x,player.position.y-.45,player.position.z);
+ flyingCarpet.rotation.y=playerBody.rotation.y;
+ }else{player.position.y=0;}
+player.position.x=THREE.MathUtils.clamp(player.position.x,-31,31);player.position.z=THREE.MathUtils.clamp(player.position.z,-31,31);
 // ベースロックは自分の基地付近、盗みは他の基地付近にいるときだけ操作可能。
 const ownBase=bases[0];let nearOwn=false,nearOther=false;
 if(ownBase){const dx=player.position.x-ownBase.x,dz=player.position.z-ownBase.z;nearOwn=Math.hypot(dx,dz)<10;}
@@ -472,6 +494,14 @@ let adminToken=null, adminApi='';
 const adminPanel=$('#adminPanel');
 const ADMIN_IDS=new Set(['kazu1haru100','kazu1haru4sub']);
 const isAdminAccount=ADMIN_IDS.has(String(signedInId||''));
+$('#carpetBtn').style.display=isAdminAccount?'block':'none';
+$('#carpetBtn').onclick=()=>setCarpetFlying(!carpetFlying);
+function flightHold(value){return e=>{e.preventDefault();carpetVertical=value}}
+for(const [id,value] of [['flyUp',1],['flyDown',-1]]){
+ const el=$('#'+id);el.addEventListener('pointerdown',e=>{el.setPointerCapture?.(e.pointerId);carpetVertical=value;e.preventDefault()});
+ for(const ev of ['pointerup','pointercancel','lostpointercapture'])el.addEventListener(ev,()=>{if(carpetVertical===value)carpetVertical=0});
+}
+
 $('#adminBtn').style.display=isAdminAccount?'block':'none';
 $('#adminId').value=isAdminAccount?String(signedInId):'';
 $('#adminBtn').onclick=()=>{if(!isAdminAccount){say('管理者アカウントではありません');return}adminPanel.style.display='grid'};
