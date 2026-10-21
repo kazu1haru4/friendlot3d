@@ -136,32 +136,31 @@ else{S(.4,0,.6,0,1,1,.9,body);C(.2,.3,-.22,.96,0,accent);C(.2,.3,.22,.96,0,accen
 for(let x of [-.22,.22])B(.14,.24,.16,x,.13,0,body);
 let tag=label(c.name,c.rarity==='シークレット'?'#ff8bff':c.rarity==='レジェンド'?'#ffd36a':'#fff');tag.position.y=1.55;g.add(tag);g.userData.charData=c;return g}
 function ground(){
- // broad floating island with layered earth edge
- box(86,.8,86,'#4da85a',0,-.55,0);
- box(83,.22,83,'#65c96d',0,-.03,0);
- // subtle tiled grass patches
- for(let i=-4;i<=4;i++)for(let j=-4;j<=4;j++){
-   if((i+j)%2===0)box(7.8,.025,7.8,'#70d475',i*8,-.015,j*8);
+ // Roblox風の広い緑のスタッド地面。派手な道路は作らず、画像のような芝生を主役にする。
+ box(86,.8,86,'#287b35',0,-.55,0);
+ box(83,.22,83,'#269b35',0,-.03,0);
+ // 小さなスタッドを格子状に並べる
+ const studGeo=new THREE.BoxGeometry(.22,.07,.22);
+ const studMat=mat('#36ad42');
+ const studs=new THREE.InstancedMesh(studGeo,studMat,41*41);
+ const dummy=new THREE.Object3D();let n=0;
+ for(let ix=-20;ix<=20;ix++)for(let iz=-20;iz<=20;iz++){
+   dummy.position.set(ix*2,.105,iz*2);dummy.rotation.set(0,0,0);dummy.updateMatrix();studs.setMatrixAt(n++,dummy.matrix);
  }
- // outer stone border
+ studs.instanceMatrix.needsUpdate=true;scene.add(studs);
+ // 薄いコンクリート境界
  for(let i=-8;i<=8;i++){
-   box(1.1,.28,.45,'#d4e0e7',i*4.5,-.12,-41.5);
-   box(1.1,.28,.45,'#d4e0e7',i*4.5,-.12,41.5);
-   box(.45,.28,1.1,'#d4e0e7',-41.5,-.12,i*4.5);
-   box(.45,.28,1.1,'#d4e0e7',41.5,-.12,i*4.5);
- }
- // roads from central conveyor to base ring
- for(let i=0;i<8;i++){
-   const a=i/8*Math.PI*2, x=Math.sin(a)*11.5,z=Math.cos(a)*11.5;
-   const road=box(2.5,.06,13,'#cbd5df',x,.06,z);road.rotation.y=-a;
-   const stripe=box(.12,.025,12,'#f9fbff',x,.1,z);stripe.rotation.y=-a;
+   box(1.1,.18,.35,'#777982',i*4.5,-.12,-41.5);
+   box(1.1,.18,.35,'#777982',i*4.5,-.12,41.5);
+   box(.35,.18,1.1,'#777982',-41.5,-.12,i*4.5);
+   box(.35,.18,1.1,'#777982',41.5,-.12,i*4.5);
  }
 }
 function buildBase(i){
- const side=i<4?-1:1, row=i%4, x=side*17.5, z=-24+row*15;
+ const side=i<4?-1:1, row=i%4, x=i===0?0:side*17.5, z=i===0?-24:-24+row*15;
  const g=new THREE.Group();g.position.set(x,0,z);
  // 自分の基地は正面が見える向き。他の区画はワールド配置に合わせて回転する。
- g.rotation.y=i===0?0:(side<0?Math.PI/2:-Math.PI/2);scene.add(g);
+ g.rotation.y=i===0?Math.PI:(side<0?Math.PI/2:-Math.PI/2);scene.add(g);
  const frame='#45464f', dark='#242731', edge='#666873', concrete='#85858d', window='#111923', wood='#8b4d2e', woodTop='#a96540';
  // Roblox版の画像に合わせた横長の土台と、レンガ色の縁取り
  box(11.8,.48,9.2,'#777982',0,.08,0,g);box(11.45,.18,8.9,'#343741',0,.39,0,g);box(11.15,.12,8.6,'#269b35',0,.53,0,g);
@@ -208,17 +207,13 @@ function buildBase(i){
  bases.push({i,x,z,g,slots,color:frame});
 }
 ground();
-// Central conveyor: dark steel bed, red moving belt, yellow safety rails and arrows
-box(7,.28,61,'#35435c',0,.03,0);
-box(5.1,.14,60,'#c53e50',0,.21,0);
-box(4.65,.08,59,'#ed5262',0,.31,0);
-for(let z=-28;z<=28;z+=1.8){
-  box(4.2,.025,.075,'#ffb7a9',0,.36,z);
-  const arrow= new THREE.Mesh(new THREE.ConeGeometry(.22,.5,3),mat('#ffe9c4'));
-  arrow.rotation.x=Math.PI/2;arrow.position.set(0,.4,z+.65);scene.add(arrow);
+// 中央レーン：芝生になじむ細い走行ライン。手前いっぱいのピンク道路は置かない。
+box(4.2,.07,42,'#4e5a52',0,.06,-5);
+box(3.8,.035,41,'#328b3c',0,.11,-5);
+for(let z=-25;z<=15;z+=2.4){
+  box(.10,.025,.8,'#a6e78c',0,.14,z);
 }
-for(let x of [-3.1,3.1])box(.25,.35,61,'#f3bf54',x,.28,0);
-for(let x of [-4.4,4.4])box(.75,.16,62,'#e8edf5',x,.02,0);
+for(let x of [-2.25,2.25])box(.12,.18,42,'#777982',x,.13,-5);
 // マップ上の物理ショップ（青白ストライプの屋根、木製カウンター、NPC）
 const shopGroup=new THREE.Group();shopGroup.position.set(7.8,0,1.5);shopGroup.rotation.y=-Math.PI/2;scene.add(shopGroup);
 box(7.2,.28,5.0,'#cbd5df',0,.08,0,shopGroup);
