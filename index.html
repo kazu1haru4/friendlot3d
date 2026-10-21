@@ -2,7 +2,7 @@
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="theme-color" content="#10152b"><title>フレンドロット3D</title>
 <style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#9ddcff;color:#fff;font-family:system-ui,-apple-system,sans-serif;touch-action:none}#game{position:fixed;inset:0}canvas{display:block}#hud{position:fixed;inset:0;pointer-events:none}.panel{background:#11182be8;border:1px solid #ffffff3d;border-radius:14px;padding:9px 12px;box-shadow:0 5px 18px #0003;backdrop-filter:blur(7px)}#brand{position:absolute;left:10px;top:10px;font-weight:1000;font-size:14px}#stats{position:absolute;left:10px;top:53px;font-size:12px;line-height:1.55}#help{position:absolute;right:10px;top:10px;max-width:46vw;text-align:right;font-size:11px}#actions{position:absolute;right:10px;top:94px;display:flex;flex-direction:column;gap:7px;pointer-events:auto}button{border:1px solid #ffffff70;border-radius:12px;background:#635bdb;color:white;font-weight:900;padding:10px 12px;font:inherit;box-shadow:0 3px 0 #27225e}button:active{transform:translateY(2px);box-shadow:none}input,select{background:#10182b;color:#fff;border:1px solid #ffffff60;font:inherit}#buy{position:absolute;right:20px;bottom:25px;width:82px;height:82px;border-radius:50%;background:#ffb82e;color:#36220a;border:3px solid #fff;pointer-events:auto;font-weight:1000}#stickpad{position:absolute;left:18px;bottom:20px;width:116px;height:116px;border-radius:50%;background:#ffffff28;border:2px solid #ffffff80;pointer-events:auto}#stick{position:absolute;left:33px;top:33px;width:46px;height:46px;border-radius:50%;background:#e8f1ffdd;border:2px solid white}#notice{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);opacity:0;transition:opacity .18s;max-width:85vw;text-align:center;font-weight:900}#notice.show{opacity:1}#loading{position:absolute;inset:0;display:grid;place-items:center;background:#9ddcff;color:#172445;font-weight:1000;font-size:22px;text-align:center}#catalog{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);font-size:11px;white-space:nowrap}@media(min-width:850px){#stickpad{display:none}#help{font-size:13px}#brand{font-size:17px}}
-</style></head><body><div id="game"></div><div id="hud"><div id="brand" class="panel">🌀 FRIENDLOT 3D <span style="color:#ffe37b">REBORN</span></div><div id="stats" class="panel">Cash: $500<br>収益: $0/s<br>ベース: 1F</div><div id="help" class="panel">WASD / 矢印キーで移動<br>ドラッグ・スワイプで視点回転<br>ホイール・ピンチでズーム</div><div id="actions"><button id="collect">💵 収益回収</button><button id="rebirth">🔁 リバース</button><button id="catalogBtn">📚 キャラ図鑑</button><button id="gearShopBtn">🛠️ ギアショップ</button><button id="carryBtn">🤲 キャラを持ち上げる</button><button id="stealBtn">🕵️ 盗み挑戦</button><button id="baseLockBtn">🔒 ベースロック</button><button id="cameraMode">👁️ 一人称に切替</button><button id="adminBtn" style="background:#a33c56;display:none">🛡️ 管理者</button></div><div id="stickpad"><div id="stick"></div></div><button id="buy">購入</button><div id="catalog" class="panel">キャラを購入してベースに運ぼう！</div><div id="eventBanner" class="panel" style="position:absolute;left:50%;top:10px;transform:translateX(-50%);display:none;color:#fff36b;font-weight:1000;text-align:center"></div><div id="notice" class="panel"></div>
+</style></head><body><div id="game"></div><div id="hud"><div id="brand" class="panel">🌀 FRIENDLOT 3D <span style="color:#ffe37b">REBORN</span></div><div id="stats" class="panel">Cash: $500<br>収益: $0/s<br>ベース: 1F</div><div id="help" class="panel">WASD / 矢印キーで移動<br>ドラッグ・スワイプで視点回転<br>ホイール・ピンチでズーム</div><div id="actions"><button id="collect">💵 収益回収</button><button id="rebirth">🔁 リバース</button><button id="catalogBtn">📚 キャラ図鑑</button><button id="gearShopBtn" style="display:none">🛠️ ギアショップ</button><button id="carryBtn">🤲 キャラを持ち上げる</button><button id="stealBtn" style="display:none">🕵️ 盗み挑戦</button><button id="baseLockBtn" style="display:none">🔒 ベースロック</button><button id="cameraMode">👁️ 一人称に切替</button><button id="adminBtn" style="background:#a33c56;display:none">🛡️ 管理者</button></div><div id="stickpad"><div id="stick"></div></div><button id="buy">購入</button><div id="catalog" class="panel">キャラを購入してベースに運ぼう！</div><div id="eventBanner" class="panel" style="position:absolute;left:50%;top:10px;transform:translateX(-50%);display:none;color:#fff36b;font-weight:1000;text-align:center"></div><div id="notice" class="panel"></div>
 <div id="adminPanel" style="display:none;position:fixed;inset:0;background:#080d1bd9;z-index:20;place-items:center;padding:16px;pointer-events:auto">
  <div class="panel" style="width:min(440px,94vw);max-height:88vh;overflow:auto">
   <div style="display:flex;justify-content:space-between;align-items:center"><b>🛡️ フレンドロット 管理者パネル</b><button id="adminClose">閉じる</button></div>
@@ -238,7 +238,7 @@ box(5.2,.18,.18,'#8b5b37',0,1.8,.45,shopGroup);
 const shopSign=label('ショップ','#ffe66d');shopSign.position.set(0,3.0,-.8);shopSign.scale.set(2.8,.7,1);shopGroup.add(shopSign);
 const shopKeeper=makeChar({id:'shopkeeper',name:'ショップ',type:'robot',color:'#d6b07a',accent:'#f8e7b4',rarity:'SHOP',price:0,income:0});
 shopKeeper.scale.set(.8,.8,.8);shopKeeper.position.set(0,.2,.9);shopGroup.add(shopKeeper);
-shopGroup.userData.isShop=true;
+shopGroup.userData.isShop=true;shopGroup.name='gearShopNpc';
 // entrance arch / spawn portal
 for(let x of [-3.4,3.4])box(.3,4,.35,'#27324a',x,2,-17.2);
 box(7,.35,.4,'#27324a',0,4,-17.2);
@@ -309,8 +309,8 @@ function refreshGearShop(){
 function buyGear(key,cost,label){say('ギアの共通保存はまだ接続していないため、購入を一時停止中だよ。Cashは消費されないよ。')}
 $('#gearShopBtn').textContent='🛠️ ギアショップ';
 $('#gearShopBtn').onclick=()=>{gearPanel.style.display='grid';refreshGearShop()};
-// ショップの売り場に近づいたときに案内を表示
-$('#gearShopBtn').onclick=()=>{gearPanel.style.display='grid';refreshGearShop()};
+$('#gearShopBtn').style.display='none';
+// ギアショップはマップ上のショップNPCをタップしたときだけ開く
 $('#gearShopClose').onclick=()=>{gearPanel.style.display='none'};
 $('#buySpeedCoil').onclick=()=>buyGear('speedCoil',500,'スピードコイル');
 $('#buyGoldenCoil').onclick=()=>buyGear('goldenCoil',2000,'ゴールデンコイル');
@@ -324,6 +324,7 @@ let cameraMode='third', cameraYaw=0, cameraPitch=0.48, cameraDistance=10;
 const cameraPointers=new Map();
 let pinchStartDistance=0, pinchStartZoom=10, lastDragX=0, lastDragY=0, dragPointer=null;
 const cameraCanvas=renderer.domElement;
+const interactionRaycaster=new THREE.Raycaster();const pointerNdc=new THREE.Vector2();
 const cameraButton=$('#cameraMode');
 function updateCameraButton(){
  cameraButton.textContent=cameraMode==='third'?'👁️ 一人称に切替':'🌎 三人称に切替';
@@ -337,6 +338,7 @@ updateCameraButton();
 function pointerDistance(a,b){return Math.hypot(a.x-b.x,a.y-b.y)}
 cameraCanvas.addEventListener('pointerdown',e=>{
  if(e.pointerType==='mouse'&&e.button!==0)return;
+ cameraCanvas.dataset.tapX=String(e.clientX);cameraCanvas.dataset.tapY=String(e.clientY);cameraCanvas.dataset.tapMoved='0';
  cameraPointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
  if(cameraPointers.size===1){
   dragPointer=e.pointerId;lastDragX=e.clientX;lastDragY=e.clientY;
@@ -357,6 +359,7 @@ cameraCanvas.addEventListener('pointermove',e=>{
  }
  if(dragPointer===e.pointerId){
   const dx=e.clientX-lastDragX,dy=e.clientY-lastDragY;
+  if(Math.hypot(e.clientX-Number(cameraCanvas.dataset.tapX||e.clientX),e.clientY-Number(cameraCanvas.dataset.tapY||e.clientY))>9)cameraCanvas.dataset.tapMoved='1';
   cameraYaw+=dx*.006;
   cameraPitch=THREE.MathUtils.clamp(cameraPitch-dy*.005,-.05,1.25);
   lastDragX=e.clientX;lastDragY=e.clientY;
@@ -371,7 +374,17 @@ function endCameraPointer(e){
   dragPointer=entry[0];lastDragX=entry[1].x;lastDragY=entry[1].y;
  }
 }
-cameraCanvas.addEventListener('pointerup',endCameraPointer);
+cameraCanvas.addEventListener('pointerup',e=>{
+ const moved=cameraCanvas.dataset.tapMoved==='1';
+ if(!moved&&cameraPointers.size===1){
+  const rect=cameraCanvas.getBoundingClientRect();
+  pointerNdc.set((e.clientX-rect.left)/rect.width*2-1,-((e.clientY-rect.top)/rect.height)*2+1);
+  interactionRaycaster.setFromCamera(pointerNdc,camera);
+  const shopHits=interactionRaycaster.intersectObject(shopKeeper,true);
+  if(shopHits.length){gearPanel.style.display='grid';refreshGearShop();say('ギアショップを開いたよ');}
+ }
+ endCameraPointer(e);
+});
 cameraCanvas.addEventListener('pointercancel',endCameraPointer);
 cameraCanvas.addEventListener('wheel',e=>{
  e.preventDefault();
@@ -392,6 +405,11 @@ const strafe=(keys.has('d')?1:0)-(keys.has('a')?1:0)+joy.x;const forward=(keys.h
  }
  if(!blocked){player.position.x=nx;player.position.z=nz;}playerBody.rotation.y=Math.atan2(x,z)
 }player.position.x=THREE.MathUtils.clamp(player.position.x,-31,31);player.position.z=THREE.MathUtils.clamp(player.position.z,-31,31);
+// ベースロックは自分の基地付近、盗みは他の基地付近にいるときだけ操作可能。
+const ownBase=bases[0];let nearOwn=false,nearOther=false;
+if(ownBase){const dx=player.position.x-ownBase.x,dz=player.position.z-ownBase.z;nearOwn=Math.hypot(dx,dz)<10;}
+for(const b of bases){if(b.i===0)continue;if(Math.hypot(player.position.x-b.x,player.position.z-b.z)<10){nearOther=true;break;}}
+$('#baseLockBtn').style.display=nearOwn?'block':'none';$('#stealBtn').style.display=nearOther?'block':'none';
 if(carriedLane){const hand=new THREE.Vector3(.55,1.65,.35).applyAxisAngle(new THREE.Vector3(0,1,0),playerBody.rotation.y);carriedLane.g.position.set(player.position.x+hand.x,player.position.y+hand.y,player.position.z+hand.z);carriedLane.g.rotation.y=playerBody.rotation.y;}
 for(let o of laneChars){if(o===carriedLane)continue;o.progress+=dt*.07;o.g.position.z=-15+((o.progress*30)%30);o.g.position.y=.05+Math.sin(now*.004+o.progress*8)*.08;o.g.rotation.y=Math.PI}
 spawnTimer+=dt;if(spawnTimer>5&&laneChars.length<5){spawnTimer=0;laneSpawn()}
