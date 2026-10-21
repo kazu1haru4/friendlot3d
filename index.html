@@ -672,9 +672,21 @@ function loop(now){requestAnimationFrame(loop);try{window.__friendlotSetStage?.(
   nearElevator=Math.abs(localPos.x-6.35)<2.0&&Math.abs(localPos.z)<2.05;
   onElevator=Math.abs(localPos.x-6.35)<.82&&Math.abs(localPos.z)<.82;
   $('#elevatorPanel').style.display=nearElevator?'block':'none';
-  if(onElevator){if(!elevatorMoving)player.position.y=[0,3.62,7.25][elevatorTargetFloor]||0;}
-  else if(insideOwnBase&&player.position.y>0.5){player.position.y=player.position.y<3.62?0:player.position.y<7.25?3.62:7.25;}
-  else if(!onElevator){player.position.y=0;}
+  // ベースの各階床に論理的な当たり判定を追加。
+  // プレイヤーが床の範囲内にいる間は、現在階の床面より下へ落ちないようにする。
+  const floorHeights=[0,3.62,7.25];
+  if(onElevator){if(!elevatorMoving)player.position.y=floorHeights[elevatorTargetFloor]??0;}
+  else if(insideOwnBase){
+    let floorIndex=0;
+    if(player.position.y>=5.45)floorIndex=2;
+    else if(player.position.y>=1.8)floorIndex=1;
+    const floorY=floorHeights[floorIndex];
+    // 床面を下回った場合だけ床上へ戻し、通常のジャンプ等は妨げない。
+    if(player.position.y<floorY)player.position.y=floorY;
+  }else{
+    // ベースの床の外へ出たら、上階の高さを引き継がず地上へ戻す。
+    if(!onElevator)player.position.y=0;
+  }
  }else{$('#elevatorPanel').style.display='none';player.position.y=0;}
 }
 player.position.x=THREE.MathUtils.clamp(player.position.x,-31,31);player.position.z=THREE.MathUtils.clamp(player.position.z,-31,31);
