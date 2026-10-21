@@ -105,7 +105,7 @@ try{
  console.warn('Supabaseのキャラ読込に失敗。character.json / fallbackを使用します。',err);
  try{const r=await fetch('./character.json',{cache:'no-store'});if(!r.ok)throw 0;catalog=(await r.json()).characters||fallback}catch{catalog=fallback}
 }
-function inferType(c){const text=(String(c.id)+' '+String(c.name)).toLowerCase();if(/tawashi|たわし/.test(text))return 'brush';if(/meowl|meowru|ミャオル|cat|猫/.test(text))return 'cat';if(/elephant|エレファント|象/.test(text))return 'elephant';if(/knight|騎士/.test(text))return 'knight';if(/dragon|ドラゴン|カネローニ/.test(text))return 'dragon';if(/waffle|ワッフル|ヌビニピザニニ/.test(text))return 'waffle';if(/lucky_block|ラッキーブロック/.test(text))return 'rainbow';return 'block'}
+function inferType(c){const text=(String(c.id)+' '+String(c.name)).toLowerCase();if(/ストロベリーエレファント|ストエレ|strawberry.?elephant|strawberryelephant/.test(text))return 'strawberryElephant';if(/tawashi|たわし/.test(text))return 'brush';if(/meowl|meowru|ミャオル|cat|猫/.test(text))return 'cat';if(/elephant|エレファント|象/.test(text))return 'elephant';if(/knight|騎士/.test(text))return 'knight';if(/dragon|ドラゴン|カネローニ/.test(text))return 'dragon';if(/waffle|ワッフル|ヌビニピザニニ/.test(text))return 'waffle';if(/lucky_block|ラッキーブロック/.test(text))return 'rainbow';return 'block'}
 function label(text,color='#fff'){let c=document.createElement('canvas');c.width=512;c.height=112;let x=c.getContext('2d');x.fillStyle='#10182beF';x.beginPath();x.roundRect(8,8,496,96,22);x.fill();x.strokeStyle='#ffffff80';x.lineWidth=3;x.stroke();x.fillStyle=color;x.font='bold 32px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(String(text).slice(0,25),256,56);let s=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),depthTest:false}));s.scale.set(3.2,.7,1);return s}
 function makeChar(c){const g=new THREE.Group(),body=mat(c.color||'#aaaaff'),accent=mat(c.accent||'#fff0cf'),dark=mat('#1a1a2a'),white=mat('#ffffff');const sph=(r,x,y,z,sx=1,sy=1,sz=1,m=body)=>ball(r,'#ffffff',x,y,z,g,[sx,sy,sz]);const S=(r,x,y,z,sx=1,sy=1,sz=1,m=body)=>{let o=new THREE.Mesh(new THREE.SphereGeometry(r,16,12),m);o.position.set(x,y,z);o.scale.set(sx,sy,sz);o.castShadow=true;g.add(o);return o};const B=(w,h,d,x,y,z,m=body,rz=0)=>{let o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.rotation.z=rz;o.castShadow=true;g.add(o);return o};const C=(r,h,x,y,z,m=body,rz=0)=>{let o=new THREE.Mesh(new THREE.ConeGeometry(r,h,12),m);o.position.set(x,y,z);o.rotation.z=rz;o.castShadow=true;g.add(o);return o};
 const type=c.type||c.id;
@@ -138,7 +138,43 @@ S(.14,-.22,.035,.12,1,.45,1.25,foot);S(.14,.22,.035,.12,1,.45,1.25,foot);
 } else if(type==='brush'){B(.9,.34,.55,0,.52,0,body,.12);for(let i=0;i<9;i++){let a=i/9*Math.PI*2;S(.07,Math.cos(a)*.36,.52+Math.sin(a)*.17,Math.sin(a)*.24,1,1,1,accent)}B(.2,.08,.1,0,.7,.28,accent)}
 else if(type==='cat'){S(.43,0,.58,0,1,1.05,.88,body);C(.2,.34,-.27,.98,0,body,-.25);C(.2,.34,.27,.98,0,body,.25);S(.055,-.15,.66,.37,1,1,1,dark);S(.055,.15,.66,.37,1,1,1,dark);S(.07,0,.53,.4,1,1,1,accent);S(.08,-.45,.57,0,1,1,1,accent);S(.08,.45,.57,0,1,1,1,accent)}
 else if(type==='waffle'){B(.82,.72,.7,0,.6,0,body);for(let x of [-.23,0,.23])for(let y of [.4,.6,.8])B(.1,.1,.025,x,y,.36,accent);S(.05,-.15,.72,.37,1,1,1,dark);S(.05,.15,.72,.37,1,1,1,dark)}
-else if(type==='elephant'){S(.44,0,.62,0,1.1,1,.95,body);S(.13,0,.35,.4,.8,1.6,1.2,accent);S(.12,0,.2,.52,.8,1.5,1,body);S(.2,-.46,.61,0,1,1,1,accent);S(.2,.46,.61,0,1,1,1,accent);S(.045,-.15,.72,.4,1,1,1,dark);S(.045,.15,.72,.4,1,1,1,dark);C(.08,.2,-.13,.91,.2,accent);C(.08,.2,.13,.91,.2,accent)}
+else if(type==='strawberryElephant'){
+ // ストエレ：赤いイチゴの小さな立方体で作る、ゾウ型のボクセルキャラ。
+ const berry=mat('#ef2435'),berryDark=mat('#c9162b'),berryLight=mat('#ff5960'),seedGold=mat('#ffe36a'),leaf=mat('#65c928'),leafLight=mat('#8be638'),eyeWhite=mat('#ffffff'),eyeBlack=mat('#11131a'),innerEar=mat('#ff9aa8');
+ // 胴体は丸い球ではなく、段差のあるブロックの集合体。
+ for(let layer=0;layer<5;layer++){
+   const y=.32+layer*.19, width=layer===0||layer===4?3:4;
+   for(let ix=0;ix<width;ix++)for(let iz=0;iz<3;iz++){
+     const x=(ix-(width-1)/2)*.19+(layer%2)*.035, z=(iz-1)*.19;
+     B(.205,.205,.205,x,y,z,((ix+iz+layer)%5===0)?berryDark:berry);
+   }
+ }
+ // 四本の太い角ばった足と白っぽい足先。
+ for(const x of [-.29,.29])for(const z of [-.22,.22]){
+   B(.22,.43,.23,x,.19,z,berryDark);B(.235,.12,.25,x,.045,z+.025,berryLight);
+ }
+ // ゾウの大きな耳（左右）とピンクの内側。
+ B(.30,.58,.14,-.48,.79,.015,berry);B(.22,.43,.035,-.49,.79,.105,innerEar);
+ B(.30,.58,.14,.48,.79,.015,berry);B(.22,.43,.035,.49,.79,.105,innerEar);
+ // 顔と長い、下向きに伸びるブロック状の鼻。
+ B(.48,.43,.28,0,.80,.205,berryLight);
+ B(.20,.22,.22,0,.57,.36,berry);B(.19,.20,.22,0,.40,.48,berryDark);B(.18,.18,.20,.015,.25,.58,berry);
+ // 四角い目：黒い目に白いハイライト。
+ B(.16,.19,.07,-.19,.91,.36,eyeBlack);B(.16,.19,.07,.19,.91,.36,eyeBlack);
+ B(.055,.065,.025,-.215,.945,.405,eyeWhite);B(.055,.065,.025,.165,.945,.405,eyeWhite);
+ // 頭の上に広がる緑のイチゴのヘタ。葉を段々のキューブで表現。
+ for(let i=-3;i<=3;i++){
+   B(.25,.14,.25,i*.19,1.39-(Math.abs(i)*.025),-.015,Math.abs(i)%2?leaf:leafLight);
+   if(i%2===0)B(.22,.13,.22,i*.16,1.49,-.12,leaf);
+ }
+ B(.27,.16,.25,0,1.58,-.02,leafLight);B(.18,.15,.18,0,1.70,-.02,leaf);
+ // 黄色い種の小さなキューブを体の側面と正面に散らす。
+ for(let i=0;i<22;i++){
+   const side=i%2===0?-1:1, row=Math.floor(i/2)%5, col=Math.floor(i/10);
+   const x=side*(.39+(col%2)*.035), y=.39+row*.18, z=-.20+col*.20;
+   B(.045,.065,.045,x,y,z,seedGold);
+ }
+ }else if(type==='elephant'){S(.44,0,.62,0,1.1,1,.95,body);S(.13,0,.35,.4,.8,1.6,1.2,accent);S(.12,0,.2,.52,.8,1.5,1,body);S(.2,-.46,.61,0,1,1,1,accent);S(.2,.46,.61,0,1,1,1,accent);S(.045,-.15,.72,.4,1,1,1,dark);S(.045,.15,.72,.4,1,1,1,dark);C(.08,.2,-.13,.91,.2,accent);C(.08,.2,.13,.91,.2,accent)}
 else if(type==='knight'){B(.62,.65,.42,0,.55,0,body);B(.8,.13,.48,0,.9,0,accent);B(.18,.5,.18,-.43,.52,0,accent,.1);B(.15,.6,.15,.43,.52,0,accent,-.1);C(.13,.4,.43,.95,0,white);B(.25,.3,.06,0,.6,.25,dark)}
 else if(type==='dragon'){S(.4,0,.58,0,1.1,1,.9,body);C(.14,.32,-.2,.98,0,accent,-.3);C(.14,.32,.2,.98,0,accent,.3);B(.48,.12,.42,-.48,.66,-.08,accent,.45);B(.48,.12,.42,.48,.66,-.08,accent,-.45);S(.05,-.14,.68,.36,1,1,1,dark);S(.05,.14,.68,.36,1,1,1,dark);S(.11,0,.32,.4,1,1,1,accent)}
 else if(type==='block'||type==='rainbow'){B(.78,.78,.78,0,.6,0,body);B(.22,.22,.04,-.17,.68,.4,accent);B(.22,.22,.04,.17,.68,.4,accent);B(.28,.06,.04,0,.44,.41,dark);for(let x of [-.42,.42])for(let y of [.32,.9])S(.06,x,y,0,1,1,1,accent);if(type==='rainbow'){for(let i=0;i<4;i++)B(.12,.8,.82,-.3+i*.2,.6,-.01,[mat('#ff5757'),mat('#ffb83e'),mat('#62d76b'),mat('#5d7bff')][i])}}
