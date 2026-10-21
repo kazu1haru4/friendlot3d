@@ -351,7 +351,25 @@ S(.13,.92,.43,-.18,1,1,1,mask);
 // human-like legs and feet
 B(.13,.43,.15,-.2,.15,.02,foot,-.06);B(.13,.43,.15,.2,.15,.02,foot,.06);
 S(.14,-.22,.035,.12,1,.45,1.25,foot);S(.14,.22,.035,.12,1,.45,1.25,foot);
-} else if(type==='brush'){B(.9,.34,.55,0,.52,0,body,.12);for(let i=0;i<9;i++){let a=i/9*Math.PI*2;S(.07,Math.cos(a)*.36,.52+Math.sin(a)*.17,Math.sin(a)*.24,1,1,1,accent)}B(.2,.08,.1,0,.7,.28,accent)}
+} else if(type==='brush'){
+ // ロスたわし：画像に合わせた、茶色い繊維が密集した楕円形のたわし。
+ const fiberMats=[mat('#6b3b1d'),mat('#80502a'),mat('#996338'),mat('#b17a43'),mat('#5a321c')];
+ const core=mat('#8a552d'),gold=mat('#ffd85a');
+ // ふっくらした楕円の芯
+ S(.42,0,.52,0,1.2,.54,.88,core);
+ // 表面を細い繊維で覆い、角度を変えて毛束を密集させる
+ for(let i=0;i<420;i++){
+   const u=(i*2.399963229728653)%(Math.PI*2);
+   const v=Math.acos(1-2*((i+.5)/420));
+   const x=.43*Math.sin(v)*Math.cos(u), y=.52+.20*Math.cos(v), z=.30*Math.sin(v)*Math.sin(u);
+   const len=.055+(i%5)*.009, r=.009+(i%3)*.002;
+   const fiber=new THREE.Mesh(new THREE.BoxGeometry(r,len,r),fiberMats[i%fiberMats.length]);
+   fiber.position.set(x,y,z);fiber.rotation.z=Math.sin(u)*.55;fiber.rotation.x=Math.cos(u)*.45;fiber.castShadow=true;g.add(fiber);
+ }
+ // ふちに沿う金色の魔法リングと光る粒
+ const ring=new THREE.Mesh(new THREE.TorusGeometry(.56,.018,6,48),gold);ring.rotation.x=Math.PI/2;ring.position.y=.42;g.add(ring);
+ for(let i=0;i<10;i++){const a=i/10*Math.PI*2;S(.025,Math.cos(a)*.62,.52+Math.sin(a)*.23,Math.sin(a)*.32,1,1,1,gold)}
+}
 else if(type==='meowl'){
  // ミャオル：参考画像に合わせた茶白のボクセル猫。大きな緑の目と三角耳。
  const fur=mat('#b77a32'),furLight=mat('#d99b4d'),cream=mat('#fff0d9'),pink=mat('#f49a9d'),eyeGreen=mat('#39d84c'),eyeDark=mat('#102a17'),black=mat('#231b1a');
