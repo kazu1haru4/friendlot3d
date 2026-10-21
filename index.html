@@ -321,7 +321,7 @@ try{
  console.warn('Supabaseのキャラ読込に失敗。character.json / fallbackを使用します。',err);
  try{const r=await fetch('./character.json',{cache:'no-store'});if(!r.ok)throw 0;catalog=(await r.json()).characters||fallback}catch{catalog=fallback}
 }
-function inferType(c){const text=(String(c.id)+' '+String(c.name)).toLowerCase();if(/ストロベリーエレファント|ストエレ|strawberry.?elephant|strawberryelephant/.test(text))return 'strawberryElephant';if(/首なし騎士|headless.?knight|headlessknight/.test(text))return 'headlessKnight';if(/ミャオル|meowl|meowru/.test(text))return 'meowl';if(/tawashi|たわし/.test(text))return 'brush';if(/cat|猫/.test(text))return 'cat';if(/elephant|エレファント|象/.test(text))return 'elephant';if(/knight|騎士/.test(text))return 'knight';if(/dragon|ドラゴン|カネローニ/.test(text))return 'dragon';if(/waffle|ワッフル|ヌビニピザニニ/.test(text))return 'waffle';if(/lucky_block|ラッキーブロック/.test(text))return 'rainbow';return 'block'}
+function inferType(c){const text=(String(c.id)+' '+String(c.name)).toLowerCase();if(/dragon\s*cannelloni|ドラゴン.?カネローニ|カネローニドラゴン/.test(text))return 'dragonCannelloni';if(/ストロベリーエレファント|ストエレ|strawberry.?elephant|strawberryelephant/.test(text))return 'strawberryElephant';if(/首なし騎士|headless.?knight|headlessknight/.test(text))return 'headlessKnight';if(/ミャオル|meowl|meowru/.test(text))return 'meowl';if(/tawashi|たわし/.test(text))return 'brush';if(/cat|猫/.test(text))return 'cat';if(/elephant|エレファント|象/.test(text))return 'elephant';if(/knight|騎士/.test(text))return 'knight';if(/dragon|ドラゴン|カネローニ/.test(text))return 'dragon';if(/waffle|ワッフル|ヌビニピザニニ/.test(text))return 'waffle';if(/lucky_block|ラッキーブロック/.test(text))return 'rainbow';return 'block'}
 function label(text,color='#fff'){let c=document.createElement('canvas');c.width=512;c.height=112;let x=c.getContext('2d');x.fillStyle='#10182beF';x.beginPath();x.roundRect(8,8,496,96,22);x.fill();x.strokeStyle='#ffffff80';x.lineWidth=3;x.stroke();x.fillStyle=color;x.font='bold 32px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(String(text).slice(0,25),256,56);let s=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),depthTest:false}));s.scale.set(3.2,.7,1);return s}
 function makeChar(c){const g=new THREE.Group(),body=mat(c.color||'#aaaaff'),accent=mat(c.accent||'#fff0cf'),dark=mat('#1a1a2a'),white=mat('#ffffff');const sph=(r,x,y,z,sx=1,sy=1,sz=1,m=body)=>ball(r,'#ffffff',x,y,z,g,[sx,sy,sz]);const S=(r,x,y,z,sx=1,sy=1,sz=1,m=body)=>{let o=new THREE.Mesh(new THREE.SphereGeometry(r,16,12),m);o.position.set(x,y,z);o.scale.set(sx,sy,sz);o.castShadow=true;g.add(o);return o};const B=(w,h,d,x,y,z,m=body,rz=0)=>{let o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.rotation.z=rz;o.castShadow=true;g.add(o);return o};const C=(r,h,x,y,z,m=body,rz=0)=>{let o=new THREE.Mesh(new THREE.ConeGeometry(r,h,12),m);o.position.set(x,y,z);o.rotation.z=rz;o.castShadow=true;g.add(o);return o};
 const type=c.type||c.id;
@@ -450,7 +450,39 @@ else if(type==='headlessKnight'){
  B(.12,.16,.05,.78,2.12,.28,fireBright);B(.12,.16,.05,1.02,2.12,.28,fireBright);B(.22,.09,.05,.90,1.96,.29,fireBright);
  B(.13,.20,.12,.80,2.39,.02,mat('#4a2c18'));B(.13,.20,.12,1.00,2.39,.02,mat('#4a2c18'));
  }else if(type==='knight'){B(.62,.65,.42,0,.55,0,body);B(.8,.13,.48,0,.9,0,accent);B(.18,.5,.18,-.43,.52,0,accent,.1);B(.15,.6,.15,.43,.52,0,accent,-.1);C(.13,.4,.43,.95,0,white);B(.25,.3,.06,0,.6,.25,dark)}
-else if(type==='dragon'){S(.4,0,.58,0,1.1,1,.9,body);C(.14,.32,-.2,.98,0,accent,-.3);C(.14,.32,.2,.98,0,accent,.3);B(.48,.12,.42,-.48,.66,-.08,accent,.45);B(.48,.12,.42,.48,.66,-.08,accent,-.45);S(.05,-.14,.68,.36,1,1,1,dark);S(.05,.14,.68,.36,1,1,1,dark);S(.11,0,.32,.4,1,1,1,accent)}
+else if(type==='dragonCannelloni'){
+ // Dragon Cannelloni（Steal a Brainrot）：黄色〜オレンジ色のパスタ製ドラゴン。
+ const pasta=mat('#ffc52f'),pastaLight=mat('#ffe36a'),pastaDark=mat('#f39a18'),sauce=mat('#e94818'),horn=mat('#7b4324'),claw=mat('#57301d'),eyeWhite=mat('#fffdf0'),pupil=mat('#17151b'),fire=mat('#ff5b16'),fireBright=mat('#ffdc45');
+ // 太く段々になった胴体と長い首
+ B(.72,.48,.52,0,.72,-.02,pasta);B(.62,.20,.54,0,.53,-.015,pastaLight);B(.56,.18,.48,0,.91,-.015,pastaDark);
+ B(.30,.62,.32,0,1.15,.02,pasta);B(.34,.18,.34,0,1.39,.02,pastaLight);
+ // 大きな頭と開いた口
+ B(.58,.42,.48,0,1.62,.08,pasta);B(.48,.20,.08,0,1.49,.33,sauce);B(.46,.07,.10,0,1.58,.36,eyeWhite);B(.46,.07,.10,0,1.43,.36,eyeWhite);
+ for(let i=0;i<6;i++){const x=-.19+i*.076;C(.035,.075,x,1.535,.405,eyeWhite,Math.PI);C(.03,.06,x,1.465,.405,eyeWhite,0)}
+ // 黒い目と小さな白いハイライト
+ for(const x of [-.17,.17]){B(.12,.14,.045,x,1.72,.335,pupil);B(.035,.04,.02,x-.025,1.755,.362,eyeWhite)}
+ // 茶色い角、鼻先のパスタ片
+ C(.10,.25,-.22,1.91,.02,horn,-.22);C(.10,.25,.22,1.91,.02,horn,.22);B(.12,.10,.16,0,1.69,.34,pastaDark);
+ // 左右に広がる翼：根元、骨組み、オレンジ色の膜をブロックで表現
+ for(const side of [-1,1]){
+   B(.25,.20,.22,side*.43,.91,-.10,pastaDark,side*.20);
+   B(.62,.10,.12,side*.77,1.14,-.12,pasta,side*-.10);
+   B(.48,.10,.12,side*.92,1.34,-.12,pastaLight,side*-.35);
+   B(.38,.10,.12,side*.78,.91,-.12,pasta,side*.55);
+   B(.30,.10,.12,side*.57,.72,-.12,pastaDark,side*.72);
+   // 翼の膜に見えるオレンジの段々
+   B(.34,.12,.045,side*.67,1.03,-.035,fire,side*-.30);
+   B(.30,.12,.045,side*.80,1.20,-.035,pastaDark,side*-.35);
+   B(.25,.12,.045,side*.65,.84,-.035,fireBright,side*.38);
+ }
+ // 四本の角ばった脚と茶色い爪
+ for(const x of [-.25,.25]){B(.18,.30,.20,x,.27,.02,pastaDark);B(.20,.10,.23,x,.10,.10,pasta);C(.055,.10,x,.075,.22,claw,Math.PI)}
+ // 後ろへ伸びる段々の尻尾
+ B(.22,.18,.24,0,.69,-.39,pastaDark);B(.18,.14,.22,.10,.65,-.57,pasta);C(.10,.22,.10,.62,-.73,claw,-Math.PI/2);
+ // 炎のオーラ（翼まわりと足元）
+ for(let i=0;i<12;i++){const a=i/12*Math.PI*2;const x=Math.cos(a)*(.65+(i%3)*.12),y=.65+(i%4)*.23,z=-.18;C(.065,.22,x,y,z,i%2?fire:fireBright,Math.cos(a)*.35)}
+ for(let i=0;i<7;i++){const x=-.48+i*.16;C(.07,.22,x,.025,.02,i%2?fireBright:fire,Math.sin(i)*.22)}
+}
 else if(type==='block'||type==='rainbow'){B(.78,.78,.78,0,.6,0,body);B(.22,.22,.04,-.17,.68,.4,accent);B(.22,.22,.04,.17,.68,.4,accent);B(.28,.06,.04,0,.44,.41,dark);for(let x of [-.42,.42])for(let y of [.32,.9])S(.06,x,y,0,1,1,1,accent);if(type==='rainbow'){for(let i=0;i<4;i++)B(.12,.8,.82,-.3+i*.2,.6,-.01,[mat('#ff5757'),mat('#ffb83e'),mat('#62d76b'),mat('#5d7bff')][i])}}
 else if(type==='robot'){B(.68,.62,.5,0,.59,0,body);B(.8,.13,.58,0,.96,0,accent);S(.08,-.15,.64,.28,1,1,1,mat('#52f6ff'));S(.08,.15,.64,.28,1,1,1,mat('#52f6ff'));B(.28,.06,.05,0,.4,.28,dark);B(.14,.24,.15,-.42,.53,0,accent);B(.14,.24,.15,.42,.53,0,accent);C(.07,.2,0,1.12,0,accent)}
 else if(type==='ghost'){S(.42,0,.63,0,1,1.15,.8,body);for(let x of [-.26,-.09,.09,.26])C(.12,.24,x,.22,0,body,Math.PI);S(.05,-.13,.69,.32,1,1,1,dark);S(.05,.13,.69,.32,1,1,1,dark);B(.23,.06,.03,0,.48,.35,dark)}
@@ -460,7 +492,7 @@ else if(type==='berryking'){S(.4,0,.59,0,1,1.1,.85,body);C(.13,.28,-.22,1.03,0,a
 else{S(.4,0,.6,0,1,1,.9,body);C(.2,.3,-.22,.96,0,accent);C(.2,.3,.22,.96,0,accent);S(.05,-.12,.68,.35,1,1,1,dark);S(.05,.12,.68,.35,1,1,1,dark)}
 // Small legs + face-forward orientation
 for(let x of [-.22,.22])B(.14,.24,.16,x,.13,0,body);
-let tag=label(c.name,c.rarity==='シークレット'?'#ff8bff':c.rarity==='レジェンド'?'#ffd36a':'#fff');tag.position.y=type==='headlessKnight'?2.75:type==='meowl'?2.35:type==='strawberryElephant'?2.05:1.8;g.add(tag);g.scale.setScalar(1.22);g.userData.charData=c;return g}
+let tag=label(c.name,c.rarity==='シークレット'?'#ff8bff':c.rarity==='レジェンド'?'#ffd36a':'#fff');tag.position.y=type==='dragonCannelloni'?2.65:type==='headlessKnight'?2.75:type==='meowl'?2.35:type==='strawberryElephant'?2.05:1.8;g.add(tag);g.scale.setScalar(1.22);g.userData.charData=c;return g}
 function ground(){
  // Roblox風の広い緑のスタッド地面。派手な道路は作らず、画像のような芝生を主役にする。
  box(86,.8,86,'#287b35',0,-.55,0);
