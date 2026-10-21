@@ -163,7 +163,7 @@ function buildBase(i){
  g.rotation.y=side<0?-Math.PI/2:Math.PI/2;scene.add(g);
  const frame='#45464f', dark='#171b24', edge='#747780', concrete='#8a8b93', window='#080f19', wood='#8b4d2e', woodTop='#a96540', white='#e8e9ed';
  // 広い基礎と緑の床
- box(12.4,.42,12.4,'#777982',0,.05,0,g);box(12.05,.16,12.05,'#343741',0,.34,0,g);box(11.75,.12,11.75,'#269b35',0,.48,0,g);
+ box(12.4,.42,9.7,'#777982',0,.05,0,g);box(12.05,.16,9.35,'#343741',0,.34,0,g);box(11.75,.12,9.05,'#269b35',0,.48,0,g);
  // 3階建ての外周フレーム。各階は白い窓枠＋黒いガラス帯の構成。
  const floorsY=[.58,3.55,6.52];
  for(let f=0;f<3;f++){
@@ -187,10 +187,12 @@ function buildBase(i){
    // 正面の白い大窓枠は看板の上下を含めて各階に見せる
    if(f>0){box(10.65,.16,.24,white,0,y+.32,-4.25,g);box(10.65,.16,.24,white,0,top-.18,-4.25,g);}
  }
- // 1階正面の赤いセキュリティゲート。柱の間を縦バーで埋める。
- box(10.55,.22,.34,edge,0,3.25,-4.28,g);box(10.55,.22,.34,edge,0,.72,-4.28,g);
- for(let j=0;j<19;j++){const bx=-5.05+j*(10.1/18);box(.14,2.42,.18,'#ed2939',bx,1.98,-4.32,g);box(.18,.08,.2,'#ff6269',bx,3.12,-4.32,g);}
- box(10.25,.12,.2,'#b71f2c',0,.84,-4.34,g);
+ // 1階正面の赤いセキュリティゲート。ロック中だけ表示する。
+ const gateGroup=new THREE.Group();gateGroup.name='baseLockGate';g.add(gateGroup);
+ box(10.55,.22,.34,edge,0,3.25,-4.28,gateGroup);box(10.55,.22,.34,edge,0,.72,-4.28,gateGroup);
+ for(let j=0;j<19;j++){const bx=-5.05+j*(10.1/18);box(.14,2.42,.18,'#ed2939',bx,1.98,-4.32,gateGroup);box(.18,.08,.2,'#ff6269',bx,3.12,-4.32,gateGroup);}
+ box(10.25,.12,.2,'#b71f2c',0,.84,-4.34,gateGroup);
+ gateGroup.visible=false;
  // ゲート奥の緑の配置スペース
  for(let j=0;j<9;j++)box(.58,.035,.66,'#65e64d',-3.8+j*.95,.56,-2.72,g);
  // 屋根と張り出した梁
@@ -209,15 +211,15 @@ function buildBase(i){
  let slots=[];
  for(let floor=0;floor<3;floor++){
    const fy=.58+floor*2.97;
-   if(floor>0){box(10.4,.2,10.2,'#777a82',0,fy,0,g);for(const xx of [-5.0,5.0])for(const zz of [-4.9,4.9])box(.2,2.75,.2,frame,xx,fy-1.35,zz,g);}
-   // 左右の端に5枠ずつ、合計10枠/階。端の台座を長手方向へ並べる。
-   for(const sx of [-4.45,4.45])for(let k=0;k<5;k++){
-     const sz=-4.2+k*2.1;
-     box(1.45,.12,1.65,'#dce4ed',sx,fy+.18,sz,g);box(1.2,.08,1.38,'#6ce18e',sx,fy+.28,sz,g);
+   if(floor>0){box(10.4,.2,7.7,'#777a82',0,fy,0,g);for(const xx of [-5.0,5.0])for(const zz of [-3.65,3.65])box(.2,2.75,.2,frame,xx,fy-1.35,zz,g);}
+   // 左右の端に5枠ずつ。壁・ゲートに重ならないよう内側へ配置する。
+   for(let sideIndex=0;sideIndex<2;sideIndex++)for(let n=0;n<5;n++){
+     const sx=-4.15+n*2.075, sz=sideIndex===0?-2.45:2.45;
+     box(1.48,.12,1.42,'#dce4ed',sx,fy+.18,sz,g);box(1.25,.08,1.18,'#6ce18e',sx,fy+.28,sz,g);
      slots.push({x:sx,y:fy+.35,z:sz,group:g,world:null,floor});
    }
  }
- bases.push({i,x,z,g,slots,color:frame});
+ bases.push({i,x,z,g,slots,color:frame,gateGroup});
 }
 ground();
 // 中央の赤いショップレーン。基地を左右に並べるマップ構成。
@@ -378,10 +380,18 @@ cameraCanvas.addEventListener('wheel',e=>{
 
 let last=performance.now(),spawnTimer=0,uiTimer=0;
 function loop(now){requestAnimationFrame(loop);let dt=Math.min(.05,(now-last)/1000);last=now;
-const strafe=(keys.has('d')?1:0)-(keys.has('a')?1:0)+joy.x;const forward=(keys.has('w')?1:0)-(keys.has('s')?1:0)-joy.y;let x=strafe*Math.cos(cameraYaw)+forward*Math.sin(cameraYaw),z=strafe*Math.sin(cameraYaw)-forward*Math.cos(cameraYaw);let len=Math.hypot(x,z);if(len>1){x/=len;z/=len}if(len>.05){player.position.x+=x*movementSpeed()*dt;player.position.z+=z*movementSpeed()*dt;playerBody.rotation.y=Math.atan2(x,z)}player.position.x=THREE.MathUtils.clamp(player.position.x,-31,31);player.position.z=THREE.MathUtils.clamp(player.position.z,-31,31);
-// 簡易当たり判定：マップ外へ出ない。基地の外壁は各基地のローカル座標で判定し、入口側のゲート前は通行可能。
-for(const b of bases){const dx=player.position.x-b.g.position.x,dz=player.position.z-b.g.position.z;const c=Math.cos(-b.g.rotation.y),sn=Math.sin(-b.g.rotation.y);const lx=dx*c-dz*sn,lz=dx*sn+dz*c;const inBody=Math.abs(lx)<6.15&&Math.abs(lz)<5.8;const atEntrance=Math.abs(lx)<4.9&&lz<-4.25&&lz>-6.4;if(inBody&&!atEntrance){const pushX=Math.abs(lx)/6.15,pushZ=Math.abs(lz)/5.8;if(pushX>pushZ)player.position.x+=Math.sign(dx||1)*.16;else player.position.z+=Math.sign(dz||1)*.16;}}
-
+const strafe=(keys.has('d')?1:0)-(keys.has('a')?1:0)+joy.x;const forward=(keys.has('w')?1:0)-(keys.has('s')?1:0)-joy.y;let x=strafe*Math.cos(cameraYaw)+forward*Math.sin(cameraYaw),z=strafe*Math.sin(cameraYaw)-forward*Math.cos(cameraYaw);let len=Math.hypot(x,z);if(len>1){x/=len;z/=len}if(len>.05){
+ const nx=player.position.x+x*movementSpeed()*dt,nz=player.position.z+z*movementSpeed()*dt;
+ let blocked=false;
+ // ロック中だけ、基地正面のゲート面に当たり判定を持たせる。解除中は衝突判定を行わない。
+ if(brainrotState?.base_locked){
+  const base=bases[0];if(base){base.g.updateMatrixWorld(true);const local=new THREE.Vector3(nx,0,nz).applyMatrix4(base.g.matrixWorld.clone().invert());
+   const prev=new THREE.Vector3(player.position.x,0,player.position.z).applyMatrix4(base.g.matrixWorld.clone().invert());
+   if(Math.abs(local.x)<5.35 && ((prev.z>=-4.05 && local.z< -4.05)||(prev.z<=-4.55 && local.z> -4.55)))blocked=true;
+  }
+ }
+ if(!blocked){player.position.x=nx;player.position.z=nz;}playerBody.rotation.y=Math.atan2(x,z)
+}player.position.x=THREE.MathUtils.clamp(player.position.x,-31,31);player.position.z=THREE.MathUtils.clamp(player.position.z,-31,31);
 if(carriedLane){const hand=new THREE.Vector3(.55,1.65,.35).applyAxisAngle(new THREE.Vector3(0,1,0),playerBody.rotation.y);carriedLane.g.position.set(player.position.x+hand.x,player.position.y+hand.y,player.position.z+hand.z);carriedLane.g.rotation.y=playerBody.rotation.y;}
 for(let o of laneChars){if(o===carriedLane)continue;o.progress+=dt*.07;o.g.position.z=-15+((o.progress*30)%30);o.g.position.y=.05+Math.sin(now*.004+o.progress*8)*.08;o.g.rotation.y=Math.PI}
 spawnTimer+=dt;if(spawnTimer>5&&laneChars.length<5){spawnTimer=0;laneSpawn()}
@@ -429,7 +439,9 @@ async function refreshSharedState({rebuild=true}={}){
  const {data,error}=await db.rpc('brainrot_state');if(error)throw error;brainrotState=data;
  signedInId=String(data.user_id||signedInId||'');sessionStorage.setItem('friendlot3d_id',signedInId);
  cash=Number(data.cash??data.coins??0);rebirths=Number(data.rebirth_count||0);const lockBtn=document.getElementById('baseLockBtn');if(lockBtn)lockBtn.textContent=data.base_locked?'🔓 ロック解除':'🔒 ベースロック';
- floors=Math.max(1,Math.min(3,Math.ceil(Number(data.capacity||20)/10)));
+ // 赤いゲートは共通データ上で基地がロック中のときだけ表示する。
+ for(const base of bases){if(base.gateGroup)base.gateGroup.visible=!!data.base_locked && base.i===0;}
+ floors=Math.max(1,Math.min(3,Math.ceil(Number(data.capacity||20)/6)));
  const inv=Array.isArray(data.inventory)?data.inventory:[];
  owned=inv.map(item=>{const c=catalog.find(x=>x.id===String(item.character_id));if(!c)return null;return {...c,inventoryId:item.id,mutation:item.mutation||null,trait:item.trait||null,income:Number(item.income_per_minute||c.incomePerMinute||0)/60}}).filter(Boolean);
  if(rebuild)rebuildOwned();updateUI();
