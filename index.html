@@ -189,7 +189,7 @@ async function loadPublicServers(){
   publicServerList.replaceChildren();
   rows.forEach(row=>{
    const wrap=document.createElement('div');wrap.style.cssText='display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px solid #ffffff25';
-   const info=document.createElement('div');info.textContent=(row.host_name||row.host_user_id||'プレイヤー')+' のサーバー • '+String(row.member_count??1)+'人';info.style.flex='1';
+   const info=document.createElement('div');info.textContent=(row.host_name||row.host_user_id||'プレイヤー')+' のサーバー • '+String(row.player_count??row.member_count??1)+'人';info.style.flex='1';
    const join=document.createElement('button');join.textContent='参加';join.addEventListener('click',()=>joinServer(row.room_code));wrap.append(info,join);publicServerList.appendChild(wrap);
   });
  }catch(e){publicServerList.textContent='サーバー一覧を取得できませんでした。データベース設定を確認してね。';serverMessage('サーバー機能のDB設定がまだの場合は、付属のSQLを適用してね。 ('+(e.message||e)+')');}
@@ -237,7 +237,7 @@ function showCurrentServer(data){
  const title=document.createElement('b');title.textContent=(data.visibility==='private'?'🔒 プライベート':'🌐 公開')+' サーバー参加中';currentServerBox.appendChild(title);
  const code=document.createElement('div');code.style.marginTop='6px';code.textContent='コード: '+String(data.room_code||'');currentServerBox.appendChild(code);
  const copy=document.createElement('button');copy.textContent='コードをコピー';copy.style.marginTop='7px';copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(String(data.room_code||''));serverMessage('コードをコピーしたよ！')}catch{serverMessage('コード: '+String(data.room_code||''))}});currentServerBox.appendChild(copy);
- const leave=document.createElement('button');leave.textContent='退出';leave.style.marginLeft='7px';leave.addEventListener('click',async()=>{try{const {data:d,error}=await db.rpc('friendlot3d_leave_server');if(error)throw error;await stopMultiplayerSync();activeGameServer=null;currentServerBox.style.display='none';serverMessage('サーバーから退出したよ。');await loadPublicServers()}catch(e){serverMessage('退出できませんでした: '+(e.message||e))}});currentServerBox.appendChild(leave);
+ const leave=document.createElement('button');leave.textContent='退出';leave.style.marginLeft='7px';leave.addEventListener('click',async()=>{try{const {data:d,error}=await db.rpc('friendlot3d_leave_server',{input_room_code:String(data.room_code||'')});if(error)throw error;await stopMultiplayerSync();activeGameServer=null;currentServerBox.style.display='none';serverMessage('サーバーから退出したよ。');await loadPublicServers()}catch(e){serverMessage('退出できませんでした: '+(e.message||e))}});currentServerBox.appendChild(leave);
 }
 document.getElementById('refreshPublicServers').addEventListener('click',loadPublicServers);
 document.getElementById('createPublicServer').addEventListener('click',()=>createGameServer('public'));
