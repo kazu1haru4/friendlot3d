@@ -105,7 +105,7 @@ try{
  console.warn('Supabaseのキャラ読込に失敗。character.json / fallbackを使用します。',err);
  try{const r=await fetch('./character.json',{cache:'no-store'});if(!r.ok)throw 0;catalog=(await r.json()).characters||fallback}catch{catalog=fallback}
 }
-function inferType(c){const text=(String(c.id)+' '+String(c.name)).toLowerCase();if(/ストロベリーエレファント|ストエレ|strawberry.?elephant|strawberryelephant/.test(text))return 'strawberryElephant';if(/tawashi|たわし/.test(text))return 'brush';if(/meowl|meowru|ミャオル|cat|猫/.test(text))return 'cat';if(/elephant|エレファント|象/.test(text))return 'elephant';if(/knight|騎士/.test(text))return 'knight';if(/dragon|ドラゴン|カネローニ/.test(text))return 'dragon';if(/waffle|ワッフル|ヌビニピザニニ/.test(text))return 'waffle';if(/lucky_block|ラッキーブロック/.test(text))return 'rainbow';return 'block'}
+function inferType(c){const text=(String(c.id)+' '+String(c.name)).toLowerCase();if(/ストロベリーエレファント|ストエレ|strawberry.?elephant|strawberryelephant/.test(text))return 'strawberryElephant';if(/首なし騎士|headless.?knight|headlessknight/.test(text))return 'headlessKnight';if(/ミャオル|meowl|meowru/.test(text))return 'meowl';if(/tawashi|たわし/.test(text))return 'brush';if(/cat|猫/.test(text))return 'cat';if(/elephant|エレファント|象/.test(text))return 'elephant';if(/knight|騎士/.test(text))return 'knight';if(/dragon|ドラゴン|カネローニ/.test(text))return 'dragon';if(/waffle|ワッフル|ヌビニピザニニ/.test(text))return 'waffle';if(/lucky_block|ラッキーブロック/.test(text))return 'rainbow';return 'block'}
 function label(text,color='#fff'){let c=document.createElement('canvas');c.width=512;c.height=112;let x=c.getContext('2d');x.fillStyle='#10182beF';x.beginPath();x.roundRect(8,8,496,96,22);x.fill();x.strokeStyle='#ffffff80';x.lineWidth=3;x.stroke();x.fillStyle=color;x.font='bold 32px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(String(text).slice(0,25),256,56);let s=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),depthTest:false}));s.scale.set(3.2,.7,1);return s}
 function makeChar(c){const g=new THREE.Group(),body=mat(c.color||'#aaaaff'),accent=mat(c.accent||'#fff0cf'),dark=mat('#1a1a2a'),white=mat('#ffffff');const sph=(r,x,y,z,sx=1,sy=1,sz=1,m=body)=>ball(r,'#ffffff',x,y,z,g,[sx,sy,sz]);const S=(r,x,y,z,sx=1,sy=1,sz=1,m=body)=>{let o=new THREE.Mesh(new THREE.SphereGeometry(r,16,12),m);o.position.set(x,y,z);o.scale.set(sx,sy,sz);o.castShadow=true;g.add(o);return o};const B=(w,h,d,x,y,z,m=body,rz=0)=>{let o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.rotation.z=rz;o.castShadow=true;g.add(o);return o};const C=(r,h,x,y,z,m=body,rz=0)=>{let o=new THREE.Mesh(new THREE.ConeGeometry(r,h,12),m);o.position.set(x,y,z);o.rotation.z=rz;o.castShadow=true;g.add(o);return o};
 const type=c.type||c.id;
@@ -136,7 +136,26 @@ S(.13,.92,.43,-.18,1,1,1,mask);
 B(.13,.43,.15,-.2,.15,.02,foot,-.06);B(.13,.43,.15,.2,.15,.02,foot,.06);
 S(.14,-.22,.035,.12,1,.45,1.25,foot);S(.14,.22,.035,.12,1,.45,1.25,foot);
 } else if(type==='brush'){B(.9,.34,.55,0,.52,0,body,.12);for(let i=0;i<9;i++){let a=i/9*Math.PI*2;S(.07,Math.cos(a)*.36,.52+Math.sin(a)*.17,Math.sin(a)*.24,1,1,1,accent)}B(.2,.08,.1,0,.7,.28,accent)}
-else if(type==='cat'){S(.43,0,.58,0,1,1.05,.88,body);C(.2,.34,-.27,.98,0,body,-.25);C(.2,.34,.27,.98,0,body,.25);S(.055,-.15,.66,.37,1,1,1,dark);S(.055,.15,.66,.37,1,1,1,dark);S(.07,0,.53,.4,1,1,1,accent);S(.08,-.45,.57,0,1,1,1,accent);S(.08,.45,.57,0,1,1,1,accent)}
+else if(type==='meowl'){
+ // ミャオル：参考画像に合わせた茶白のボクセル猫。大きな緑の目と三角耳。
+ const fur=mat('#b77a32'),furLight=mat('#d99b4d'),cream=mat('#fff0d9'),pink=mat('#f49a9d'),eyeGreen=mat('#39d84c'),eyeDark=mat('#102a17'),black=mat('#231b1a');
+ // 胴体と白いお腹
+ B(.76,.88,.50,0,.72,0,fur);B(.48,.78,.075,0,.72,.292,cream);
+ // 四角い頭と頬
+ B(.88,.72,.58,0,1.48,.02,fur);B(.66,.48,.07,0,1.39,.335,cream);
+ B(.28,.22,.075,-.25,1.30,.38,cream);B(.28,.22,.075,.25,1.30,.38,cream);
+ // 耳
+ B(.27,.34,.22,-.29,1.98,.0,fur,-.12);B(.17,.22,.06,-.29,1.99,.125,pink,-.12);
+ B(.27,.34,.22,.29,1.98,.0,fur,.12);B(.17,.22,.06,.29,1.99,.125,pink,.12);
+ // 大きな緑の目、黒い縁と白いハイライト
+ for(const x of [-.22,.22]){B(.25,.30,.075,x,1.53,.345,black);B(.18,.23,.035,x,1.53,.393,eyeGreen);B(.105,.16,.025,x,1.52,.416,eyeDark);B(.055,.065,.02,x-.035,1.60,.433,white);B(.025,.03,.018,x+.045,1.48,.433,white)}
+ B(.09,.065,.035,0,1.34,.415,pink);B(.045,.035,.025,0,1.27,.42,black);B(.12,.025,.025,-.06,1.24,.42,black);B(.12,.025,.025,.06,1.24,.42,black);
+ // 縞模様の側面と短い足
+ for(const x of [-.43,.43]){B(.08,.18,.42,x,.82,.0,furLight);B(.08,.12,.42,x,.52,.0,fur)}
+ for(const x of [-.25,.25]){B(.22,.35,.24,x,.22,.02,fur);B(.23,.08,.26,x,.055,.05,cream)}
+ // 背中側のしっぽ
+ const tail=new THREE.Group();tail.position.set(.42,.58,-.22);tail.rotation.z=-.5;g.add(tail);B(.17,.62,.18,0,.22,0,furLight);B(.18,.14,.19,0,.0,0,fur);
+ }else if(type==='cat'){S(.43,0,.58,0,1,1.05,.88,body);C(.2,.34,-.27,.98,0,body,-.25);C(.2,.34,.27,.98,0,body,.25);S(.055,-.15,.66,.37,1,1,1,dark);S(.055,.15,.66,.37,1,1,1,dark);S(.07,0,.53,.4,1,1,1,accent);S(.08,-.45,.57,0,1,1,1,accent);S(.08,.45,.57,0,1,1,1,accent)}
 else if(type==='waffle'){B(.82,.72,.7,0,.6,0,body);for(let x of [-.23,0,.23])for(let y of [.4,.6,.8])B(.1,.1,.025,x,y,.36,accent);S(.05,-.15,.72,.37,1,1,1,dark);S(.05,.15,.72,.37,1,1,1,dark)}
 else if(type==='strawberryElephant'){
  // ストエレ：赤いイチゴの小さな立方体で作る、ゾウ型のボクセルキャラ。
@@ -175,7 +194,28 @@ else if(type==='strawberryElephant'){
    B(.045,.065,.045,x,y,z,seedGold);
  }
  }else if(type==='elephant'){S(.44,0,.62,0,1.1,1,.95,body);S(.13,0,.35,.4,.8,1.6,1.2,accent);S(.12,0,.2,.52,.8,1.5,1,body);S(.2,-.46,.61,0,1,1,1,accent);S(.2,.46,.61,0,1,1,1,accent);S(.045,-.15,.72,.4,1,1,1,dark);S(.045,.15,.72,.4,1,1,1,dark);C(.08,.2,-.13,.91,.2,accent);C(.08,.2,.13,.91,.2,accent)}
-else if(type==='knight'){B(.62,.65,.42,0,.55,0,body);B(.8,.13,.48,0,.9,0,accent);B(.18,.5,.18,-.43,.52,0,accent,.1);B(.15,.6,.15,.43,.52,0,accent,-.1);C(.13,.4,.43,.95,0,white);B(.25,.3,.06,0,.6,.25,dark)}
+else if(type==='headlessKnight'){
+ // 首なし騎士：頭のない黒鉄の騎士鎧、赤いマント、金色の縁取りと炎のカボチャ。
+ const iron=mat('#292b35'),ironLight=mat('#454653'),gold=mat('#e8a53b'),red=mat('#b7192b'),redLight=mat('#f03930'),fire=mat('#ff7a16'),fireBright=mat('#ffe65a');
+ // armored torso and shoulder plates
+ B(.62,.68,.42,0,1.12,0,iron);B(.40,.42,.07,0,1.15,.235,ironLight);B(.13,.44,.08,0,1.16,.28,gold);
+ B(.88,.24,.48,-.42,1.48,0,ironLight,-.12);B(.88,.24,.48,.42,1.48,0,ironLight,.12);
+ for(const x of [-.43,.43]){B(.19,.34,.23,x,1.48,.12,gold);B(.14,.32,.22,x,.98,.08,ironLight)}
+ // headless neck opening: black collar, no head
+ B(.36,.10,.32,0,1.53,0,red);B(.28,.08,.24,0,1.59,0,iron);
+ // ragged red cape behind
+ B(.72,.82,.09,0,1.05,-.28,red);for(let i=0;i<5;i++)B(.14,.28,.10,-.28+i*.14,.57,-.30, i%2?red:redLight,(i-2)*.05);
+ // belt and armored legs/boots
+ B(.64,.13,.46,0,.76,.02,gold);B(.20,.48,.24,-.22,.43,0,ironLight,.06);B(.20,.48,.24,.22,.43,0,ironLight,-.06);
+ B(.28,.13,.35,-.22,.16,.06,iron);B(.28,.13,.35,.22,.16,.06,iron);
+ // raised arm holding a flaming voxel pumpkin
+ B(.18,.50,.20,.47,1.25,.02,ironLight,-.45);B(.18,.24,.20,.65,1.47,.02,gold,-.55);
+ // flame aura and pumpkin head held aloft
+ for(let i=0;i<10;i++){const a=i/10*Math.PI*2;B(.10,.18,.10,.90+Math.cos(a)*.34,2.08+Math.sin(a)*.30,.02,i%2?fire:fireBright,a*.25)}
+ B(.54,.52,.48,.90,2.08,.02,fire);B(.42,.40,.38,.90,2.08,.075,mat('#e94710'));
+ B(.12,.16,.05,.78,2.12,.28,fireBright);B(.12,.16,.05,1.02,2.12,.28,fireBright);B(.22,.09,.05,.90,1.96,.29,fireBright);
+ B(.13,.20,.12,.80,2.39,.02,mat('#4a2c18'));B(.13,.20,.12,1.00,2.39,.02,mat('#4a2c18'));
+ }else if(type==='knight'){B(.62,.65,.42,0,.55,0,body);B(.8,.13,.48,0,.9,0,accent);B(.18,.5,.18,-.43,.52,0,accent,.1);B(.15,.6,.15,.43,.52,0,accent,-.1);C(.13,.4,.43,.95,0,white);B(.25,.3,.06,0,.6,.25,dark)}
 else if(type==='dragon'){S(.4,0,.58,0,1.1,1,.9,body);C(.14,.32,-.2,.98,0,accent,-.3);C(.14,.32,.2,.98,0,accent,.3);B(.48,.12,.42,-.48,.66,-.08,accent,.45);B(.48,.12,.42,.48,.66,-.08,accent,-.45);S(.05,-.14,.68,.36,1,1,1,dark);S(.05,.14,.68,.36,1,1,1,dark);S(.11,0,.32,.4,1,1,1,accent)}
 else if(type==='block'||type==='rainbow'){B(.78,.78,.78,0,.6,0,body);B(.22,.22,.04,-.17,.68,.4,accent);B(.22,.22,.04,.17,.68,.4,accent);B(.28,.06,.04,0,.44,.41,dark);for(let x of [-.42,.42])for(let y of [.32,.9])S(.06,x,y,0,1,1,1,accent);if(type==='rainbow'){for(let i=0;i<4;i++)B(.12,.8,.82,-.3+i*.2,.6,-.01,[mat('#ff5757'),mat('#ffb83e'),mat('#62d76b'),mat('#5d7bff')][i])}}
 else if(type==='robot'){B(.68,.62,.5,0,.59,0,body);B(.8,.13,.58,0,.96,0,accent);S(.08,-.15,.64,.28,1,1,1,mat('#52f6ff'));S(.08,.15,.64,.28,1,1,1,mat('#52f6ff'));B(.28,.06,.05,0,.4,.28,dark);B(.14,.24,.15,-.42,.53,0,accent);B(.14,.24,.15,.42,.53,0,accent);C(.07,.2,0,1.12,0,accent)}
@@ -186,7 +226,7 @@ else if(type==='berryking'){S(.4,0,.59,0,1,1.1,.85,body);C(.13,.28,-.22,1.03,0,a
 else{S(.4,0,.6,0,1,1,.9,body);C(.2,.3,-.22,.96,0,accent);C(.2,.3,.22,.96,0,accent);S(.05,-.12,.68,.35,1,1,1,dark);S(.05,.12,.68,.35,1,1,1,dark)}
 // Small legs + face-forward orientation
 for(let x of [-.22,.22])B(.14,.24,.16,x,.13,0,body);
-let tag=label(c.name,c.rarity==='シークレット'?'#ff8bff':c.rarity==='レジェンド'?'#ffd36a':'#fff');tag.position.y=1.55;g.add(tag);g.userData.charData=c;return g}
+let tag=label(c.name,c.rarity==='シークレット'?'#ff8bff':c.rarity==='レジェンド'?'#ffd36a':'#fff');tag.position.y=type==='headlessKnight'?2.75:type==='meowl'?2.35:type==='strawberryElephant'?2.05:1.8;g.add(tag);g.scale.setScalar(1.22);g.userData.charData=c;return g}
 function ground(){
  // Roblox風の広い緑のスタッド地面。派手な道路は作らず、画像のような芝生を主役にする。
  box(86,.8,86,'#287b35',0,-.55,0);
@@ -211,6 +251,8 @@ function ground(){
 function buildBase(i){
  const side=i<4?-1:1, row=i%4, x=side*17.5, z=-27+row*17;
  const g=new THREE.Group();g.position.set(x,0,z);
+ // ベース全体を少し拡大。床・窓枠・ゲート・キャラ台も一緒に大きくする。
+ g.scale.set(1.2,1,1.2);
  // 正面（ゲート・看板）を中央道路へ向ける。左列は右向き、右列は左向き。
  g.rotation.y=side<0?-Math.PI/2:Math.PI/2;scene.add(g);
  const frame='#303440', dark='#171b24', edge='#d8d9df', concrete='#8d8e96', window='#080f19', wood='#65412f', woodTop='#7d5039', white='#f0f0f4';
