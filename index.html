@@ -499,10 +499,22 @@ async function refreshSharedShop(){try{
  if(!states.length)throw new Error('ショップに商品がありません');
  for(const {slot,data} of states){const raw=data.character;const c=catalog.find(v=>v.id===String(raw.id))||{...raw,id:String(raw.id),name:raw.name||raw.id,emoji:raw.emoji||'🧠',rarity:raw.rarity||'ノーマル',price:Number(data.price||0),incomePerMinute:Number(raw.income_per_minute||0),income:Number(raw.income_per_minute||0)/60,color:charColor(raw),type:inferType(raw)};c.mutation=raw.mutation||c.mutation||null;c.trait=raw.trait||c.trait||null;laneShopItems.set(slot,{character:c,price:Number(data.price||0),already_bought:!!data.already_bought});}
  const activeSlots=threeLaneActive?[1,2,3]:[1];
- // Keep a physical 3-lane shop in the world during the event; otherwise retain the normal single shared product.
- const carried=carriedLane;for(const o of [...laneChars]){if(o!==carried)o.g.parent?.remove(o.g);}laneChars.length=0;if(carried)laneChars.push(carried);
- for(const slot of activeSlots){const item=laneShopItems.get(slot);if(item&&(!carried||Number(carried.slot)!==slot))laneSpawn(slot,item.character,item.price);}
- if(!threeLaneActive){const item=laneShopItems.get(1);sharedShopCharacter=item?.character||null;sharedShopPrice=String(item?.price||0);}else{sharedShopCharacter=laneShopItems.get(1)?.character||null;sharedShopPrice=String(laneShopItems.get(1)?.price||0);}
+ // 5秒ごとの状態確認では、同じ商品なら3Dキャラを作り直さず位置を維持する。
+ // 以前は毎回削除して再生成していたため、キャラが消えたように見えていた。
+ const carried=carriedLane;
+ for(const o of [...laneChars]){
+  if(o===carried)continue;
+  const item=laneShopItems.get(Number(o.slot));
+  const sameCharacter=activeSlots.includes(Number(o.slot))&&item&&String(o.c?.id)===String(item.character?.id);
+  if(!sameCharacter){o.g.parent?.remove(o.g);const idx=laneChars.indexOf(o);if(idx>=0)laneChars.splice(idx,1);}
+ }
+ for(const slot of activeSlots){
+  const item=laneShopItems.get(slot);if(!item)continue;
+  const existing=laneChars.find(o=>Number(o.slot)===slot);
+  if(existing){if(existing!==carried){existing.c=item.character;existing.price=item.price;}}
+  else if(!carried||Number(carried.slot)!==slot){laneSpawn(slot,item.character,item.price);}
+ }
+ if(!threeLaneActive){const item=laneShopItems.get(1);sharedShopCharacter=item?.character||null;sharedShopPrice=String(item?.price||0);}else{const item=laneShopItems.get(1);sharedShopCharacter=item?.character||null;sharedShopPrice=String(item?.price||0);}
  updateUI();
  }catch(e){console.warn('共有ショップ読み込み失敗',e)}}
 async function buyNear(){near=carriedLane||nearestLane();if(purchaseBusy)return;if(!near){say('ショップのキャラに近づいてね！');return}if(owned.length>=Number(brainrotState?.capacity||20)){say('ベースの空きスロットがないよ！');return}purchaseBusy=true;$('#buy').disabled=true;try{const item=laneShopItems.get(near.slot||1);if(!item){await refreshSharedShop();say('ショップを更新したよ。もう一度近づいてね！');return}const args=threeLaneActive?{input_character_id:item.character.id,input_slot:near.slot||1}:{input_character_id:item.character.id};const {data,error}=await db.rpc(threeLaneActive?'brainrot_shop_buy_lane':'brainrot_shop_buy',args);if(error)throw error;if(!data?.ok){say(data?.message||'購入できなかったよ');await refreshSharedShop();return}const bought=data.character||item.character;const extras=[bought.mutation?'🧬 '+bought.mutation:'',bought.trait?'✨ '+String(bought.trait).replaceAll(',', '・'):''].filter(Boolean).join(' / ');say('🎉 '+(bought.name||item.character.name)+' を購入！'+(extras?' '+extras:''));if(carriedLane){carriedLane.g.parent?.remove(carriedLane.g);const i=laneChars.indexOf(carriedLane);if(i>=0)laneChars.splice(i,1);carriedLane=null;$('#carryBtn').textContent='🤲 キャラを持ち上げる';}await refreshSharedState();await refreshSharedShop();}catch(e){say('購入エラー：'+(e.message||e))}finally{purchaseBusy=false;$('#buy').disabled=false}}
