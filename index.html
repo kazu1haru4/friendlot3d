@@ -732,7 +732,7 @@ async function refreshSharedState({rebuild=true}={}){
 window.__friendlotSetStage?.('共有ゲームデータ読み込み');
 try{await refreshSharedState()}catch(e){console.error(e);$('#loading').style.display='grid';$('#loading').innerHTML='サイト版データを読み込めませんでした。<br><small>'+String(e.message||e)+'</small>';throw e}
 try{await refreshSharedShop()}catch(e){console.warn('初回ショップ読込',e)}
-setInterval(()=>{if(!document.hidden)refreshSharedShop()},15000);
+// ショップ更新タイマーは末尾で一元管理する（重複ポーリングを防止）。
 
 // 管理者機能：ログインとイベント操作はWorker側で認証する
 const API_ROOT='https://riendlot3d-api.kazu31-t10.workers.dev';
@@ -769,7 +769,9 @@ $('#eventEnd').onclick=async()=>{try{let d=await apiCall('/api/admin/event/end',
 $('#adminLogout').onclick=()=>{adminToken=null;$('#adminPassword').value='';$('#adminLogin').style.display='block';$('#adminControls').style.display='none';say('ログアウトしました')};
 setInterval(refreshEvent,1000);
 window.__friendlotSetStage?.('ショップ初期化');
-await refreshSharedShop();setInterval(refreshSharedShop,15000);
+await refreshSharedShop();
+// 本家と同様に短い間隔で状態を確認し、サーバー側の入れ替わりを早めに反映する。
+setInterval(()=>{if(!document.hidden&&!purchaseBusy)refreshSharedShop()},5000);
 
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 window.__friendlotSetStage?.('初回描画開始');$('#loading').style.display='none';updateUI();requestAnimationFrame(loop);
