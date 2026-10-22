@@ -710,13 +710,22 @@ if(cameraMode==='first'){
  try {
    const blockers=[];
    scene.traverse(o=>{
+     // プレイヤー本体・その子メッシュはカメラ衝突判定から除外する。
+     // Group本体だけ除外しても、体や頭のMeshがヒットしてカメラが急接近することがある。
      if(o===player || o===flyingCarpet || !o.isMesh || !o.visible || !o.geometry) return;
+     let parent=o.parent;
+     while(parent){
+       if(parent===player || parent===flyingCarpet) return;
+       parent=parent.parent;
+     }
+     // キャラクターや頭上ラベルなどの動くオブジェクトも、カメラを押し戻す対象にしない。
+     if(o.userData?.isCharacter || o.userData?.isLabel || o.userData?.cameraIgnore) return;
      if(!o.geometry.attributes || !o.geometry.attributes.position) return;
      if(o.geometry.boundingSphere===null) o.geometry.computeBoundingSphere();
      blockers.push(o);
    });
    const hits=raycaster.intersectObjects(blockers,false);
-   if(hits.length && Number.isFinite(hits[0].distance)) safeDistance=Math.max(0.65,Math.min(desiredDistance,hits[0].distance-0.38));
+   if(hits.length && Number.isFinite(hits[0].distance)) safeDistance=Math.max(1.8,Math.min(desiredDistance,hits[0].distance-0.55));
  } catch(collisionError) {
    console.warn('カメラ当たり判定を一時スキップ:',collisionError);
    window.__friendlotDiag?.('カメラ当たり判定エラー',(collisionError&&collisionError.stack)||String(collisionError));
