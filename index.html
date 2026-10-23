@@ -43,7 +43,7 @@
     if(original)original.dataset.diagnosticReady='1';
   });
 })();
-</script><div id="game"></div><div id="hud"><div id="brand" class="panel">🌀 FRIENDLOT 3D <span style="color:#ffe37b">REBORN</span></div><div id="stats" class="panel">Cash: $500<br>収益: $0/s<br>ベース: 1F</div><div id="help" class="panel">左下のスティック / WASD・矢印キーで移動<br>ドラッグ・スワイプで視点回転<br>ホイール・ピンチでズーム</div><button id="actionsToggle" type="button" aria-expanded="false">☰ メニューを開く</button><div id="actions" class="collapsed"><button id="collect">💵 収益回収</button><button id="rebirth">🔁 リバース</button><button id="catalogBtn">📚 キャラ図鑑</button><button id="gearShopBtn" style="display:none">🛠️ ギアショップ</button><button id="carryBtn">🤲 キャラを持ち上げる</button><button id="stealBtn" style="display:none">🕵️ 盗み挑戦</button><button id="baseLockBtn" style="display:none">🔒 ベースロック</button><button id="cameraMode">👁️ 一人称に切替</button><button id="carpetBtn" style="display:none;background:#188b58">🟩 飛行カーペット</button><div id="flightControls" style="display:none;pointer-events:auto;gap:6px;flex-direction:column"><div id="carpetSpeedPanel" style="display:block"><label for="carpetSpeed">🛸 カーペット速度：<span id="carpetSpeedValue">12</span></label><input id="carpetSpeed" type="range" min="3" max="30" step="1" value="12" aria-label="カーペット速度"></div><button id="flyUp" style="background:#188b58">⬆ 上昇</button><button id="flyDown" style="background:#188b58">⬇ 下降</button></div><button id="adminBtn" style="background:#a33c56;display:none">🛡️ 管理者</button></div><button id="gearToggle" type="button" aria-expanded="true">🎒 ギア欄を隠す</button><div id="gearInventory" aria-label="ギア装備欄"><div class="gearInvTitle">🎒 ギア</div><div id="gearSlots"><button class="gearSlot active" data-gear="none">なし</button><button class="gearSlot" data-gear="speedCoil" disabled>⚡<small>未所持</small></button><button class="gearSlot" data-gear="goldenCoil" disabled>💨<small>未所持</small></button><button class="gearSlot" data-gear="incomeCharm" disabled>💰<small>未所持</small></button></div></div><div id="stickpad"><div id="stick"></div></div><button id="buy">購入</button><div id="catalog" class="panel">キャラを購入してベースに運ぼう！</div><div id="eventBanner" class="panel" style="position:absolute;left:50%;top:10px;transform:translateX(-50%);display:none;color:#fff36b;font-weight:1000;text-align:center"></div><div id="notice" class="panel"></div>
+</script><div id="game"></div><div id="hud"><div id="brand" class="panel">🌀 FRIENDLOT 3D <span style="color:#ffe37b">REBORN</span></div><div id="stats" class="panel">Cash: $500<br>収益: $0/s<br>ベース: 1F</div><div id="help" class="panel">左下のスティック / WASD・矢印キーで移動<br>ドラッグ・スワイプで視点回転<br>ホイール・ピンチでズーム</div><button id="actionsToggle" type="button" aria-expanded="false">☰ メニューを開く</button><div id="actions" class="collapsed"><button id="collect">💵 収益回収</button><button id="rebirth">🔁 リバース</button><button id="catalogBtn">📚 キャラ図鑑</button><button id="gearShopBtn" style="display:none">🛠️ ギアショップ</button><button id="carryBtn">🤲 ベースのキャラを移動</button><button id="stealBtn" style="display:none">🕵️ 盗み挑戦</button><button id="baseLockBtn" style="display:none">🔒 ベースロック</button><button id="cameraMode">👁️ 一人称に切替</button><button id="carpetBtn" style="display:none;background:#188b58">🟩 飛行カーペット</button><div id="flightControls" style="display:none;pointer-events:auto;gap:6px;flex-direction:column"><div id="carpetSpeedPanel" style="display:block"><label for="carpetSpeed">🛸 カーペット速度：<span id="carpetSpeedValue">12</span></label><input id="carpetSpeed" type="range" min="3" max="30" step="1" value="12" aria-label="カーペット速度"></div><button id="flyUp" style="background:#188b58">⬆ 上昇</button><button id="flyDown" style="background:#188b58">⬇ 下降</button></div><button id="adminBtn" style="background:#a33c56;display:none">🛡️ 管理者</button></div><button id="gearToggle" type="button" aria-expanded="true">🎒 ギア欄を隠す</button><div id="gearInventory" aria-label="ギア装備欄"><div class="gearInvTitle">🎒 ギア</div><div id="gearSlots"><button class="gearSlot active" data-gear="none">なし</button><button class="gearSlot" data-gear="speedCoil" disabled>⚡<small>未所持</small></button><button class="gearSlot" data-gear="goldenCoil" disabled>💨<small>未所持</small></button><button class="gearSlot" data-gear="incomeCharm" disabled>💰<small>未所持</small></button></div></div><div id="stickpad"><div id="stick"></div></div><button id="buy">購入</button><div id="catalog" class="panel">キャラを購入してベースに運ぼう！</div><div id="eventBanner" class="panel" style="position:absolute;left:50%;top:10px;transform:translateX(-50%);display:none;color:#fff36b;font-weight:1000;text-align:center"></div><div id="elevatorPanel" class="panel" style="display:none;position:absolute;left:50%;top:58%;transform:translate(-50%,-50%);pointer-events:auto;text-align:center;min-width:190px;border:2px solid #f4c95d;background:#241a0deF;z-index:6"><div style="font-weight:1000;color:#ffdf79;margin-bottom:7px">👑 GOLD ELEVATOR</div><div style="display:flex;gap:6px"><button type="button" data-elevator-floor="0" style="background:#a87922;color:#fff5c8;flex:1">1F</button><button type="button" data-elevator-floor="1" style="background:#a87922;color:#fff5c8;flex:1">2F</button><button type="button" data-elevator-floor="2" style="background:#a87922;color:#fff5c8;flex:1">3F</button></div><div style="font-size:10px;margin-top:6px;color:#ffe9a6">エレベーターの近くで階を選択</div></div><div id="notice"
 <div id="adminPanel" style="display:none;position:fixed;inset:0;background:#080d1bd9;z-index:20;place-items:center;padding:16px;pointer-events:auto">
  <div class="panel" style="width:min(440px,94vw);max-height:88vh;overflow:auto">
   <div style="display:flex;justify-content:space-between;align-items:center"><b>🛡️ フレンドロット 管理者パネル</b><button id="adminClose">閉じる</button></div>
@@ -132,8 +132,8 @@ const camera=new THREE.PerspectiveCamera(64,innerWidth/innerHeight,.1,180);
 const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.08;renderer.outputColorSpace=THREE.SRGBColorSpace;$('#game').appendChild(renderer.domElement);
 scene.add(new THREE.HemisphereLight('#ffffff','#61718c',2.1));const sun=new THREE.DirectionalLight('#fff1d3',3);sun.position.set(-18,32,12);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);scene.add(sun);
 const mat=c=>new THREE.MeshStandardMaterial({color:c,roughness:.76});const box=(w,h,d,c,x,y,z,parent=scene)=>{let m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat(c));m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m};const ball=(r,c,x,y,z,parent=scene,scale=[1,1,1])=>{let m=new THREE.Mesh(new THREE.SphereGeometry(r,16,12),mat(c));m.position.set(x,y,z);m.scale.set(...scale);m.castShadow=true;parent.add(m);return m};
-let cash=1500,bank=0,rebirths=0,floors=1,owned=[],near=null,toastTimer,selectedIndex=0;
-let gearOwned={speedCoil:false,goldenCoil:false,incomeCharm:false};let equippedGear='none';const bases=[],laneChars=[],keys=new Set(),joy={x:0,y:0};let threeLaneActive=false,threeLaneSeconds=0;const laneShopItems=new Map();let player,playerBody;let flyingCarpet=null,carpetFlying=false,carpetVertical=0;let carpetSpeed=12;
+let cash=1500,bank=0,rebirths=0,floors=1,owned=[],near=null,toastTimer,selectedIndex=0,elevatorTargetFloor=0,elevatorMoving=false;
+let gearOwned={speedCoil:false,goldenCoil:false,incomeCharm:false};let equippedGear='none';const bases=[],laneChars=[],elevatorCars=[],keys=new Set(),joy={x:0,y:0};let threeLaneActive=false,threeLaneSeconds=0;const laneShopItems=new Map();let player,playerBody;let flyingCarpet=null,carpetFlying=false,carpetVertical=0;let carpetSpeed=12;
 const fmt=n=>n>=1e12?(n/1e12).toFixed(2)+'T':n>=1e9?(n/1e9).toFixed(2)+'B':n>=1e6?(n/1e6).toFixed(2)+'M':n>=1e3?(n/1e3).toFixed(1)+'K':Math.floor(n).toLocaleString();
 const say=t=>{let e=$('#notice');e.textContent=t;e.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>e.classList.remove('show'),1900)};
 let catalog=[];
@@ -376,14 +376,28 @@ function buildBase(i){
  // 正面の茶色い看板
  box(9.5,.98,.42,wood,0,3.82,-5.55,g);box(9.54,.13,.45,woodTop,0,4.36,-5.55,g);box(9.54,.11,.45,'#65371f',0,3.28,-5.55,g);
  const sign=label(i===0?(signedInId?String(signedInId)+'の基地':'あなたの基地'):'基地 '+(i+1),'#fff4e8');sign.position.set(0,3.82,-5.8);sign.scale.set(3.85,.72,1);g.add(sign);
- // 右側の階段：1～3階を歩いて移動できるように、奥行き方向へ長い段を配置
- for(let n=0;n<24;n++){
-   const stepY=.14+n*.25, stepZ=4.45-n*.38;
-   box(1.9,.18,.46,'#777982',6.35,stepY,stepZ,g);
-   box(1.94,.045,.48,'#a5a8b0',6.35,stepY+.105,stepZ,g);
+
+ // ゴールドエレベーター：かごが上下する3階建てリフト
+ const elevatorGroup=new THREE.Group();elevatorGroup.name='goldLuxuryElevator';elevatorGroup.position.set(6.35,0,0);g.add(elevatorGroup);
+ const gold='#e7b947',goldLight='#ffe6a0',goldDark='#8d5e16',glass='#9de7f2';
+ for(const ex of [-1.05,1.05])for(const ez of [-1.12,1.12]){
+   box(.13,8.15,.13,goldDark,ex,4.25,ez,elevatorGroup);
+   box(.045,8.0,.045,goldLight,ex+(ex<0?.08:-.08),4.25,ez+(ez<0?.08:-.08),elevatorGroup);
  }
- box(1.98,.18,1.0,'#555963',6.35,.12,4.75,g);
- box(1.98,.18,1.0,'#555963',6.35,6.0,-4.75,g);
+ for(const ey of [.68,3.65,6.62]){
+   for(const ex of [-1.12,1.12])box(.22,.16,2.5,gold,ex,ey,0,elevatorGroup);
+   box(2.35,.12,.18,gold,0,ey,-1.18,elevatorGroup);
+   box(2.35,.12,.18,gold,0,ey,1.18,elevatorGroup);
+ }
+ const elevatorCar=new THREE.Group();elevatorCar.name='elevatorCar';elevatorCar.position.set(0,.68,0);elevatorGroup.add(elevatorCar);
+ box(1.92,.16,2.12,goldDark,0,0,0,elevatorCar);box(1.78,.08,1.98,goldLight,0,.105,0,elevatorCar);
+ for(const ex of [-.88,.88]){box(.12,2.35,1.98,gold,ex,1.28,0,elevatorCar);box(.035,2.18,1.7,glass,ex+(ex<0?.07:-.07),1.28,0,elevatorCar);}
+ box(1.72,2.35,.10,goldDark,0,1.28,.95,elevatorCar);box(1.55,2.12,.035,glass,0,1.3,.90,elevatorCar);
+ box(.78,2.18,.09,gold,-.43,1.28,-.98,elevatorCar);box(.78,2.18,.09,gold,.43,1.28,-.98,elevatorCar);
+ box(.05,2.05,.035,goldLight,0,1.28,-1.035,elevatorCar);
+ box(2.0,.12,2.18,gold,0,2.48,0,elevatorCar);box(.78,.18,.06,'#202330',0,2.59,-.8,elevatorCar);
+ const elevatorLabel=label('GOLD LIFT','#ffe37b');elevatorLabel.position.set(0,2.9,-1.15);elevatorLabel.scale.set(1.7,.35,1);elevatorCar.add(elevatorLabel);
+ elevatorCars.push({baseIndex:i,group:elevatorGroup,car:elevatorCar,currentY:.68,targetY:.68,level:0});
  // キャラ台と3階分のスロット。既存の所持キャラ・階数ロジックを維持。
  let slots=[];
  for(let floor=0;floor<3;floor++){
@@ -396,8 +410,17 @@ function buildBase(i){
      slots.push({x:sx,y:fy+.36,z:sz,group:g,world:null,floor});
    }
  }
- bases.push({i,x,z,g,slots,color:frame,gateGroup});
+ bases.push({i,x,z,g,slots,color:frame,gateGroup,elevatorGroup,elevatorCar});
 }
+
+document.querySelectorAll('[data-elevator-floor]').forEach(btn=>btn.addEventListener('click',()=>{
+ const level=Number(btn.dataset.elevatorFloor);if(!Number.isInteger(level)||level<0||level>2)return;
+ const own=bases[0];if(!own)return;own.g.updateMatrixWorld(true);
+ const lp=new THREE.Vector3(player.position.x,0,player.position.z).applyMatrix4(own.g.matrixWorld.clone().invert());
+ if(Math.abs(lp.x-6.35)>.95||Math.abs(lp.z)>.95){say('エレベーターのかごの中に入ってね');return;}
+ elevatorTargetFloor=level;elevatorMoving=true;const lift=elevatorCars.find(v=>v.baseIndex===0);if(lift)lift.targetY=.68+level*2.97;
+ say((level+1)+'階へ移動します');
+}));
 window.__friendlotSetStage?.('マップ生成: 地面');ground();
 // 中央の赤いショップレーン。基地を左右に並べるマップ構成。
 box(6.4,.12,68,'#4b342e',0,.01,-3);
@@ -480,12 +503,13 @@ function setCarpetFlying(on){
 }
 function laneSpawn(slot=1,cOverride=null,priceOverride=null){const spawnPool=catalog.filter(v=>v.is_shop_available && !v.is_fuse_only && Number(v.price)>0);const pool=spawnPool.length?spawnPool:catalog.filter(v=>Number(v.price)>0);let c=cOverride||pool[Math.floor(Math.random()*pool.length)]||catalog[0];const price=priceOverride==null?Number(c.price||0):Number(priceOverride||0);let g=makeChar(c);const laneX=threeLaneActive?(slot-2)*4:0;g.position.set(laneX,0,-15);scene.add(g);const extra=[c.mutation&&c.mutation!=='なし'?'🧬 '+c.mutation:'🧬 変異なし',c.trait&&c.trait!=='なし'?'✨ '+String(c.trait).replaceAll(',', '・'):'✨ 属性なし'];const title=label(String(c.name||c.emoji||'キャラ'),c.rarity==='シークレット'?'#ff89ff':'#fff',['$'+fmt(price)+' • '+(c.rarity||'ノーマル'),...extra].slice(0,3));title.position.set(0,2.15,0);g.add(title);laneChars.push({g,c,progress:0,dir:1,slot,price});return laneChars[laneChars.length-1]}
 laneSpawn();laneChars[0].g.position.z=-5;for(let i=1;i<4;i++){laneSpawn();laneChars[i].progress=i*.23;laneChars[i].g.position.z=-15+i*7.5}
-function rebuildOwned(){for(let b of bases)for(let s of b.slots){if(s.world){s.world.parent?.remove(s.world);s.world=null}}let my=bases[0];owned.forEach((o,i)=>{let s=my.slots.filter(q=>q.floor<floors)[i];if(!s)return;let g=makeChar(o);g.position.set(s.x,s.y,s.z);/* Face the character toward the opposite row of pads across the center aisle. */g.rotation.y=s.x<0?Math.PI/2:-Math.PI/2;const extras=[o.mutation&&o.mutation!=='なし'?'🧬 '+o.mutation:'',o.trait&&o.trait!=='なし'?'✨ '+String(o.trait).replaceAll(',', '・'):''].filter(Boolean);if(extras.length){const tag=label(o.name||o.emoji||'キャラ','#fff',extras);tag.position.set(0,2.05,0);g.add(tag)}s.group.add(g);s.world=g})}
+function rebuildOwned(){for(let b of bases)for(let s of b.slots){if(s.world){s.world.parent?.remove(s.world);s.world=null}}let my=bases[0];owned.forEach((o,i)=>{let s=my.slots.filter(q=>q.floor<floors)[i];if(!s)return;let g=makeChar(o);const p=o.basePosition;if(p&&Number.isFinite(p.x)&&Number.isFinite(p.y)&&Number.isFinite(p.z)){g.position.set(p.x,p.y,p.z);g.rotation.y=Number.isFinite(p.rotation)?p.rotation:(p.x<0?Math.PI/2:-Math.PI/2)}else{g.position.set(s.x,s.y,s.z);g.rotation.y=s.x<0?Math.PI/2:-Math.PI/2}/* Face the character toward the opposite row of pads across the center aisle. */const extras=[o.mutation&&o.mutation!=='なし'?'🧬 '+o.mutation:'',o.trait&&o.trait!=='なし'?'✨ '+String(o.trait).replaceAll(',', '・'):''].filter(Boolean);if(extras.length){const tag=label(o.name||o.emoji||'キャラ','#fff',extras);tag.position.set(0,2.05,0);g.add(tag)}my.g.add(g);s.world=g;o.baseMesh=g;o.baseSlot=s})}
 function movementSpeed(){return carpetFlying?carpetSpeed:(equippedGear==='goldenCoil'?14:equippedGear==='speedCoil'?10.5:7)}
 function incomeRate(){return owned.reduce((n,c)=>n+(c.income||0),0)*(1+rebirths*.25)*(equippedGear==='incomeCharm'?1.2:1)}
 function nearestLane(){let best=null,d=3.5;for(let o of laneChars){if(o===carriedLane)continue;let dist=o.g.position.distanceTo(player.position);if(dist<d){best=o;d=dist}}return best}
-let carriedLane=null;
-function carryNearest(){if(carriedLane){carriedLane.g.parent?.remove(carriedLane.g);scene.add(carriedLane.g);carriedLane.g.position.set(player.position.x+1,0.1,player.position.z);carriedLane=null;$('#carryBtn').textContent='🤲 キャラを持ち上げる';say('キャラを置いたよ');return;}const o=nearestLane();if(!o){say('持ち上げられるキャラに近づいてね！');return;}carriedLane=o;$('#carryBtn').textContent='📥 キャラを置く';say(o.c.name+' を持ち上げたよ！購入するとベースに追加されるよ');}
+let carriedLane=null,carriedBase=null;
+function nearestBaseCharacter(){let best=null,d=4.2;const base=bases[0];if(!base)return null;base.g.updateMatrixWorld(true);for(const o of owned){const g=o.baseMesh;if(!g||g===carriedBase?.g)continue;const pos=new THREE.Vector3();g.getWorldPosition(pos);const dist=pos.distanceTo(player.position);if(dist<d){best=o;d=dist}}return best}
+function carryNearest(){if(carriedBase){const base=bases[0];if(!base){return;}base.g.updateMatrixWorld(true);const world=carriedBase.g.position.clone();const local=world.applyMatrix4(base.g.matrixWorld.clone().invert());const floorIndex=local.y>6.0?2:local.y>3.1?1:0;const floorSlots=base.slots.filter(s=>s.floor===floorIndex);local.x=THREE.MathUtils.clamp(local.x,-5.55,5.55);local.z=THREE.MathUtils.clamp(local.z,-4.35,4.35);local.y=.58+floorIndex*2.97+.36;carriedBase.g.parent?.remove(carriedBase.g);base.g.add(carriedBase.g);carriedBase.g.position.copy(local);carriedBase.g.rotation.y=playerBody.rotation.y;carriedBase.basePosition={x:local.x,y:local.y,z:local.z,rotation:carriedBase.g.rotation.y};if(carriedBase.baseSlot)carriedBase.baseSlot.world=carriedBase.g;carriedBase=null;$('#carryBtn').textContent='🤲 ベースのキャラを移動';say('ベースに置いたよ！位置を変更したよ');return;}const o=nearestBaseCharacter();if(!o){say('ベースのキャラに近づいてね！');return;}const g=o.baseMesh;if(!g)return;const world=new THREE.Vector3();g.getWorldPosition(world);g.parent?.remove(g);scene.add(g);g.position.copy(world);carriedBase=o;$('#carryBtn').textContent='📥 ベースに置く';say((o.name||o.emoji||'キャラ')+' を持ち上げたよ。移動して「ベースに置く」を押してね');}
 $('#carryBtn').onclick=carryNearest;
 function updateUI(){let maxSlots=floors*10;$('#stats').innerHTML='Cash: $'+fmt(cash)+'<br>収益: $'+fmt(incomeRate())+'/s<br>ベース: '+floors+'F • リバース '+rebirths+'回<br>キャラ: '+owned.length+'/'+maxSlots;near=nearestLane();if(near){$('#buy').textContent='購入 $'+fmt(Number(sharedShopPrice||near.c.price));$('#catalog').textContent=near.c.emoji+' '+near.c.name+' • '+near.c.rarity+' • +$'+fmt(near.c.incomePerMinute??((near.c.income||0)*60))+'/分'+(near.c.mutation?' • 🧬'+near.c.mutation:'')+(near.c.trait?' • ✨'+String(near.c.trait).replaceAll(',', '・'):'')}else{$('#buy').textContent='購入';$('#catalog').textContent='ショップのキャラに近づこう！'}}
 let sharedShopCharacter=null,sharedShopPrice='0',purchaseBusy=false;
@@ -637,7 +661,16 @@ cameraCanvas.addEventListener('wheel',e=>{
 },{passive:false});
 
 let last=performance.now(),spawnTimer=0,uiTimer=0;
-function loop(now){requestAnimationFrame(loop);try{window.__friendlotSetStage?.('ゲームループ: 移動・キャラ更新');let dt=Math.min(.05,(now-last)/1000);last=now;
+function loop(now){requestAnimationFrame(loop);try{window.__friendlotSetStage?.('ゲームループ: 移動・キャラ更新');
+let dt=Math.min(.05,(now-last)/1000);last=now;
+for(const lift of elevatorCars){
+ const diff=lift.targetY-lift.currentY;
+ if(Math.abs(diff)>.015){
+  lift.currentY+=Math.sign(diff)*Math.min(Math.abs(diff),dt*3.8);lift.car.position.y=lift.currentY;
+  if(lift.baseIndex===0){const base=bases[0];base.g.updateMatrixWorld(true);const local=new THREE.Vector3(player.position.x,0,player.position.z).applyMatrix4(base.g.matrixWorld.clone().invert());if(Math.abs(local.x-6.35)<.95&&Math.abs(local.z)<.95)player.position.y=THREE.MathUtils.clamp((lift.currentY-.68)*1.22,0,7.25);}
+ }else{lift.currentY=lift.targetY;lift.car.position.y=lift.currentY;if(lift.baseIndex===0)elevatorMoving=false;}
+}
+
 const strafe=(keys.has('d')?1:0)-(keys.has('a')?1:0)+joy.x;const forward=(keys.has('w')?1:0)-(keys.has('s')?1:0)-joy.y;let x=strafe*Math.cos(cameraYaw)+forward*Math.sin(cameraYaw),z=strafe*Math.sin(cameraYaw)-forward*Math.cos(cameraYaw);let len=Math.hypot(x,z);if(len>1){x/=len;z/=len}if(len>.05){
  const nx=player.position.x+x*movementSpeed()*dt,nz=player.position.z+z*movementSpeed()*dt;
  let blocked=false;
@@ -669,6 +702,19 @@ const strafe=(keys.has('d')?1:0)-(keys.has('a')?1:0)+joy.x;const forward=(keys.h
   else {player.position.y=0;}
  }else{player.position.y=0;}
 }
+
+const ownForElevator=bases[0];
+if(ownForElevator){
+ ownForElevator.g.updateMatrixWorld(true);
+ const lp=new THREE.Vector3(player.position.x,0,player.position.z).applyMatrix4(ownForElevator.g.matrixWorld.clone().invert());
+ const inside=Math.abs(lp.x)<6.25&&Math.abs(lp.z)<5.1;
+ const nearElevator=Math.abs(lp.x-6.35)<2.0&&Math.abs(lp.z)<2.05;
+ const onElevator=Math.abs(lp.x-6.35)<.95&&Math.abs(lp.z)<.95;
+ $('#elevatorPanel').style.display=nearElevator?'block':'none';
+ if(onElevator){if(!elevatorMoving)player.position.y=[0,3.62,7.25][elevatorTargetFloor]||0;}
+ else if(inside&&player.position.y>.5){player.position.y=player.position.y<3.62?0:player.position.y<7.25?3.62:7.25;}
+ else if(!onElevator)player.position.y=0;
+}else{$('#elevatorPanel').style.display='none';player.position.y=0;}
 player.position.x=THREE.MathUtils.clamp(player.position.x,-31,31);player.position.z=THREE.MathUtils.clamp(player.position.z,-31,31);
 // ベースロックは自分の基地付近、盗みは他の基地付近にいるときだけ操作可能。
 const ownBase=bases[0];let nearOwn=false,nearOther=false;
@@ -676,6 +722,7 @@ if(ownBase){const dx=player.position.x-ownBase.x,dz=player.position.z-ownBase.z;
 for(const b of bases){if(b.i===0)continue;if(Math.hypot(player.position.x-b.x,player.position.z-b.z)<10){nearOther=true;break;}}
 $('#baseLockBtn').style.display=nearOwn?'block':'none';$('#stealBtn').style.display=nearOther?'block':'none';
 if(carriedLane){const hand=new THREE.Vector3(.55,1.65,.35).applyAxisAngle(new THREE.Vector3(0,1,0),playerBody.rotation.y);carriedLane.g.position.set(player.position.x+hand.x,player.position.y+hand.y,player.position.z+hand.z);carriedLane.g.rotation.y=playerBody.rotation.y;}
+if(carriedBase){const hand=new THREE.Vector3(.55,1.65,.35).applyAxisAngle(new THREE.Vector3(0,1,0),playerBody.rotation.y);carriedBase.g.position.set(player.position.x+hand.x,player.position.y+hand.y,player.position.z+hand.z);carriedBase.g.rotation.y=playerBody.rotation.y;}
 for(let o of laneChars){if(o===carriedLane)continue;o.progress+=dt*.07;o.g.position.z=-15+((o.progress*30)%30);o.g.position.x=threeLaneActive?((Number(o.slot||1)-2)*4):0;o.g.position.y=.05+Math.sin(now*.004+o.progress*8)*.08;o.g.rotation.y=Math.PI}
 spawnTimer+=dt;if(!laneShopItems.size&&spawnTimer>5&&laneChars.length<5){spawnTimer=0;laneSpawn()}
 bank=0;uiTimer+=dt;if(uiTimer>.2){uiTimer=0;updateUI()}
@@ -713,6 +760,7 @@ if(cameraMode==='first'){
      // プレイヤー本体・その子メッシュはカメラ衝突判定から除外する。
      // Group本体だけ除外しても、体や頭のMeshがヒットしてカメラが急接近することがある。
      if(o===player || o===flyingCarpet || !o.isMesh || !o.visible || !o.geometry) return;
+      let liftParent=o,isLiftPart=false;while(liftParent){if(liftParent.name==='goldLuxuryElevator'){isLiftPart=true;break;}liftParent=liftParent.parent;}if(isLiftPart)return;
      let parent=o.parent;
      while(parent){
        if(parent===player || parent===flyingCarpet) return;
@@ -747,7 +795,7 @@ async function refreshSharedState({rebuild=true}={}){
  for(const base of bases){if(base.gateGroup)base.gateGroup.visible=!!data.base_locked && base.i===0;}
  floors=Math.max(1,Math.min(3,Math.ceil(Number(data.capacity||20)/6)));
  const inv=Array.isArray(data.inventory)?data.inventory:[];
- owned=inv.map(item=>{const c=catalog.find(x=>x.id===String(item.character_id));if(!c)return null;return {...c,inventoryId:item.id,mutation:item.mutation||null,trait:item.trait||null,income:Number(item.income_per_minute||c.incomePerMinute||0)/60}}).filter(Boolean);
+ const oldPositions=new Map(owned.filter(o=>o.inventoryId&&o.basePosition).map(o=>[String(o.inventoryId),o.basePosition]));owned=inv.map(item=>{const c=catalog.find(x=>x.id===String(item.character_id));if(!c)return null;return {...c,inventoryId:item.id,mutation:item.mutation||null,trait:item.trait||null,income:Number(item.income_per_minute||c.incomePerMinute||0)/60,basePosition:oldPositions.get(String(item.id))||null}}).filter(Boolean);
  if(rebuild)rebuildOwned();updateUI();
 }
 window.__friendlotSetStage?.('共有ゲームデータ読み込み');
