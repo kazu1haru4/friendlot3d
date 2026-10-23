@@ -941,7 +941,7 @@ if(cameraMode==='first'){
  camera.position.copy(safePosition);
  camera.lookAt(target);
 }
-window.__friendlotSetStage?.('ゲームループ: 3D描画');renderer.render(scene,camera);window.__friendlotSetStage?.('ゲームループ正常動作')}catch(e){console.error('Friendlot game loop error:',e);window.__friendlotDiag?.('ゲームループ実行エラー',(e&&e.stack)||String(e));}}
+sendMultiplayerPose(now);window.__friendlotSetStage?.('ゲームループ: 3D描画');renderer.render(scene,camera);window.__friendlotSetStage?.('ゲームループ正常動作')}catch(e){console.error('Friendlot game loop error:',e);window.__friendlotDiag?.('ゲームループ実行エラー',(e&&e.stack)||String(e));}}
 
 
 // サイト版FriendlotのSupabase Auth・既存Brainrot RPCを使用。独自game_savesは使わない。
